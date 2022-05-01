@@ -44,231 +44,393 @@ class Sidebar extends GetView<SidebarController> {
                   ),
                 ],
               ),
-              Container(
-                margin: EdgeInsetsDirectional.only(bottom: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: CupertinoSearchTextField(
-                          controller: controller.textController.value,
-                          itemColor: kColourLight,
-                          placeholder: 'Search Sessions',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Arial',
-                          ),
-                          prefixInsets: EdgeInsets.all(10),
-                          onChanged: (String value) {
-                            print('The text has changed to: $value');
-                          },
-                          onSubmitted: (String value) {
-                            print('Submitted text: $value');
-                          },
-                          onSuffixTap: () {
-                            controller.textController.value.clear();
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
-          Obx(
-            () => controller.archiveExpanded.value
-                ? Container()
-                : Expanded(
-                    child: SettingsList(
-                      applicationType: ApplicationType.both,
-                      brightness: Brightness.light,
-                      lightTheme: SettingsThemeData(
-                        settingsListBackground: kColourSidebarBackground,
-                        settingsSectionBackground: kColourSidebarTile,
-                        settingsTileTextColor: kColourSidebarTileText,
-                        dividerColor: kColourTileDivider,
-                      ),
-                      sections: [
-                        SettingsSection(
-                          title: Text('FRIDAY, APRIL 29, 2022'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              title: Text(
-                                '784 Robson St',
-                                style: kTextStyleSidebarTile,
+          Expanded(
+            child: SettingsList(
+              applicationType: ApplicationType.both,
+              brightness: Brightness.light,
+              lightTheme: SettingsThemeData(
+                settingsListBackground: kColourSidebarBackground,
+                settingsSectionBackground: kColourSidebarTile,
+                settingsTileTextColor: kColourSidebarTileText,
+                tileHighlightColor: kColourLight,
+                dividerColor: kColourTileDivider,
+              ),
+              sections: [
+                CustomSettingsSection(
+                  child: Container(
+                    margin: EdgeInsetsDirectional.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: CupertinoSearchTextField(
+                              controller: controller.textController.value,
+                              itemColor: kColourLight,
+                              placeholder: 'Search Sessions',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Arial',
                               ),
-                              value: Text('758'),
+                              prefixInsets: EdgeInsets.all(10),
+                              onChanged: (String value) {
+                                print('The text has changed to: $value');
+                              },
+                              onSubmitted: (String value) {
+                                print('Submitted text: $value');
+                              },
+                              onSuffixTap: () {
+                                controller.textController.value.clear();
+                              },
                             ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '4051 Tanner Street',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('913'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '1967 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('857'),
-                            ),
-                          ],
-                        ),
-                        SettingsSection(
-                          title: Text('THURSDAY, APRIL 28, 2022'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              title: Text(
-                                '164 Dunsmuir',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1640'),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-          ),
-          SizedBox(
-            height: 1,
-          ),
-          Expanded(
-            flex: 0,
-            child: GestureDetector(
-              onTap: () {
-                controller.archiveExpanded.value =
-                    !controller.archiveExpanded.value;
-              },
-              child: Container(
-                color: kColourSidebarTile,
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FaIcon(
-                            CupertinoIcons.archivebox,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                        Text(
-                          'Archived',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Arial',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      ],
+                ),
+                SettingsSection(
+                  title: Text('FRIDAY, APRIL 29, 2022'),
+                  tiles: <SettingsTile>[
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
                     ),
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(right: 24),
-                          child: FaIcon(
-                            controller.archiveExpanded.value
-                                ? CupertinoIcons.chevron_right
-                                : CupertinoIcons.chevron_down,
-                            color: kColourLight,
-                            size: 18 * MediaQuery.of(context).textScaleFactor,
-                          ),
-                        )),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '784 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('758'),
+                      onPressed: (BuildContext context) {},
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '4051 Tanner Street',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('913'),
+                    ),
+                    SettingsTile.navigation(
+                      title: Text(
+                        '1967 Robson St',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('857'),
+                    ),
                   ],
                 ),
-              ),
+                SettingsSection(
+                  title: Text('THURSDAY, APRIL 28, 2022'),
+                  tiles: <SettingsTile>[
+                    SettingsTile.navigation(
+                      title: Text(
+                        '164 Dunsmuir',
+                        style: kTextStyleSidebarTile,
+                      ),
+                      value: Text('1640'),
+                    ),
+                  ],
+                ),
+                CustomSettingsSection(
+                  child: CustomSettingsTile(
+                    child: GestureDetector(
+                      onTap: () => controller.archiveExpanded.value =
+                          !controller.archiveExpanded.value,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: FaIcon(
+                                    CupertinoIcons.archivebox,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                ),
+                                Text(
+                                  'Archived',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Arial',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ],
+                            ),
+                            Obx(() => Padding(
+                                  padding: const EdgeInsets.only(right: 24),
+                                  child: FaIcon(
+                                    controller.archiveExpanded.value
+                                        ? CupertinoIcons.chevron_right
+                                        : CupertinoIcons.chevron_down,
+                                    color: kColourLight,
+                                    size: 18 *
+                                        MediaQuery.of(context).textScaleFactor,
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                CustomSettingsSection(
+                    child: Obx(() => controller.archiveExpanded.value
+                        ? SettingsSection(
+                            title: Text('FRIDAY, JANUARY 4, 2021'),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '985 Alberni St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('599'),
+                                onPressed: (BuildContext context) {},
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  'W47 and 16TH',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('1452'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '1967 Robson St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('567'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '985 Alberni St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('599'),
+                                onPressed: (BuildContext context) {},
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  'W47 and 16TH',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('1452'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '1967 Robson St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('567'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '985 Alberni St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('599'),
+                                onPressed: (BuildContext context) {},
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  'W47 and 16TH',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('1452'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '1967 Robson St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('567'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '985 Alberni St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('599'),
+                                onPressed: (BuildContext context) {},
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  'W47 and 16TH',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('1452'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '1967 Robson St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('567'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '985 Alberni St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('599'),
+                                onPressed: (BuildContext context) {},
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  'W47 and 16TH',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('1452'),
+                              ),
+                              SettingsTile.navigation(
+                                title: Text(
+                                  '1967 Robson St',
+                                  style: kTextStyleSidebarTile,
+                                ),
+                                value: Text('567'),
+                              ),
+                            ],
+                          )
+                        : Container()))
+              ],
             ),
           ),
-          Obx(
-            () => controller.archiveExpanded.value
-                ? Expanded(
-                    child: SettingsList(
-                      applicationType: ApplicationType.both,
-                      brightness: Brightness.light,
-                      lightTheme: SettingsThemeData(
-                        settingsListBackground: kColourSidebarBackground,
-                        settingsSectionBackground: kColourSidebarTile,
-                        settingsTileTextColor: kColourSidebarTileText,
-                        dividerColor: kColourTileDivider,
-                      ),
-                      sections: [
-                        SettingsSection(
-                          title: Text('TUE, MARCH 8, 2022'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              title: Text(
-                                '4747 Kingsway',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('2934'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '3500 Cambie Street',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1508'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '3646 Nootka Street',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('759'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '310 Hastings Street',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('887'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '3836 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('546'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '418 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('44'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '2700 Tolmie St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('567'),
-                            ),
-                          ],
-                        ),
-                        SettingsSection(
-                          title: Text('SAT, AUGUST 28, 2021'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              title: Text(
-                                '164 Dunsmuir',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1600'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-          )
         ],
       ),
     );
