@@ -150,13 +150,25 @@ class Sidebar extends GetView<SidebarController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Archived',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Arial',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FaIcon(
+                            CupertinoIcons.archivebox,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                        Text(
+                          'Archived',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Arial',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ],
                     ),
                     Obx(() => Padding(
                           padding: const EdgeInsets.only(right: 24),
