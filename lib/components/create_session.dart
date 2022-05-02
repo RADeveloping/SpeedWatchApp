@@ -125,14 +125,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                   color: Colors.white,
                                   borderColor: Colors.transparent,
                                   labelStyle: TextStyle(
-                                      fontSize: 16, fontFamily: 'Arial'),
+                                    fontSize: 16,
+                                  ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8)),
                                 ),
                                 choiceStyle: C2ChoiceStyle(
                                   color: Colors.white,
                                   labelStyle: TextStyle(
-                                      fontSize: 16, fontFamily: 'Arial'),
+                                    fontSize: 16,
+                                  ),
                                   padding: EdgeInsets.all(10.0),
                                   backgroundColor: kColourSidebarTile,
                                   borderColor: kColourLight,
@@ -187,14 +189,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                   color: Colors.white,
                                   borderColor: Colors.transparent,
                                   labelStyle: TextStyle(
-                                      fontSize: 16, fontFamily: 'Arial'),
+                                    fontSize: 16,
+                                  ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8)),
                                 ),
                                 choiceStyle: C2ChoiceStyle(
                                   color: Colors.white,
                                   labelStyle: TextStyle(
-                                      fontSize: 16, fontFamily: 'Arial'),
+                                    fontSize: 16,
+                                  ),
                                   padding: EdgeInsets.all(10.0),
                                   backgroundColor: kColourSidebarTile,
                                   borderColor: kColourLight,
@@ -249,14 +253,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                   color: Colors.white,
                                   borderColor: Colors.transparent,
                                   labelStyle: TextStyle(
-                                      fontSize: 16, fontFamily: 'Arial'),
+                                    fontSize: 16,
+                                  ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8)),
                                 ),
                                 choiceStyle: C2ChoiceStyle(
                                   color: Colors.white,
                                   labelStyle: TextStyle(
-                                      fontSize: 16, fontFamily: 'Arial'),
+                                    fontSize: 16,
+                                  ),
                                   padding: EdgeInsets.all(10.0),
                                   backgroundColor: kColourSidebarTile,
                                   borderColor: kColourLight,
@@ -284,7 +290,6 @@ class CreateSession extends GetView<CreateSessionController> {
                               placeholder: 'Search Volunteers',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontFamily: 'Arial',
                               ),
                               prefixInsets: EdgeInsets.all(10),
                               onChanged: (String value) {
@@ -347,16 +352,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                             color: Colors.white,
                                             borderColor: Colors.transparent,
                                             labelStyle: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Arial'),
+                                              fontSize: 16,
+                                            ),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(8)),
                                           ),
                                           choiceStyle: C2ChoiceStyle(
                                             color: Colors.white,
                                             labelStyle: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Arial'),
+                                              fontSize: 16,
+                                            ),
                                             padding: EdgeInsets.all(10.0),
                                             backgroundColor: kColourSidebarTile,
                                             borderColor: kColourLight,
@@ -451,14 +456,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                     color: Colors.white,
                                     borderColor: Colors.transparent,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8)),
                                   ),
                                   choiceStyle: C2ChoiceStyle(
                                     color: Colors.white,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     padding: EdgeInsets.all(10.0),
                                     backgroundColor: kColourSidebarTile,
                                     borderColor: kColourLight,
@@ -520,14 +527,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                     color: Colors.white,
                                     borderColor: Colors.transparent,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8)),
                                   ),
                                   choiceStyle: C2ChoiceStyle(
                                     color: Colors.white,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     padding: EdgeInsets.all(10.0),
                                     backgroundColor: kColourSidebarTile,
                                     borderColor: kColourLight,
@@ -603,14 +612,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                     color: Colors.white,
                                     borderColor: Colors.transparent,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8)),
                                   ),
                                   choiceStyle: C2ChoiceStyle(
                                     color: Colors.white,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     padding: EdgeInsets.all(10.0),
                                     backgroundColor: kColourSidebarTile,
                                     borderColor: kColourLight,
@@ -686,14 +697,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                     color: Colors.white,
                                     borderColor: Colors.transparent,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8)),
                                   ),
                                   choiceStyle: C2ChoiceStyle(
                                     color: Colors.white,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     padding: EdgeInsets.all(10.0),
                                     backgroundColor: kColourSidebarTile,
                                     borderColor: kColourLight,
@@ -770,14 +783,16 @@ class CreateSession extends GetView<CreateSessionController> {
                                     color: Colors.white,
                                     borderColor: Colors.transparent,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8)),
                                   ),
                                   choiceStyle: C2ChoiceStyle(
                                     color: Colors.white,
                                     labelStyle: TextStyle(
-                                        fontSize: 16, fontFamily: 'Arial'),
+                                      fontSize: 16,
+                                    ),
                                     padding: EdgeInsets.all(10.0),
                                     backgroundColor: kColourSidebarTile,
                                     borderColor: kColourLight,
