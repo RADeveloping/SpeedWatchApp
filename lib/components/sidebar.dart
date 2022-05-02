@@ -73,7 +73,6 @@ class Sidebar extends GetView<SidebarController> {
                               placeholder: 'Search Sessions',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontFamily: 'Arial',
                               ),
                               prefixInsets: EdgeInsets.all(10),
                               onChanged: (String value) {
@@ -287,7 +286,6 @@ class Sidebar extends GetView<SidebarController> {
                                   'Archived',
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontFamily: 'Arial',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
