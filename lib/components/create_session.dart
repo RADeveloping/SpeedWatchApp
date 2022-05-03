@@ -201,8 +201,8 @@ class CreateSession extends GetView<CreateSessionController> {
 class CancelCreateSessionButton extends GetView<CreateSessionController> {
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
+    return CupertinoButton(
+      child: Icon(
         CupertinoIcons.xmark,
         color: kColourLight,
       ),

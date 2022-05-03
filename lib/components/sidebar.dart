@@ -16,8 +16,8 @@ class Sidebar extends GetView<SidebarController> {
         backgroundColor: kColourSidebarBackground,
         shadowColor: Colors.transparent,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
+          CupertinoButton(
+            child: Icon(
               CupertinoIcons.share_up,
               color: kColourLight,
             ),
