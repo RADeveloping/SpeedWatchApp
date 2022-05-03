@@ -41,20 +41,6 @@ class CreateSessionController extends GetxController {
   RxInt directionTag = 0.obs;
   List<String> directionOptions = ['North', 'East', 'South', 'West'];
 
-  // Start
-  Rx<DateTime> startDate = DateTime.now().obs;
-  RxInt startTag = 0.obs;
-  RxList<String> startOptions =
-      [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
-
-  // End
-  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 1)).obs;
-  RxInt endTag = 0.obs;
-  RxList<String> endOptions = [
-    DateFormat('MMMM d, y h:mm aa')
-        .format(DateTime.now().add(Duration(hours: 1)))
-  ].obs;
-
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
       TextEditingController(text: '').obs;
@@ -104,4 +90,16 @@ class CreateSessionController extends GetxController {
     'Artificial',
     'Night'
   ];
+}
+
+class DateTimePickerController extends CreateSessionController {
+  Rx<DateTime> date;
+  DateTimePickerController({required this.date}); // Start
+
+  // date = DateTime.now().obs;
+  // RxInt tag = 0.obs;
+  // RxList<String> options =
+  //     [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
+
+  final DateFormat formatter = DateFormat('MMMM d, y h:mm aa');
 }
