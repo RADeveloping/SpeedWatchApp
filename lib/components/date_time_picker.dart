@@ -1,23 +1,33 @@
 import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:speedwatch/controllers/create_session_controller.dart';
 import 'package:popover/popover.dart';
 import 'package:intl/intl.dart';
 import '../constants.dart';
 
-class DateTimePicker extends GetView<CreateSessionController> {
-  bool isStart;
-
-  DateTimePicker({
-    Key? key,
-    required this.isStart,
-  }) : super(key: key);
-
+class DatePickerChoice extends StatelessWidget {
   final DateFormat formatter = DateFormat('MMMM d, y h:mm aa');
+  late Rx<DateTime> date;
+  late DateTimePickerController controller;
+  late DateTime minDate;
+  late Function(DateTime)? onChange;
 
-  @override
+  DatePickerChoice(
+      {required DateTime dateTime,
+      DateTime? minDate,
+      Function(DateTime)? onChange}) {
+    this.date = dateTime.obs;
+    if (minDate == null) {
+      minDate = DateTime.now();
+    }
+    this.minDate = minDate;
+    this.onChange = onChange;
+    controller = DateTimePickerController(date: date);
+  }
+
   Widget build(BuildContext context) {
     return Obx(() => ChipsChoice<int>.single(
           value: 0,
@@ -31,31 +41,13 @@ class DateTimePicker extends GetView<CreateSessionController> {
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.dateAndTime,
                   onDateTimeChanged: (dateTime) {
-                    if (isStart) {
-                      controller.startDate.value = dateTime;
-                      controller.startOptions.value = [
-                        formatter.format(dateTime)
-                      ];
-
-                      controller.endOptions.value = [
-                        formatter.format(
-                            controller.startDate.value.add(Duration(hours: 1)))
-                      ];
-                      controller.endDate.value =
-                          controller.startDate.value.add(Duration(hours: 1));
-                    } else {
-                      controller.endDate.value = dateTime;
-                      controller.endOptions.value = [
-                        formatter.format(dateTime)
-                      ];
+                    this.date.value = dateTime;
+                    if (onChange != null) {
+                      onChange!(dateTime);
                     }
                   },
-                  minimumDate: isStart
-                      ? DateTime.now()
-                      : controller.startDate.value.add(Duration(minutes: 1)),
-                  initialDateTime: isStart
-                      ? controller.startDate.value.add(Duration(seconds: 30))
-                      : controller.startDate.value.add(Duration(hours: 1)),
+                  minimumDate: minDate.add(Duration(minutes: -1)),
+                  initialDateTime: date.value,
                 ),
               ),
               direction: PopoverDirection.left,
@@ -68,7 +60,7 @@ class DateTimePicker extends GetView<CreateSessionController> {
             );
           },
           choiceItems: C2Choice.listFrom<int, String>(
-            source: isStart ? controller.startOptions : controller.endOptions,
+            source: [formatter.format(date.value)],
             value: (i, v) => i,
             label: (i, v) => v,
           ),

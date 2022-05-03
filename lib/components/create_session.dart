@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/create_session_controller.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
@@ -14,11 +13,20 @@ import '../constants.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
-final HomeController homeController = Get.find();
-
 class CreateSession extends GetView<CreateSessionController> {
+  late DatePickerChoice startDatePicker;
+  late DatePickerChoice endDatePicker;
+
   @override
   Widget build(BuildContext context) {
+    startDatePicker = DatePickerChoice(
+        dateTime: DateTime.now(),
+        onChange: (dateTime) {
+          endDatePicker.date.value = dateTime.add(Duration(hours: 1));
+        });
+    endDatePicker = DatePickerChoice(
+        dateTime: DateTime.now().add(Duration(hours: 1)),
+        minDate: startDatePicker.date.value);
     return Scaffold(
       backgroundColor: kColourRightPaneBackground,
       appBar: AppBar(
@@ -79,22 +87,19 @@ class CreateSession extends GetView<CreateSessionController> {
                       tileOptions: controller.directionOptions,
                     )),
                     CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'Start',
-                      tileTag: controller.directionTag,
-                      tileOptions: controller.directionOptions,
-                      trailing: DateTimePicker(
-                        isStart: true,
+                      child: CustomTileWithChoices(
+                        leadingText: 'Start',
+                        tileTag: controller.directionTag,
+                        tileOptions: controller.directionOptions,
+                        trailing: startDatePicker,
                       ),
-                    )),
+                    ),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
-                      leadingText: 'End',
+                      leadingText: 'end',
                       tileTag: controller.directionTag,
                       tileOptions: controller.directionOptions,
-                      trailing: DateTimePicker(
-                        isStart: false,
-                      ),
+                      trailing: endDatePicker,
                     )),
                   ]),
                   SettingsSection(tiles: [
