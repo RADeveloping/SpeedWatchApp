@@ -10,24 +10,21 @@ import 'package:speedwatch/controllers/sidebar_controller.dart';
 class Sidebar extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CupertinoPageScaffold(
       backgroundColor: kColourSidebarBackground,
-      appBar: AppBar(
+      navigationBar: CupertinoNavigationBar(
         backgroundColor: kColourSidebarBackground,
-        shadowColor: Colors.transparent,
-        actions: <Widget>[
-          CupertinoButton(
-            child: Icon(
-              CupertinoIcons.share_up,
-              color: kColourLight,
-            ),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
+        trailing: CupertinoButton(
+          child: Icon(
+            CupertinoIcons.share_up,
+            color: kColourLight,
+          ),
+          onPressed: () {
+            // do something
+          },
+        ),
       ),
-      body: Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Column(

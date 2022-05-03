@@ -35,16 +35,22 @@ class CustomTileWithChoices extends GetView<CreateSessionController> {
             : Obx(
                 () => Expanded(
                   flex: 4,
-                  child: ChipsChoice<int>.single(
-                    value: tileTag.value,
-                    onChanged: (val) => tileTag.value = val,
-                    choiceItems: C2Choice.listFrom<int, String>(
-                      source: tileOptions,
-                      value: (i, v) => i,
-                      label: (i, v) => v,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: ChipsChoice<int>.single(
+                        value: tileTag.value,
+                        onChanged: (val) => tileTag.value = val,
+                        choiceItems: C2Choice.listFrom<int, String>(
+                          source: tileOptions,
+                          value: (i, v) => i,
+                          label: (i, v) => v,
+                        ),
+                        choiceActiveStyle: choiceActiveStyle,
+                        choiceStyle: choiceStyle,
+                      ),
                     ),
-                    choiceActiveStyle: choiceActiveStyle,
-                    choiceStyle: choiceStyle,
                   ),
                 ),
               ));

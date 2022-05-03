@@ -27,14 +27,13 @@ class CreateSession extends GetView<CreateSessionController> {
     endDatePicker = DatePickerChoice(
         dateTime: DateTime.now().add(Duration(hours: 1)),
         minDate: startDatePicker.date.value);
-    return Scaffold(
+    return CupertinoPageScaffold(
       backgroundColor: kColourRightPaneBackground,
-      appBar: AppBar(
+      navigationBar: CupertinoNavigationBar(
         backgroundColor: kColourRightPaneBackground,
-        shadowColor: Colors.transparent,
         leading: CancelCreateSessionButton(),
       ),
-      body: Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Column(
@@ -132,20 +131,24 @@ class CreateSession extends GetView<CreateSessionController> {
                       ),
                     ),
                     SettingsTile(
-                        title: Obx(() => ChipsChoice<String>.multiple(
-                              value: controller.volunteerTags.value,
-                              onChanged: (val) {
-                                controller.volunteerTags.value = val;
-                                controller.mockUserListFromDatabase.addAll(val);
-                              },
-                              runSpacing: 20,
-                              choiceItems: C2Choice.listFrom<String, String>(
-                                source: controller.volunteerOptions,
-                                value: (i, v) => v,
-                                label: (i, v) => v,
+                        title: Obx(() => Material(
+                              color: Colors.transparent,
+                              child: ChipsChoice<String>.multiple(
+                                value: controller.volunteerTags.value,
+                                onChanged: (val) {
+                                  controller.volunteerTags.value = val;
+                                  controller.mockUserListFromDatabase
+                                      .addAll(val);
+                                },
+                                runSpacing: 20,
+                                choiceItems: C2Choice.listFrom<String, String>(
+                                  source: controller.volunteerOptions,
+                                  value: (i, v) => v,
+                                  label: (i, v) => v,
+                                ),
+                                choiceActiveStyle: choiceActiveStyle,
+                                choiceStyle: choiceStyle,
                               ),
-                              choiceActiveStyle: choiceActiveStyle,
-                              choiceStyle: choiceStyle,
                             )))
                   ]),
                   SettingsSection(tiles: [
