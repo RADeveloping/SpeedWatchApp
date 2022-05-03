@@ -3,36 +3,76 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CreateSessionController extends GetxController {
-  RxString title = 'Create Session'.obs;
-  List<String> directionOptions = ['North', 'East', 'South', 'West'];
-  RxList<String> directionTags = <String>[].obs;
-
-  Rx<DateTime> startDate = DateTime.now().obs;
-  List<String> startOptions =
-      [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
-  RxList<String> startTags = <String>[].obs;
-
-  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 1)).obs;
-  List<String> endOptions = [
-    DateFormat('MMMM d, y h:mm aa')
-        .format(DateTime.now().add(Duration(hours: 1)))
-  ].obs;
-  RxList<String> endTags = <String>[].obs;
-
-  List<String> volunteerOptions = [
+  RxSet<String> mockUserListFromDatabase = {
     'Sandy Wesker',
     'Rahim Askarzadeh',
     'John Walker',
     'Sunwoo Park',
     'John Brady',
     'Medhat Elmasry',
-    'Justin Jones'
-  ];
+    'Justin Jones',
+  }.obs;
+
+  void volunteerSearchValueChanged(String value) {
+    if (value.isEmpty) {
+      volunteerOptions.value =
+          (volunteerTags.value + mockUserListFromDatabase.value.toList())
+              .toSet()
+              .toList();
+    } else {
+      volunteerOptions.value = mockUserListFromDatabase.value
+          .toList()
+          .where((element) => element.isCaseInsensitiveContains(value))
+          .toList();
+    }
+
+    if (!volunteerOptions.contains(value) && !value.isEmpty) {
+      volunteerOptions.add(value);
+    }
+  }
+
+  RxString title = 'Create Session'.obs;
+
+  // Address
+  Rx<TextEditingController> address_textController =
+      TextEditingController(text: '').obs;
+
+  // Direction
+  RxInt directionTag = 0.obs;
+  List<String> directionOptions = ['North', 'East', 'South', 'West'];
+
+  // Start
+  Rx<DateTime> startDate = DateTime.now().obs;
+  RxInt startTag = 0.obs;
+  RxList<String> startOptions =
+      [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
+
+  // End
+  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 1)).obs;
+  RxInt endTag = 0.obs;
+  RxList<String> endOptions = [
+    DateFormat('MMMM d, y h:mm aa')
+        .format(DateTime.now().add(Duration(hours: 1)))
+  ].obs;
+
+  // Volunteer
+  Rx<TextEditingController> volunteer_textController =
+      TextEditingController(text: '').obs;
+
   RxList<String> volunteerTags = <String>[].obs;
+  RxList<String> volunteerOptions = [
+    'Sandy Wesker',
+    'Rahim Askarzadeh',
+    'John Walker',
+  ].obs;
 
+  // Road Zone
+  RxInt roadZoneTag = 0.obs;
   List<String> roadZoneOptions = ['School', 'Construction', 'Highway', 'None'];
-  RxList<String> roadZoneTags = <String>[].obs;
 
+  // Speed Limit
+
+  RxInt speedLimitTag = 0.obs;
   List<String> speedLimitOptions = [
     '30',
     '50',
@@ -45,14 +85,18 @@ class CreateSessionController extends GetxController {
     '120',
     '130',
   ];
-  RxList<String> speedLimitTags = <String>[].obs;
 
+  // Weather
+
+  RxInt weatherTag = 2.obs;
   List<String> weatherOptions = ['Sunny', 'Rainy', 'Cloudy'];
-  RxList<String> weatherTags = <String>[].obs;
 
+  // Road Conditions
+  RxInt roadConditionTag = 0.obs;
   List<String> roadConditionOptions = ['Dry', 'Wet', 'Snow'];
-  RxList<String> roadConditionTags = <String>[].obs;
 
+  // Road Lighting
+  RxInt roadLightingTag = 2.obs;
   List<String> roadLightingOptions = [
     'Dawn',
     'Day',
@@ -60,26 +104,4 @@ class CreateSessionController extends GetxController {
     'Artificial',
     'Night'
   ];
-  RxList<String> roadLightingTags = <String>[].obs;
-
-  Rx<TextEditingController> title_textController =
-      TextEditingController(text: '').obs;
-
-  Rx<TextEditingController> address_textController =
-      TextEditingController(text: '').obs;
-
-  Rx<TextEditingController> volunteer_textController =
-      TextEditingController(text: '').obs;
-
-  Rx<TextEditingController> speed_textController =
-      TextEditingController(text: '').obs;
-
-  Rx<TextEditingController> weather_textController =
-      TextEditingController(text: '').obs;
-
-  Rx<TextEditingController> road_conditions_textController =
-      TextEditingController(text: '').obs;
-
-  Rx<TextEditingController> visibility_textController =
-      TextEditingController(text: '').obs;
 }
