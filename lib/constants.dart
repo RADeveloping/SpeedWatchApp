@@ -1,3 +1,4 @@
+import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/material.dart';
 
 const kColourSidebarBackground = Color(0xFF1C1C1E);
@@ -40,4 +41,28 @@ const kTextStyleLargeLight = TextStyle(
 
 const kTextStyleSidebarTile = TextStyle(
   fontSize: 16,
+);
+
+// SELECTED CHIP
+
+const choiceActiveStyle = C2ChoiceStyle(
+  backgroundColor: kColourLight,
+  padding: EdgeInsets.all(10.0),
+  color: Colors.white,
+  borderColor: Colors.transparent,
+  labelStyle: TextStyle(
+    fontSize: 16,
+  ),
+  borderRadius: BorderRadius.all(Radius.circular(8)),
+);
+
+const choiceStyle = C2ChoiceStyle(
+  color: Colors.white,
+  labelStyle: TextStyle(
+    fontSize: 16,
+  ),
+  padding: EdgeInsets.all(10.0),
+  backgroundColor: kColourSidebarTile,
+  borderColor: kColourLight,
+  borderRadius: BorderRadius.all(Radius.circular(5)),
 );
