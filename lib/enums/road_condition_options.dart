@@ -1,5 +1,6 @@
 enum RoadConditionOptions {
   Dry,
   Wet,
-  Snow
+  Snow,
+  Ice
 }
