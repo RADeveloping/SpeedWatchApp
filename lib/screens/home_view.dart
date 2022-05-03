@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
@@ -8,8 +7,8 @@ import 'package:speedwatch/controllers/home_controller.dart';
 class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: MultiSplitViewTheme(
+    return CupertinoPageScaffold(
+        child: MultiSplitViewTheme(
       data: MultiSplitViewThemeData(dividerThickness: 1),
       child: Obx(() => MultiSplitView(
             resizable: false,

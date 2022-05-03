@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: GetMaterialApp(
+      child: GetCupertinoApp(
         title: 'Speed Watch',
         home: HomeView(),
         initialRoute: '/',
@@ -40,6 +41,11 @@ class MyApp extends StatelessWidget {
             page: () => HomeView(),
             transition: Transition.noTransition,
           ),
+        ],
+        localizationsDelegates: [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
         ],
       ),
     );
