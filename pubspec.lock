@@ -102,6 +102,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.1"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.0"
   line_icons:
     dependency: "direct main"
     description:
@@ -151,6 +158,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  popover:
+    dependency: "direct main"
+    description:
+      name: popover
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.6+3"
   settings_ui:
     dependency: "direct main"
     description:
@@ -221,4 +235,4 @@ packages:
     version: "2.1.1"
 sdks:
   dart: ">=2.16.2 <3.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=2.0.0"
