@@ -1,15 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CreateSessionController extends GetxController {
   RxString title = 'Create Session'.obs;
   List<String> directionOptions = ['North', 'East', 'South', 'West'];
   RxList<String> directionTags = <String>[].obs;
 
-  List<String> startOptions = ['April 30, 2022', '10:00 AM'];
+  Rx<DateTime> startDate = DateTime.now().obs;
+  List<String> startOptions =
+      [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
   RxList<String> startTags = <String>[].obs;
 
-  List<String> endOptions = ['April 30, 2022', '1:00 PM'];
+  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 1)).obs;
+  List<String> endOptions = [
+    DateFormat('MMMM d, y h:mm aa')
+        .format(DateTime.now().add(Duration(hours: 1)))
+  ].obs;
   RxList<String> endTags = <String>[].obs;
 
   List<String> volunteerOptions = [
@@ -30,21 +37,30 @@ class CreateSessionController extends GetxController {
     '30',
     '50',
     '60',
+    '70',
     '80',
     '90',
     '100',
-    'Other'
+    '110',
+    '120',
+    '130',
   ];
   RxList<String> speedLimitTags = <String>[].obs;
 
-  List<String> weatherOptions = ['Sunny', 'Rainy', 'Cloudy', 'Other'];
+  List<String> weatherOptions = ['Sunny', 'Rainy', 'Cloudy'];
   RxList<String> weatherTags = <String>[].obs;
 
-  List<String> roadConditionOptions = ['Dry', 'Wet', 'Snow', 'Other'];
+  List<String> roadConditionOptions = ['Dry', 'Wet', 'Snow'];
   RxList<String> roadConditionTags = <String>[].obs;
 
-  List<String> roadVisibilityOptions = ['Light', 'Dusk', 'Dawn', 'Other'];
-  RxList<String> roadVisibilityTags = <String>[].obs;
+  List<String> roadLightingOptions = [
+    'Dawn',
+    'Day',
+    'Dusk',
+    'Artificial',
+    'Night'
+  ];
+  RxList<String> roadLightingTags = <String>[].obs;
 
   Rx<TextEditingController> title_textController =
       TextEditingController(text: '').obs;

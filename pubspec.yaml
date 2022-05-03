@@ -40,6 +40,8 @@ dependencies:
   multi_split_view: ^1.13.0
   settings_ui: ^2.0.2
   chips_choice_null_safety: ^2.0.6
+  popover: ^0.2.6+3
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
