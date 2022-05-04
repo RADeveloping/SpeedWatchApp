@@ -33,6 +33,7 @@ class CreateSession extends GetView<CreateSessionController> {
         backgroundColor: kColourRightPaneBackground,
         leading: CancelCreateSessionButton(),
       ),
+      resizeToAvoidBottomInset: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

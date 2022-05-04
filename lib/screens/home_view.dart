@@ -8,13 +8,14 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+        resizeToAvoidBottomInset: false,
         child: MultiSplitViewTheme(
-      data: MultiSplitViewThemeData(dividerThickness: 1),
-      child: Obx(() => MultiSplitView(
-            resizable: false,
-            initialWeights: [0.3, 0.7],
-            children: controller.masterDetailList.value,
-          )),
-    ));
+          data: MultiSplitViewThemeData(dividerThickness: 1),
+          child: Obx(() => MultiSplitView(
+                resizable: false,
+                initialWeights: [0.3, 0.7],
+                children: controller.masterDetailList.value,
+              )),
+        ));
   }
 }
