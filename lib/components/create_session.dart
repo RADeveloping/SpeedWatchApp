@@ -25,16 +25,6 @@ import 'date_time_picker.dart';
 
 final HomeController homeController = Get.find();
 
-Future<Isar> initIsar() async {
-  final dir = await getApplicationSupportDirectory();
-  final Isar isar = await Isar.open(
-    schemas: [SessionSchema],
-    directory: dir.path,
-    inspector: true,
-  );
-  return isar;
-}
-
 class CreateSession extends GetView<CreateSessionController> {
   @override
   Widget build(BuildContext context) {
@@ -50,14 +40,7 @@ class CreateSession extends GetView<CreateSessionController> {
     List<String>? volunteerNames;
     int? speedLimit;
 
-    return FutureBuilder(
-      future: initIsar(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (!snapshot.hasData) return Container(); // still loading
-        // alternatively use snapshot.connectionState != ConnectionState.done
-        final Isar isar = snapshot.data;
-        final sessions = isar.sessions;
-        return Scaffold(
+    return Scaffold(
         backgroundColor: kColourRightPaneBackground,
         appBar: AppBar(
           backgroundColor: kColourRightPaneBackground,
@@ -230,9 +213,9 @@ class CreateSession extends GetView<CreateSessionController> {
                                 ..roadZoneOptions = RoadZone.Construction
                                 ..volunteerNames = ['test']
                                 ..speedLimit = 100;
-                            await isar.writeTxn(((isar) async {
-                              await sessions.put(newSession);
-                            }));
+                            // await isar.writeTxn(((isar) async {
+                            //   await sessions.put(newSession);
+                            // }));
                           },
                           icon: FaIcon(CupertinoIcons.add),
                           label: Text('Create Session'),
@@ -249,8 +232,6 @@ class CreateSession extends GetView<CreateSessionController> {
           ],
         ),
       );
-      },
-    );
   }
 }
 
