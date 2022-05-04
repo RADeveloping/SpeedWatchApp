@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:isar/isar.dart';
 import 'package:speedwatch/enums/road_condition.dart';
 import 'package:speedwatch/enums/road_lighting.dart';
@@ -33,4 +35,5 @@ class Session {
   late RoadCondition roadConditionOptions;
   @LightingConverter()
   late RoadLighting roadLightingOptions;
+  late bool hasExportedSession;
 }
