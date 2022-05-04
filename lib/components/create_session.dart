@@ -32,7 +32,6 @@ class CreateSession extends GetView<CreateSessionController> {
   Widget build(BuildContext context) {
 
     Isar db = Get.find();
-    db.sessions.clear();
 
     return Scaffold(
         backgroundColor: kColourRightPaneBackground,
@@ -196,8 +195,8 @@ class CreateSession extends GetView<CreateSessionController> {
                         child: ElevatedButton.icon(
                           onPressed: () async {
                             final newSession = Session()
-                                ..startTime = controller.startDate.value
-                                ..endTime = controller.endDate.value
+                                ..startTime = new DateFormat('MMMM d, y h:mm aa').parse(controller.startOptions[controller.startTag.value])
+                                ..endTime = new DateFormat('MMMM d, y h:mm aa').parse(controller.endOptions[controller.endTag.value])
                                 ..direction = Direction.values[controller.directionTag.value]
                                 ..streetAddress = controller.address_textController.value.text
                                 ..weatherOptions = Weather.values[controller.weatherTag.value]
