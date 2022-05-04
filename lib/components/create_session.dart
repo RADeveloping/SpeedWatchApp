@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:popover/popover.dart';
@@ -31,6 +32,7 @@ class CreateSession extends GetView<CreateSessionController> {
   Widget build(BuildContext context) {
 
     Isar db = Get.find();
+    db.sessions.clear();
 
     return Scaffold(
         backgroundColor: kColourRightPaneBackground,
@@ -194,17 +196,16 @@ class CreateSession extends GetView<CreateSessionController> {
                         child: ElevatedButton.icon(
                           onPressed: () async {
                             final newSession = Session()
-                                ..startTime = DateTime(controller.startTag.value)
-                                ..endTime = DateTime(controller.endTag.value)
-                                // ..direction = Direction.values.firstWhere((e) => e.name == controller.directionTag.value)
-                                ..direction = Direction.North
+                                ..startTime = controller.startDate.value
+                                ..endTime = controller.endDate.value
+                                ..direction = Direction.values[controller.directionTag.value]
                                 ..streetAddress = controller.address_textController.value.text
-                                ..weatherOptions = Weather.Cloudy
-                                ..roadConditionOptions = RoadCondition.Wet
-                                ..roadLightingOptions = RoadLighting.Dawn
-                                ..roadZoneOptions = RoadZone.Construction
-                                ..volunteerNames = ['test']
-                                ..speedLimit = 100;
+                                ..weatherOptions = Weather.values[controller.weatherTag.value]
+                                ..roadConditionOptions = RoadCondition.values[controller.roadConditionTag.value]
+                                ..roadLightingOptions = RoadLighting.values[controller.roadLightingTag.value]
+                                ..roadZoneOptions = RoadZone.values[controller.roadZoneTag.value]
+                                ..volunteerNames = controller.volunteerTags.value
+                                ..speedLimit = controller.speedLimitTag.value;
                             await db.writeTxn(((isar) async {
                               await db.sessions.put(newSession);
                             }));
