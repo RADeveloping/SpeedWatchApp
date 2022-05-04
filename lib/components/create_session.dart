@@ -194,19 +194,8 @@ class CreateSession extends GetView<CreateSessionController> {
                           child: Center(
                         child: ElevatedButton.icon(
                           onPressed: () async {
-                            final newSession = Session()
-                                ..startTime = new DateFormat('MMMM d, y h:mm aa').parse(controller.startOptions[controller.startTag.value])
-                                ..endTime = new DateFormat('MMMM d, y h:mm aa').parse(controller.endOptions[controller.endTag.value])
-                                ..direction = Direction.values[controller.directionTag.value]
-                                ..streetAddress = controller.address_textController.value.text
-                                ..weatherOptions = Weather.values[controller.weatherTag.value]
-                                ..roadConditionOptions = RoadCondition.values[controller.roadConditionTag.value]
-                                ..roadLightingOptions = RoadLighting.values[controller.roadLightingTag.value]
-                                ..roadZoneOptions = RoadZone.values[controller.roadZoneTag.value]
-                                ..volunteerNames = controller.volunteerTags.value
-                                ..speedLimit = controller.speedLimitTag.value;
                             await db.writeTxn(((isar) async {
-                              await db.sessions.put(newSession);
+                              await db.sessions.put(controller.getSession());
                             }));
                           },
                           icon: FaIcon(CupertinoIcons.add),

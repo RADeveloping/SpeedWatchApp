@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../collections/session.dart';
 import '../enums/direction.dart';
 import '../enums/road_condition.dart';
 import '../enums/road_lighting.dart';
@@ -104,4 +105,18 @@ class CreateSessionController extends GetxController {
   // Road Lighting
   RxInt roadLightingTag = 2.obs;
   List<String> roadLightingOptions = RoadLighting.values.map((val) => val.name).toList();
+
+  Session getSession() {
+    return Session()
+      ..startTime = new DateFormat('MMMM d, y h:mm aa').parse(startOptions[startTag.value])
+      ..endTime = new DateFormat('MMMM d, y h:mm aa').parse(endOptions[endTag.value])
+      ..direction = Direction.values[directionTag.value]
+      ..streetAddress = address_textController.value.text
+      ..weatherOptions = Weather.values[weatherTag.value]
+      ..roadConditionOptions = RoadCondition.values[roadConditionTag.value]
+      ..roadLightingOptions = RoadLighting.values[roadLightingTag.value]
+      ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
+      ..volunteerNames = volunteerTags.value
+      ..speedLimit = speedLimitTag.value;
+  }
 }
