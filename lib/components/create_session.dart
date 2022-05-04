@@ -166,7 +166,7 @@ class CreateSession extends GetView<CreateSessionController> {
                         child: CustomTileWithChoices(
                       leadingText: 'Road Conditions',
                       tileTag: controller.roadConditionTag,
-                      tileOptions: controller.roadLightingOptions,
+                      tileOptions: controller.roadConditionOptions,
                     )),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(

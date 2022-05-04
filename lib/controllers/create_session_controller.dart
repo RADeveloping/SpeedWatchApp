@@ -2,6 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../enums/direction.dart';
+import '../enums/road_condition.dart';
+import '../enums/road_lighting.dart';
+import '../enums/road_zone.dart';
+import '../enums/weather.dart';
+
 class CreateSessionController extends GetxController {
   RxSet<String> mockUserListFromDatabase = {
     'Sandy Wesker',
@@ -39,7 +45,7 @@ class CreateSessionController extends GetxController {
 
   // Direction
   RxInt directionTag = 0.obs;
-  List<String> directionOptions = ['North', 'East', 'South', 'West'];
+  List<String> directionOptions = Direction.values.map((val) => val.name).toList();
 
   // Start
   Rx<DateTime> startDate = DateTime.now().obs;
@@ -68,7 +74,7 @@ class CreateSessionController extends GetxController {
 
   // Road Zone
   RxInt roadZoneTag = 0.obs;
-  List<String> roadZoneOptions = ['School', 'Construction', 'Highway', 'None'];
+  List<String> roadZoneOptions = RoadZone.values.map((val) => val.name).toList();
 
   // Speed Limit
 
@@ -89,19 +95,13 @@ class CreateSessionController extends GetxController {
   // Weather
 
   RxInt weatherTag = 2.obs;
-  List<String> weatherOptions = ['Sunny', 'Rainy', 'Cloudy'];
+  List<String> weatherOptions = Weather.values.map((val) => val.name).toList();
 
   // Road Conditions
   RxInt roadConditionTag = 0.obs;
-  List<String> roadConditionOptions = ['Dry', 'Wet', 'Snow'];
+  List<String> roadConditionOptions = RoadCondition.values.map((val) => val.name).toList();
 
   // Road Lighting
   RxInt roadLightingTag = 2.obs;
-  List<String> roadLightingOptions = [
-    'Dawn',
-    'Day',
-    'Dusk',
-    'Artificial',
-    'Night'
-  ];
+  List<String> roadLightingOptions = RoadLighting.values.map((val) => val.name).toList();
 }
