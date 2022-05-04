@@ -117,7 +117,7 @@ class CreateSessionController extends GetxController {
       ..roadLightingOptions = RoadLighting.values[roadLightingTag.value]
       ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
       ..volunteerNames = volunteerTags.value
-      ..speedLimit = speedLimitTag.value
+      ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
       ..hasExportedSession = false;
   }
 }
