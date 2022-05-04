@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:speedwatch/collections/session.dart';
 
 import '../converters/speed_range_converter.dart';
 import '../converters/vehicle_type_converter.dart';
@@ -19,4 +20,5 @@ class Record {
 
   @VehicleTypeConverter()
   late VehicleType vehicleType;
+  final session = IsarLink<Session>();
 }
