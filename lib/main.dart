@@ -19,18 +19,11 @@ void makeStatusBarTransparent() {
 
 void main() async {
   makeStatusBarTransparent();
-  final dir = await getApplicationSupportDirectory();
-  final isar = await Isar.open(
-    schemas: [SessionSchema],
-    directory: dir.path,
-    inspector: true,
-  );
-  runApp(MyApp(isar: isar,));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Isar isar;
-  MyApp({Key? key, required this.isar}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +35,12 @@ class MyApp extends StatelessWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetMaterialApp(
         title: 'Speed Watch',
-        home: HomeView(isar: isar,),
+        home: HomeView(),
         initialRoute: '/',
         getPages: [
           GetPage(
             name: '/',
-            page: () => HomeView(isar: isar,),
+            page: () => HomeView(),
             transition: Transition.noTransition,
           ),
         ],
