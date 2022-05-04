@@ -20,6 +20,7 @@ import 'package:speedwatch/enums/weather.dart';
 
 import '../constants.dart';
 import '../enums/speed_range.dart';
+import '../services/db_service.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
@@ -29,16 +30,7 @@ class CreateSession extends GetView<CreateSessionController> {
   @override
   Widget build(BuildContext context) {
 
-    SpeedRange? speedRange;
-    DateTime? startTime;
-    DateTime? endTime;
-    Direction? direction;
-    Weather? weather;
-    RoadCondition? roadCondition;
-    RoadLighting? roadLighting;
-    RoadZone? roadZone;
-    List<String>? volunteerNames;
-    int? speedLimit;
+    Isar db = Get.find();
 
     return Scaffold(
         backgroundColor: kColourRightPaneBackground,
@@ -205,7 +197,7 @@ class CreateSession extends GetView<CreateSessionController> {
                                 ..startTime = DateTime(controller.startTag.value)
                                 ..endTime = DateTime(controller.endTag.value)
                                 // ..direction = Direction.values.firstWhere((e) => e.name == controller.directionTag.value)
-                                ..direction = Direction.East
+                                ..direction = Direction.North
                                 ..streetAddress = controller.address_textController.value.text
                                 ..weatherOptions = Weather.Cloudy
                                 ..roadConditionOptions = RoadCondition.Wet
@@ -213,9 +205,9 @@ class CreateSession extends GetView<CreateSessionController> {
                                 ..roadZoneOptions = RoadZone.Construction
                                 ..volunteerNames = ['test']
                                 ..speedLimit = 100;
-                            // await isar.writeTxn(((isar) async {
-                            //   await sessions.put(newSession);
-                            // }));
+                            await db.writeTxn(((isar) async {
+                              await db.sessions.put(newSession);
+                            }));
                           },
                           icon: FaIcon(CupertinoIcons.add),
                           label: Text('Create Session'),
