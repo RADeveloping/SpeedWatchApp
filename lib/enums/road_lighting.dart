@@ -1,4 +1,4 @@
-enum RoadLightingOptions {
+enum RoadLighting {
   Dawn,
   Day,
   Dusk,

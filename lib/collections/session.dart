@@ -1,11 +1,14 @@
 import 'package:isar/isar.dart';
-import 'package:speedwatch/enums/road_condition_options.dart';
-import 'package:speedwatch/enums/road_lighting_option.dart';
-import 'package:speedwatch/enums/road_zone_options.dart';
-import 'package:speedwatch/enums/weather_condition_options.dart';
+import 'package:speedwatch/enums/road_condition.dart';
+import 'package:speedwatch/enums/road_lighting.dart';
+import 'package:speedwatch/enums/road_zone.dart';
+import 'package:speedwatch/enums/weather.dart';
 
 import '../converters/direction_converter.dart';
 import '../converters/lighting_converter.dart';
+import '../converters/road_condition_converter.dart';
+import '../converters/road_zone_converter.dart';
+import '../converters/weather_converter.dart';
 import '../enums/direction.dart';
 
 part 'session.g.dart';
@@ -21,11 +24,13 @@ class Session {
   late DateTime startTime;
   late DateTime endTime;
   late List<String> volunteerNames;
-  late RoadZoneOptions roadZoneOptions;
+  @RoadZoneConverter()
+  late RoadZone roadZoneOptions;
   late int speedLimit;
-  late WeatherOptions weatherOptions;
-  late RoadConditionOptions roadConditionOptions;
-
+  @WeatherConverter()
+  late Weather weatherOptions;
+  @RoadConditionConverter()
+  late RoadCondition roadConditionOptions;
   @LightingConverter()
-  late RoadLightingOptions roadLightingOptions;
+  late RoadLighting roadLightingOptions;
 }

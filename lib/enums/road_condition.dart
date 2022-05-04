@@ -1,4 +1,4 @@
-enum RoadConditionOptions {
+enum RoadCondition {
   Dry,
   Wet,
   Snow,

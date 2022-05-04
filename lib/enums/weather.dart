@@ -1,4 +1,4 @@
-enum WeatherOptions {
+enum Weather {
   Sunny,
   Cloudy,
   Rain,

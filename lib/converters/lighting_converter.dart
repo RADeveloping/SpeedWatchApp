@@ -1,16 +1,16 @@
 import 'package:isar/isar.dart';
-import '../enums/road_lighting_option.dart';
+import '../enums/road_lighting.dart';
 
-class LightingConverter extends TypeConverter<RoadLightingOptions, int> {
+class LightingConverter extends TypeConverter<RoadLighting, int> {
   const LightingConverter();
 
   @override
-  RoadLightingOptions fromIsar(int lightingIndex) {
-    return RoadLightingOptions.values[lightingIndex];
+  RoadLighting fromIsar(int lightingIndex) {
+    return RoadLighting.values[lightingIndex];
   }
 
   @override
-  int toIsar(RoadLightingOptions lighting) {
+  int toIsar(RoadLighting lighting) {
     return lighting.index;
   }
 

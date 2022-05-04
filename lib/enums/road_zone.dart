@@ -1,4 +1,4 @@
-enum RoadZoneOptions {
+enum RoadZone {
   School,
   Construction,
   Highway,
