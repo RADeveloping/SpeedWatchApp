@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:speedwatch/components/create_session.dart';
+import 'package:speedwatch/components/session.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 
 import '../constants.dart';
@@ -43,7 +43,7 @@ class RightPane extends GetView<RightPane> {
                 child: UnconstrainedBox(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      homeController.masterDetailList[1] = CreateSession();
+                      homeController.masterDetailList[1] = Session();
                     },
                     icon: FaIcon(CupertinoIcons.calendar_badge_plus),
                     label: Text(
