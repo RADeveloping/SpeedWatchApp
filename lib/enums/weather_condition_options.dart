@@ -1,5 +1,6 @@
 enum WeatherOptions {
   Sunny,
-  Rainy,
-  Cloudy
+  Cloudy,
+  Rain,
+  Snow
 }
