@@ -42,12 +42,12 @@ class MyApp extends StatelessWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetMaterialApp(
         title: 'Speed Watch',
-        home: HomeView(),
+        home: HomeView(isar: isar,),
         initialRoute: '/',
         getPages: [
           GetPage(
             name: '/',
-            page: () => HomeView(),
+            page: () => HomeView(isar: isar,),
             transition: Transition.noTransition,
           ),
         ],

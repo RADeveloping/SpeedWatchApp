@@ -7,6 +7,8 @@ import 'package:speedwatch/controllers/home_controller.dart';
 
 // ALWAYS remember to pass the `Type` you used to register your controller
 class HomeView extends GetView<HomeController> {
+  final Isar isar;
+  HomeView({Key? key, required this.isar}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
 
 import '../components/rightpane.dart';
 import '../components/sidebar.dart';

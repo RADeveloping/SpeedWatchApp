@@ -12,27 +12,45 @@ import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/create_session_controller.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
+import 'package:speedwatch/enums/direction.dart';
+import 'package:speedwatch/enums/road_condition.dart';
+import 'package:speedwatch/enums/road_lighting.dart';
+import 'package:speedwatch/enums/road_zone.dart';
+import 'package:speedwatch/enums/weather.dart';
 
 import '../constants.dart';
+import '../enums/speed_range.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
 final HomeController homeController = Get.find();
 
+Future<Isar> initIsar() async {
+  final dir = await getApplicationSupportDirectory();
+  final Isar isar = await Isar.open(
+    schemas: [SessionSchema],
+    directory: dir.path,
+    inspector: true,
+  );
+  return isar;
+}
+
 class CreateSession extends GetView<CreateSessionController> {
-  Future<IsarCollection<Session>> getSessions() async {
-    final dir = await getApplicationSupportDirectory();
-    final Isar isar = await Isar.open(
-      schemas: [SessionSchema],
-      directory: dir.path,
-      inspector: true,
-    );
-    final sessions = isar.sessions;
-    return sessions;
-  }
   @override
   Widget build(BuildContext context) {
-    final sessions = getSessions();
+    final Isar isar = initIsar() as Isar;
+    final sessions = isar.sessions;
+    SpeedRange? speedRange;
+    DateTime? startTime;
+    DateTime? endTime;
+    Direction? direction;
+    Weather? weather;
+    RoadCondition? roadCondition;
+    RoadLighting? roadLighting;
+    RoadZone? roadZone;
+    List<String>? volunteerNames;
+    int? speedLimit;
+
     return Scaffold(
       backgroundColor: kColourRightPaneBackground,
       appBar: AppBar(
@@ -193,8 +211,21 @@ class CreateSession extends GetView<CreateSessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: () {
-
+                        onPressed: () async {
+                          final newSession = Session()
+                              ..startTime = startTime!
+                              ..endTime = endTime!
+                              ..direction = direction!
+                              ..streetAddress = controller.address_textController.value.text
+                              ..weatherOptions = weather!
+                              ..roadConditionOptions = roadCondition!
+                              ..roadLightingOptions = roadLighting!
+                              ..roadZoneOptions = roadZone!
+                              ..volunteerNames = volunteerNames!
+                              ..speedLimit = speedLimit!;
+                          await isar.writeTxn(((isar) async {
+                            await sessions.put(newSession);
+                          }));
                         },
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text('Create Session'),
