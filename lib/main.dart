@@ -18,18 +18,19 @@ void makeStatusBarTransparent() {
 }
 
 void main() async {
+  makeStatusBarTransparent();
   final dir = await getApplicationSupportDirectory();
   final isar = await Isar.open(
     schemas: [SessionSchema],
     directory: dir.path,
     inspector: true,
   );
-  makeStatusBarTransparent();
-  runApp(MyApp());
+  runApp(MyApp(isar: isar,));
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  final Isar isar;
+  MyApp({Key? key, required this.isar}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:speedwatch/collections/session.dart';
 import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/create_session_controller.dart';
@@ -17,8 +20,19 @@ import 'date_time_picker.dart';
 final HomeController homeController = Get.find();
 
 class CreateSession extends GetView<CreateSessionController> {
+  Future<IsarCollection<Session>> getSessions() async {
+    final dir = await getApplicationSupportDirectory();
+    final Isar isar = await Isar.open(
+      schemas: [SessionSchema],
+      directory: dir.path,
+      inspector: true,
+    );
+    final sessions = isar.sessions;
+    return sessions;
+  }
   @override
   Widget build(BuildContext context) {
+    final sessions = getSessions();
     return Scaffold(
       backgroundColor: kColourRightPaneBackground,
       appBar: AppBar(
@@ -179,7 +193,9 @@ class CreateSession extends GetView<CreateSessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+
+                        },
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text('Create Session'),
                         style: ButtonStyle(
