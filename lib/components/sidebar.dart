@@ -24,6 +24,7 @@ class Sidebar extends GetView<SidebarController> {
           },
         ),
       ),
+      resizeToAvoidBottomInset: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
