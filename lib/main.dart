@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
         title: 'Speed Watch',
+        theme: CupertinoThemeData(brightness: Brightness.light),
         home: HomeView(),
         initialRoute: '/',
         getPages: [
