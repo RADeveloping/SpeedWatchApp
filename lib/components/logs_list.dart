@@ -20,7 +20,7 @@ class LogsList extends GetView<SidebarController> {
             brightness: Brightness.light,
             lightTheme: SettingsThemeData(
               settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: kColourSidebarTile,
+              settingsSectionBackground: Colors.transparent,
               settingsTileTextColor: kColourSidebarTileText,
               tileHighlightColor: kColourLight,
               dividerColor: kColourTileDivider,
@@ -28,6 +28,7 @@ class LogsList extends GetView<SidebarController> {
             sections: [
               SettingsSection(
                 title: Text('FRIDAY, APRIL 29, 2022'),
+                margin: EdgeInsetsDirectional.zero,
                 tiles: <SettingsTile>[
                   SettingsTile(
                     trailing: Row(
