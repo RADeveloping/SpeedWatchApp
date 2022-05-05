@@ -2,13 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import '../enums/speed_range.dart';
+import '../enums/vehicle_type.dart';
 
 class SpringBoard extends StatelessWidget {
-  final Function(int, VehicleType) onPressed;
+  final Function(SpeedRange, VehicleType) onPressed;
 
   const SpringBoard({
     Key? key,
-    required Function(int, VehicleType) this.onPressed,
+    required Function(SpeedRange, VehicleType) this.onPressed,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class SpringBoard extends StatelessWidget {
           minSpeed: 0,
           maxSpeed: 50,
           onPressed: (vehicleType) {
-            onPressed(0, vehicleType);
+            onPressed(SpeedRange.green, vehicleType);
           },
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -35,7 +37,7 @@ class SpringBoard extends StatelessWidget {
           minSpeed: 51,
           maxSpeed: 60,
           onPressed: (vehicleType) {
-            onPressed(1, vehicleType);
+            onPressed(SpeedRange.yellow, vehicleType);
           },
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -50,7 +52,7 @@ class SpringBoard extends StatelessWidget {
           minSpeed: 61,
           maxSpeed: 70,
           onPressed: (vehicleType) {
-            onPressed(2, vehicleType);
+            onPressed(SpeedRange.orange, vehicleType);
           },
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -64,7 +66,7 @@ class SpringBoard extends StatelessWidget {
         SpeedButtonGroup(
           minSpeed: 71,
           onPressed: (vehicleType) {
-            onPressed(3, vehicleType);
+            onPressed(SpeedRange.red, vehicleType);
           },
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -79,8 +81,6 @@ class SpringBoard extends StatelessWidget {
     );
   }
 }
-
-enum VehicleType { passenger, largeTruck, transit, motorBike }
 
 class SpeedButtonGroup extends StatelessWidget {
   final int minSpeed;

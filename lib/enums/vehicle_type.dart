@@ -1,6 +1,1 @@
-enum VehicleType {
-  Bus,
-  Truck,
-  Car,
-  Motorcycle
-}
+enum VehicleType { passenger, largeTruck, transit, motorBike }
