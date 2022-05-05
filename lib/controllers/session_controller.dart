@@ -97,7 +97,7 @@ class SessionController extends GetxController {
   }
 
   void writeSessionToDB(DateTime startDate, DateTime endDate) async {
-    if (address_textController.value.toString().length > 0 && volunteerTags.value.isNotEmpty) {}
+    if (address_textController.value.toString().length > 0 && volunteerTags.value.isNotEmpty) {
       Isar db = Get.find();
       SettingsCollection newSettings = await getNewSetting(db);
 
