@@ -7,43 +7,26 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import 'cupertino_page_scaffold_custom.dart';
+
 class Sidebar extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return CupertinoPageScaffoldCustom(
       backgroundColor: kColourSidebarBackground,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: kColourSidebarBackground,
-        trailing: CupertinoButton(
-          child: Icon(
-            CupertinoIcons.share_up,
-            color: kColourLight,
-          ),
-          onPressed: () {
-            // do something
-          },
+      largeTitle: 'Sessions',
+      trailing: CupertinoButton(
+        padding: EdgeInsets.zero,
+        child: Icon(
+          CupertinoIcons.share_up,
+          color: kColourLight,
         ),
+        onPressed: () {},
       ),
-      resizeToAvoidBottomInset: false,
+      heroTag: 0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Sessions',
-                      style: kTextStyleLargeTitle,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
           Expanded(
             child: SettingsList(
               applicationType: ApplicationType.both,
@@ -98,153 +81,9 @@ class Sidebar extends GetView<SidebarController> {
                         style: kTextStyleSidebarTile,
                       ),
                       value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
+                      onPressed: (BuildContext context) {
+                        Get.offAndToNamed('/session/445');
+                      },
                     ),
                   ],
                 ),

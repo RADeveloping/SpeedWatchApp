@@ -2,7 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class CreateSessionController extends GetxController {
+import '../collections/session_collection.dart';
+import '../enums/direction.dart';
+import '../enums/road_condition.dart';
+import '../enums/road_lighting.dart';
+import '../enums/road_zone.dart';
+import '../enums/weather.dart';
+
+class SessionController extends GetxController {
   RxSet<String> mockUserListFromDatabase = {
     'Sandy Wesker',
     'Rahim Askarzadeh',
@@ -39,7 +46,7 @@ class CreateSessionController extends GetxController {
 
   // Direction
   RxInt directionTag = 0.obs;
-  List<String> directionOptions = ['North', 'East', 'South', 'West'];
+  List<String> directionOptions = Direction.values.map((val) => val.name).toList();
 
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
@@ -54,7 +61,7 @@ class CreateSessionController extends GetxController {
 
   // Road Zone
   RxInt roadZoneTag = 0.obs;
-  List<String> roadZoneOptions = ['School', 'Construction', 'Highway', 'None'];
+  List<String> roadZoneOptions = RoadZone.values.map((val) => val.name).toList();
 
   // Speed Limit
 
@@ -75,31 +82,34 @@ class CreateSessionController extends GetxController {
   // Weather
 
   RxInt weatherTag = 2.obs;
-  List<String> weatherOptions = ['Sunny', 'Rainy', 'Cloudy'];
+  List<String> weatherOptions = Weather.values.map((val) => val.name).toList();
 
   // Road Conditions
   RxInt roadConditionTag = 0.obs;
-  List<String> roadConditionOptions = ['Dry', 'Wet', 'Snow'];
+  List<String> roadConditionOptions = RoadCondition.values.map((val) => val.name).toList();
 
   // Road Lighting
   RxInt roadLightingTag = 2.obs;
-  List<String> roadLightingOptions = [
-    'Dawn',
-    'Day',
-    'Dusk',
-    'Artificial',
-    'Night'
-  ];
+  List<String> roadLightingOptions = RoadLighting.values.map((val) => val.name).toList();
+
+  SessionCollection getSession(DateTime startDate, DateTime endDate) {
+    return SessionCollection()
+      ..startTime = startDate
+      ..endTime = endDate
+      ..direction = Direction.values[directionTag.value]
+      ..streetAddress = address_textController.value.text
+      ..weatherOptions = Weather.values[weatherTag.value]
+      ..roadConditionOptions = RoadCondition.values[roadConditionTag.value]
+      ..roadLightingOptions = RoadLighting.values[roadLightingTag.value]
+      ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
+      ..volunteerNames = volunteerTags.value
+      ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
+      ..hasExportedSession = false;
+  }
 }
 
-class DateTimePickerController extends CreateSessionController {
+class DateTimePickerController extends SessionController {
   Rx<DateTime> date;
   DateTimePickerController({required this.date}); // Start
-
-  // date = DateTime.now().obs;
-  // RxInt tag = 0.obs;
-  // RxList<String> options =
-  //     [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
-
   final DateFormat formatter = DateFormat('MMMM d, y h:mm aa');
 }

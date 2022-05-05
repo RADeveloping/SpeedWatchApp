@@ -3,60 +3,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/components/text_field_input.dart';
-import 'package:speedwatch/controllers/create_session_controller.dart';
-import 'package:speedwatch/controllers/home_controller.dart';
+import 'package:speedwatch/controllers/session_controller.dart';
 
 import '../constants.dart';
+import 'cupertino_page_scaffold_custom.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
-class CreateSession extends GetView<CreateSessionController> {
+class Session extends GetView<SessionController> {
   late DatePickerChoice startDatePicker;
   late DatePickerChoice endDatePicker;
+
+  String title;
+  String submitButtonText;
+
+  Session({required this.title, required this.submitButtonText});
 
   @override
   Widget build(BuildContext context) {
     startDatePicker = DatePickerChoice(
         dateTime: DateTime.now(),
         onChange: (dateTime) {
-          endDatePicker.date.value = dateTime.add(Duration(hours: 1));
+          endDatePicker.date.value = dateTime.add(Duration(hours: 2));
         });
     endDatePicker = DatePickerChoice(
-        dateTime: DateTime.now().add(Duration(hours: 1)),
+        dateTime: DateTime.now().add(Duration(hours: 2)),
         minDate: startDatePicker.date.value);
-    return CupertinoPageScaffold(
+    return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: kColourRightPaneBackground,
-        leading: CancelCreateSessionButton(),
-      ),
-      resizeToAvoidBottomInset: false,
+      leading: DiscardSessionChangesButton(),
+      largeTitle: title,
+      heroTag: 1,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Create',
-                      style: kTextStyleLargeTitle,
-                    ),
-                  ),
-                  Text(
-                    'Session',
-                    style: kTextStyleLargeLight,
-                  ),
-                ],
-              ),
-            ],
-          ),
           Obx(
             () => Expanded(
               child: SettingsList(
@@ -96,7 +81,7 @@ class CreateSession extends GetView<CreateSessionController> {
                     ),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
-                      leadingText: 'end',
+                      leadingText: 'End',
                       tileTag: controller.directionTag,
                       tileOptions: controller.directionOptions,
                       trailing: endDatePicker,
@@ -175,7 +160,7 @@ class CreateSession extends GetView<CreateSessionController> {
                         child: CustomTileWithChoices(
                       leadingText: 'Road Conditions',
                       tileTag: controller.roadConditionTag,
-                      tileOptions: controller.roadLightingOptions,
+                      tileOptions: controller.roadConditionOptions,
                     )),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
@@ -188,9 +173,15 @@ class CreateSession extends GetView<CreateSessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: ()
+                          async {
+                            Isar db = Get.find();
+                            await db.writeTxn(((isar) async {
+                              await db.sessionCollections.put(controller.getSession(startDatePicker.date.value, endDatePicker.date.value));
+                            }));
+                        },
                         icon: FaIcon(CupertinoIcons.add),
-                        label: Text('Create Session'),
+                        label: Text(submitButtonText),
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(kColourLight)),
@@ -207,10 +198,11 @@ class CreateSession extends GetView<CreateSessionController> {
   }
 }
 
-class CancelCreateSessionButton extends GetView<CreateSessionController> {
+class DiscardSessionChangesButton extends GetView<SessionController> {
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
+      padding: EdgeInsets.zero,
       child: Icon(
         CupertinoIcons.xmark,
         color: kColourLight,
@@ -227,7 +219,7 @@ class CancelCreateSessionButton extends GetView<CreateSessionController> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'Are you sure you want to discard this new session?',
+                    'Are you sure you want to discard changes?',
                     style: TextStyle(fontSize: 14, color: Colors.white24),
                     textAlign: TextAlign.center,
                   ),
@@ -245,11 +237,12 @@ class CancelCreateSessionButton extends GetView<CreateSessionController> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                  Get.offAndToNamed('/home');
                 },
               ),
             ],
           ),
-          direction: PopoverDirection.top,
+          direction: PopoverDirection.bottom,
           width: 300,
           height: 125,
           arrowHeight: 15,
