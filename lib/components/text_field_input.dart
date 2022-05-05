@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import '../constants.dart';
-import '../controllers/create_session_controller.dart';
+import '../controllers/session_controller.dart';
 
-class SessionTextFieldEntry extends GetView<CreateSessionController> {
+class SessionTextFieldEntry extends GetView<SessionController> {
   final placeholder;
   final ValueChanged<String>? onSubmitted;
   final ValueChanged<String>? onChanged;

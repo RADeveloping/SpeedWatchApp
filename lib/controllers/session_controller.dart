@@ -9,7 +9,7 @@ import '../enums/road_lighting.dart';
 import '../enums/road_zone.dart';
 import '../enums/weather.dart';
 
-class CreateSessionController extends GetxController {
+class SessionController extends GetxController {
   RxSet<String> mockUserListFromDatabase = {
     'Sandy Wesker',
     'Rahim Askarzadeh',
@@ -47,20 +47,6 @@ class CreateSessionController extends GetxController {
   // Direction
   RxInt directionTag = 0.obs;
   List<String> directionOptions = Direction.values.map((val) => val.name).toList();
-
-  // Start
-  Rx<DateTime> startDate = DateTime.now().obs;
-  RxInt startTag = 0.obs;
-  RxList<String> startOptions =
-      [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
-
-  // End
-  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 2)).obs;
-  RxInt endTag = 0.obs;
-  RxList<String> endOptions = [
-    DateFormat('MMMM d, y h:mm aa')
-        .format(DateTime.now().add(Duration(hours: 2)))
-  ].obs;
 
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
@@ -120,4 +106,10 @@ class CreateSessionController extends GetxController {
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
       ..hasExportedSession = false;
   }
+}
+
+class DateTimePickerController extends SessionController {
+  Rx<DateTime> date;
+  DateTimePickerController({required this.date}); // Start
+  final DateFormat formatter = DateFormat('MMMM d, y h:mm aa');
 }

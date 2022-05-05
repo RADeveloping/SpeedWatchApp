@@ -11,8 +11,6 @@ import '../constants.dart';
 class RightPane extends GetView<RightPane> {
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.find();
-
     return Container(
         color: kColourRightPaneBackground,
         child: Padding(
@@ -40,22 +38,17 @@ class RightPane extends GetView<RightPane> {
                   ],
                 ),
               ),
-              Expanded(
-                child: UnconstrainedBox(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      homeController.masterDetailList[1] = CreateSession();
-                    },
-                    icon: FaIcon(CupertinoIcons.calendar_badge_plus),
-                    label: Text(
-                      'New Session',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kColourLight)),
-                  ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Get.offAndToNamed('/create');
+                },
+                icon: FaIcon(CupertinoIcons.calendar_badge_plus),
+                label: Text(
+                  'New Session',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(kColourLight)),
               )
             ],
           ),

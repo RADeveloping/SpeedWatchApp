@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:speedwatch/components/rightpane.dart';
+import 'package:speedwatch/components/session.dart';
+import 'package:speedwatch/components/sidebar.dart';
 import 'package:speedwatch/collections/session.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
@@ -9,14 +13,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speedwatch/services/db_service.dart';
 
-import 'controllers/create_session_controller.dart';
-
-void makeStatusBarTransparent() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent, // transparent status bar
-  ));
-}
+import 'controllers/session_controller.dart';
 
 Future<void> main() async {
   makeStatusBarTransparent();
@@ -37,20 +34,55 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
-    Get.put<CreateSessionController>(CreateSessionController());
+    Get.put<SessionController>(SessionController());
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: GetMaterialApp(
+      child: GetCupertinoApp(
+        defaultTransition: Transition.cupertino,
         title: 'Speed Watch',
-        home: HomeView(),
+        theme: CupertinoThemeData(brightness: Brightness.light),
+        home: HomeView(
+          leftChild: Sidebar(),
+          rightChild: RightPane(),
+        ),
         initialRoute: '/',
         getPages: [
           GetPage(
             name: '/',
-            page: () => HomeView(),
+            page: () => HomeView(
+              leftChild: Sidebar(),
+              rightChild: RightPane(),
+            ),
             transition: Transition.noTransition,
           ),
+          GetPage(
+            name: '/create',
+            page: () => HomeView(
+              leftChild: Sidebar(),
+              rightChild: Session(
+                title: 'Create Session',
+                submitButtonText: 'Create Session',
+              ),
+            ),
+            transition: Transition.noTransition,
+          ),
+          GetPage(
+            name: '/session/:sessionID',
+            page: () => HomeView(
+              leftChild: Sidebar(),
+              rightChild: Session(
+                title: 'Create Session',
+                submitButtonText: 'Create Session',
+              ),
+            ),
+            transition: Transition.noTransition,
+          ),
+        ],
+        localizationsDelegates: [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
         ],
       ),
     );

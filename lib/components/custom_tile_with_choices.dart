@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:speedwatch/controllers/create_session_controller.dart';
+import 'package:speedwatch/controllers/session_controller.dart';
 import '../constants.dart';
 
-class CustomTileWithChoices extends GetView<CreateSessionController> {
+class CustomTileWithChoices extends GetView<SessionController> {
   final String leadingText;
   final RxInt tileTag;
   final List<String> tileOptions;
@@ -35,16 +35,22 @@ class CustomTileWithChoices extends GetView<CreateSessionController> {
             : Obx(
                 () => Expanded(
                   flex: 4,
-                  child: ChipsChoice<int>.single(
-                    value: tileTag.value,
-                    onChanged: (val) => tileTag.value = val,
-                    choiceItems: C2Choice.listFrom<int, String>(
-                      source: tileOptions,
-                      value: (i, v) => i,
-                      label: (i, v) => v,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: ChipsChoice<int>.single(
+                        value: tileTag.value,
+                        onChanged: (val) => tileTag.value = val,
+                        choiceItems: C2Choice.listFrom<int, String>(
+                          source: tileOptions,
+                          value: (i, v) => i,
+                          label: (i, v) => v,
+                        ),
+                        choiceActiveStyle: choiceActiveStyle,
+                        choiceStyle: choiceStyle,
+                      ),
                     ),
-                    choiceActiveStyle: choiceActiveStyle,
-                    choiceStyle: choiceStyle,
                   ),
                 ),
               ));
