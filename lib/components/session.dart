@@ -78,7 +78,7 @@ class Session extends GetView<SessionController> {
                     ),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
-                      leadingText: 'end',
+                      leadingText: 'End',
                       tileTag: controller.directionTag,
                       tileOptions: controller.directionOptions,
                       trailing: endDatePicker,
