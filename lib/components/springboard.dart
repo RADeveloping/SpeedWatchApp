@@ -1,0 +1,197 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import '../constants.dart';
+
+class SpringBoard extends StatelessWidget {
+  final Function(int, VehicleType) onPressed;
+
+  const SpringBoard({
+    Key? key,
+    required Function(int, VehicleType) this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SpeedButtonGroup(
+          minSpeed: 0,
+          maxSpeed: 50,
+          onPressed: (vehicleType) {
+            onPressed(0, vehicleType);
+          },
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFA4F485),
+              Color(0xFF64CD4C),
+            ],
+          ),
+        ),
+        SpeedButtonGroup(
+          minSpeed: 51,
+          maxSpeed: 60,
+          onPressed: (vehicleType) {
+            onPressed(1, vehicleType);
+          },
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFF9D96D),
+              Color(0xFFF7CD53),
+            ],
+          ),
+        ),
+        SpeedButtonGroup(
+          minSpeed: 61,
+          maxSpeed: 70,
+          onPressed: (vehicleType) {
+            onPressed(2, vehicleType);
+          },
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFF19838),
+              Color(0xFFED6947),
+            ],
+          ),
+        ),
+        SpeedButtonGroup(
+          minSpeed: 71,
+          onPressed: (vehicleType) {
+            onPressed(3, vehicleType);
+          },
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFE5466B),
+              Color(0xFFE9664B),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+enum VehicleType { passenger, largeTruck, transit, motorBike }
+
+class SpeedButtonGroup extends StatelessWidget {
+  final int minSpeed;
+  final int? maxSpeed;
+  final Gradient gradient;
+  final Function(VehicleType) onPressed;
+
+  const SpeedButtonGroup({
+    Key? key,
+    required int this.minSpeed,
+    int? this.maxSpeed,
+    required Gradient this.gradient,
+    required Function(VehicleType) this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            maxSpeed != null
+                ? 'Speed: ${minSpeed} to ${maxSpeed}'
+                : 'Speed: Over ${minSpeed - 1}',
+            style: TextStyle(color: Colors.white, fontSize: 28),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+              color: kColourSidebarTile,
+              borderRadius: BorderRadius.circular(30)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SpeedButton(
+                  onPressed: () {
+                    onPressed(VehicleType.passenger);
+                  },
+                  gradient: gradient,
+                  icon: Icon(
+                    Icons.directions_car,
+                    size: 51.857,
+                    color: Colors.white,
+                  )),
+              SpeedButton(
+                  onPressed: () {
+                    onPressed(VehicleType.transit);
+                  },
+                  gradient: gradient,
+                  icon: Icon(
+                    Icons.directions_bus,
+                    size: 51.857,
+                    color: Colors.white,
+                  )),
+              SpeedButton(
+                  onPressed: () {
+                    onPressed(VehicleType.largeTruck);
+                  },
+                  gradient: gradient,
+                  icon: Icon(
+                    Icons.local_shipping,
+                    size: 51.857,
+                    color: Colors.white,
+                  )),
+              SpeedButton(
+                  onPressed: () {
+                    onPressed(VehicleType.motorBike);
+                  },
+                  gradient: gradient,
+                  icon: Icon(
+                    Icons.motorcycle,
+                    size: 51.857,
+                    color: Colors.white,
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SpeedButton extends StatelessWidget {
+  final Icon icon;
+  final Gradient gradient;
+  final Function() onPressed;
+
+  const SpeedButton({
+    Key? key,
+    required Icon this.icon,
+    required Gradient this.gradient,
+    required Function() this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        child: Container(
+          width: 96,
+          height: 96,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(21.475),
+              gradient: gradient,
+              shape: BoxShape.rectangle),
+          child: Center(
+            child: icon,
+          ),
+        ));
+  }
+}
