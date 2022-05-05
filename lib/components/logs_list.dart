@@ -1,0 +1,253 @@
+import 'package:camera_camera/camera_camera.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:popover/popover.dart';
+import 'package:settings_ui/settings_ui.dart';
+import 'package:speedwatch/controllers/sidebar_controller.dart';
+import '../constants.dart';
+
+class LogsList extends GetView<SidebarController> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: SettingsList(
+            applicationType: ApplicationType.both,
+            brightness: Brightness.light,
+            lightTheme: SettingsThemeData(
+              settingsListBackground: kColourSidebarBackground,
+              settingsSectionBackground: kColourSidebarTile,
+              settingsTileTextColor: kColourSidebarTileText,
+              tileHighlightColor: kColourLight,
+              dividerColor: kColourTileDivider,
+            ),
+            sections: [
+              SettingsSection(
+                title: Text('FRIDAY, APRIL 29, 2022'),
+                tiles: <SettingsTile>[
+                  SettingsTile(
+                    trailing: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '0-50 km/h',
+                            style: TextStyle(color: kColourPlaceHolderText),
+                          ),
+                        ),
+                        FaIcon(
+                          CupertinoIcons.ellipsis,
+                          color: kColourPlaceHolderText,
+                        ),
+                      ],
+                    ),
+                    leading: Icon(
+                      Icons.motorcycle,
+                      color: Colors.white,
+                    ),
+                    title: Column(
+                      children: [
+                        Text(
+                          '10:32:38 AM',
+                          style: kTextStyleSidebarTile,
+                        ),
+                        Text(
+                          'Motor Bike',
+                          style: kTextStyleTilePlaceholder,
+                        ),
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    onPressed: (BuildContext context) {
+                      showPopover(
+                        context: context,
+                        backgroundColor: kColourRightPaneBackground,
+                        transitionDuration: const Duration(milliseconds: 150),
+                        bodyBuilder: (context) => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CupertinoButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => CameraCamera(
+                                              cameraSide: CameraSide.front,
+                                              onFile: (file) {
+                                                print(file);
+                                                //When take foto you should close camera
+                                                Navigator.pop(context);
+                                              },
+                                            )));
+                              },
+                              padding: EdgeInsets.symmetric(horizontal: 30),
+                              color: Colors.transparent,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  FaIcon(
+                                    CupertinoIcons.camera,
+                                    size: 32,
+                                  ),
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text('Take Photo')
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: 1,
+                              color: kColourTileDivider,
+                            ),
+                            CupertinoButton(
+                              onPressed: null,
+                              padding: EdgeInsets.symmetric(horizontal: 30),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  FaIcon(
+                                    CupertinoIcons.camera,
+                                    size: 32,
+                                  ),
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text('View Photo')
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        direction: PopoverDirection.right,
+                        width: 400,
+                        height: 50,
+                        arrowHeight: 15,
+                        arrowWidth: 30,
+                      );
+                    },
+                  ),
+                  SettingsTile.navigation(
+                    trailing: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '0-50 km/h',
+                            style: TextStyle(color: kColourPlaceHolderText),
+                          ),
+                        ),
+                        FaIcon(
+                          CupertinoIcons.ellipsis,
+                          color: kColourPlaceHolderText,
+                        ),
+                      ],
+                    ),
+                    leading: Icon(
+                      Icons.directions_car,
+                      color: Colors.white,
+                    ),
+                    title: Column(
+                      children: [
+                        Text(
+                          '10:31:15 AM',
+                          style: kTextStyleSidebarTile,
+                        ),
+                        Text(
+                          'Passenger',
+                          style: kTextStyleTilePlaceholder,
+                        ),
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    onPressed: (BuildContext context) {
+                      Get.offAndToNamed('/session/445');
+                    },
+                  ),
+                  SettingsTile.navigation(
+                    trailing: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '0-50 km/h',
+                            style: TextStyle(color: kColourPlaceHolderText),
+                          ),
+                        ),
+                        FaIcon(
+                          CupertinoIcons.ellipsis,
+                          color: kColourPlaceHolderText,
+                        ),
+                      ],
+                    ),
+                    leading: Icon(
+                      Icons.directions_bus,
+                      color: Colors.white,
+                    ),
+                    title: Column(
+                      children: [
+                        Text(
+                          '10:30:38 AM',
+                          style: kTextStyleSidebarTile,
+                        ),
+                        Text(
+                          'Transit',
+                          style: kTextStyleTilePlaceholder,
+                        ),
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    onPressed: (BuildContext context) {
+                      Get.offAndToNamed('/session/445');
+                    },
+                  ),
+                  SettingsTile.navigation(
+                    trailing: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '0-50 km/h',
+                            style: TextStyle(color: kColourPlaceHolderText),
+                          ),
+                        ),
+                        FaIcon(
+                          CupertinoIcons.ellipsis,
+                          color: kColourPlaceHolderText,
+                        ),
+                      ],
+                    ),
+                    leading: Icon(
+                      Icons.local_shipping,
+                      color: Colors.white,
+                    ),
+                    title: Column(
+                      children: [
+                        Text(
+                          '10:30:03 AM',
+                          style: kTextStyleSidebarTile,
+                        ),
+                        Text(
+                          'Large Truck',
+                          style: kTextStyleTilePlaceholder,
+                        ),
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    onPressed: (BuildContext context) {},
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

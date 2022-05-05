@@ -8,13 +8,14 @@ const kColourSidebarTile = Color(0xFF2C2C2E);
 const kColourSidebarTileText = Colors.white;
 const kColourTileDivider = Color(0xFF48484A);
 const kColourSuffixIcon = Color(0xFF8E8E93);
+const kColourPlaceHolderText = Color(0xFF8E8E93);
 
 const kTextStyleWelcomeMessage =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
 
 const kTextStylePlaceHelpPlaceholder = TextStyle(
   fontSize: 16,
-  color: Color(0xFF8E8E93),
+  color: kColourPlaceHolderText,
 );
 
 const kTextStyleTileText = TextStyle(

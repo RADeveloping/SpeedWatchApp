@@ -9,7 +9,7 @@ import 'springboard.dart';
 class SessionDetail extends GetView<SessionDetail> {
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.find();
+    print(Get.parameters['sessionID']);
 
     return Container(
         padding: EdgeInsets.all(20.0),
