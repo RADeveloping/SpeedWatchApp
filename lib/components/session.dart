@@ -27,6 +27,7 @@ class Session extends GetView<CreateSessionController> {
         dateTime: DateTime.now().add(Duration(hours: 1)),
         minDate: startDatePicker.date.value);
     return CupertinoPageScaffoldCustom(
+      backgroundColor: kColourRightPaneBackground,
       leading: CancelCreateSessionButton(),
       largeTitle: 'Create Session',
       child: Column(

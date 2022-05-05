@@ -13,6 +13,7 @@ class Sidebar extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffoldCustom(
+      backgroundColor: kColourSidebarBackground,
       largeTitle: 'Sessions',
       trailing: CupertinoButton(
         padding: EdgeInsets.zero,

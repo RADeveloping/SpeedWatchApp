@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../constants.dart';
 
 class CupertinoPageScaffoldCustom extends StatelessWidget {
   final Widget child;
   final Widget? leading;
   final String largeTitle;
   final Widget? trailing;
+  final Color backgroundColor;
 
   CupertinoPageScaffoldCustom(
       {required this.child,
       this.leading,
       required this.largeTitle,
-      this.trailing});
+      this.trailing,
+      required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
             CupertinoSliverNavigationBar(
                 leading: leading,
                 brightness: Brightness.dark,
-                backgroundColor: kColourRightPaneBackground,
+                backgroundColor: backgroundColor,
                 trailing: trailing,
                 largeTitle: Text(
                   largeTitle,
