@@ -31,8 +31,6 @@ class CreateSession extends GetView<CreateSessionController> {
   @override
   Widget build(BuildContext context) {
 
-    Isar db = Get.find();
-
     return Scaffold(
         backgroundColor: kColourRightPaneBackground,
         appBar: AppBar(
@@ -194,6 +192,7 @@ class CreateSession extends GetView<CreateSessionController> {
                           child: Center(
                         child: ElevatedButton.icon(
                           onPressed: () async {
+                            Isar db = Get.find();
                             await db.writeTxn(((isar) async {
                               await db.sessions.put(controller.getSession());
                             }));
