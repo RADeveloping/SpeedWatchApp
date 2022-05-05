@@ -97,13 +97,15 @@ class SessionController extends GetxController {
   }
 
   void writeSessionToDB(DateTime startDate, DateTime endDate) async {
-    Isar db = Get.find();
-    SettingsCollection newSettings = await getNewSetting(db);
+    if (address_textController.value.toString().length > 0 && volunteerTags.value.isNotEmpty) {}
+      Isar db = Get.find();
+      SettingsCollection newSettings = await getNewSetting(db);
 
-    await db.writeTxn(((isar) async {
-      await db.sessionCollections.put(getSession(startDate, endDate));
-      await db.settingsCollections.put(newSettings);
-    }));
+      await db.writeTxn(((isar) async {
+        await db.sessionCollections.put(getSession(startDate, endDate));
+        await db.settingsCollections.put(newSettings);
+      }));
+    }
   }
 
   Future<SettingsCollection> getNewSetting(Isar db) async {
