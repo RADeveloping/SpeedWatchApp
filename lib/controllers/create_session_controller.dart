@@ -55,11 +55,11 @@ class CreateSessionController extends GetxController {
       [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
 
   // End
-  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 1)).obs;
+  Rx<DateTime> endDate = DateTime.now().add(Duration(hours: 2)).obs;
   RxInt endTag = 0.obs;
   RxList<String> endOptions = [
     DateFormat('MMMM d, y h:mm aa')
-        .format(DateTime.now().add(Duration(hours: 1)))
+        .format(DateTime.now().add(Duration(hours: 2)))
   ].obs;
 
   // Volunteer
