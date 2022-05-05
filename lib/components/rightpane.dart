@@ -2,16 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:speedwatch/components/create_session.dart';
-import 'package:speedwatch/controllers/home_controller.dart';
 
 import '../constants.dart';
 
 class RightPane extends GetView<RightPane> {
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.find();
-
     return Container(
         color: kColourRightPaneBackground,
         child: Padding(
@@ -39,22 +35,17 @@ class RightPane extends GetView<RightPane> {
                   ],
                 ),
               ),
-              Expanded(
-                child: UnconstrainedBox(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      homeController.masterDetailList[1] = CreateSession();
-                    },
-                    icon: FaIcon(CupertinoIcons.calendar_badge_plus),
-                    label: Text(
-                      'New Session',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kColourLight)),
-                  ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Get.offAndToNamed('/create');
+                },
+                icon: FaIcon(CupertinoIcons.calendar_badge_plus),
+                label: Text(
+                  'New Session',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(kColourLight)),
               )
             ],
           ),

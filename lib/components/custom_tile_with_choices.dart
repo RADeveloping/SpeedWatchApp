@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:speedwatch/controllers/create_session_controller.dart';
+import 'package:speedwatch/controllers/session_controller.dart';
 import '../constants.dart';
 
-class CustomTileWithChoices extends GetView<CreateSessionController> {
+class CustomTileWithChoices extends GetView<SessionController> {
   final String leadingText;
   final RxInt tileTag;
   final List<String> tileOptions;
