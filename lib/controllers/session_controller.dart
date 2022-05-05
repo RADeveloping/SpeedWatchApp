@@ -12,15 +12,16 @@ import '../enums/road_zone.dart';
 import '../enums/weather.dart';
 
 class SessionController extends GetxController {
+  RxSet<String> userListFromDatabase = <String>{}.obs;
 
   void volunteerSearchValueChanged(String value) {
     if (value.isEmpty) {
       volunteerOptions.value =
-          (volunteerTags.value + volunteerOptions.value)
+          (volunteerTags.value + userListFromDatabase.value.toList())
               .toSet()
               .toList();
     } else {
-      volunteerOptions.value = volunteerOptions.value
+      volunteerOptions.value = userListFromDatabase.value
           .where((element) => element.isCaseInsensitiveContains(value))
           .toList();
     }
@@ -125,9 +126,20 @@ class SessionController extends GetxController {
     return await db.settingsCollections.get(id);
   }
 
-  Session() {
+  Future<List<String>> getCurrentVolunteerOptions(Isar db) async {
+    SettingsCollection? currentSettings = await db.settingsCollections.get(0);
+    List<String> output = [];
+    if (currentSettings != null) {
+      output = currentSettings.value;
+    }
+    return output;
+  }
 
-}
+  void setVolunteerOptions() async {
+    Isar db = Get.find();
+    volunteerOptions.value = await getCurrentVolunteerOptions(db);
+    userListFromDatabase.value = volunteerOptions.value.toSet();
+  }
 }
 
 class DateTimePickerController extends SessionController {

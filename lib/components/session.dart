@@ -26,6 +26,7 @@ class Session extends GetView<SessionController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.setVolunteerOptions();
     startDatePicker = DatePickerChoice(
         dateTime: DateTime.now(),
         onChange: (dateTime) {
@@ -95,10 +96,11 @@ class Session extends GetView<SessionController> {
                                 CupertinoThemeData(brightness: Brightness.dark),
                             child: CupertinoSearchTextField(
                               backgroundColor: Colors.transparent,
+                              prefixIcon: Container(),
                               controller:
                                   controller.volunteer_textController.value,
                               itemColor: kColourLight,
-                              placeholder: 'Search Volunteers',
+                              placeholder: 'Volunteers',
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -123,9 +125,13 @@ class Session extends GetView<SessionController> {
                                 value: controller.volunteerTags.value,
                                 onChanged: (val) {
                                   controller.volunteerTags.value = val;
-                                  controller.mockUserListFromDatabase
+                                  controller.userListFromDatabase
                                       .addAll(val);
+                                  controller.volunteer_textController.value
+                                      .clear();
+                                  controller.volunteerSearchValueChanged('');
                                 },
+                                placeholder: 'No Saved Volunteers',
                                 runSpacing: 20,
                                 choiceItems: C2Choice.listFrom<String, String>(
                                   source: controller.volunteerOptions,
