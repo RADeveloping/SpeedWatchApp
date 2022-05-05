@@ -14,6 +14,10 @@ class SessionDetail extends GetView<SessionDetail> {
     return Container(
         padding: EdgeInsets.all(20.0),
         color: kColourRightPaneBackground,
-        child: SpringBoard());
+        child: SpringBoard(
+          onPressed: (sectionIndex, vehicleType) {
+            print('${sectionIndex}, ${vehicleType}');
+          },
+        ));
   }
 }
