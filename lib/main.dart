@@ -5,14 +5,25 @@ import 'package:get/get.dart';
 import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/session.dart';
 import 'package:speedwatch/components/sidebar.dart';
+import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/screens/home_view.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:speedwatch/services/db_service.dart';
 
 import 'controllers/session_controller.dart';
 
-void main() {
+Future<void> main() async {
   runApp(MyApp());
+  await initServices();
+}
+
+Future<void> initServices() async {
+  print('starting services ...');
+  await Get.putAsync(() => DbService().init());
+  print('All services started...');
 }
 
 class MyApp extends StatelessWidget {
