@@ -33,8 +33,9 @@ class Session extends GetView<SessionController> {
         minDate: startDatePicker.date.value);
     return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
-      leading: CancelCreateSessionButton(),
+      leading: DiscardSessionChangesButton(),
       largeTitle: title,
+      heroTag: 1,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -188,7 +189,7 @@ class Session extends GetView<SessionController> {
   }
 }
 
-class CancelCreateSessionButton extends GetView<SessionController> {
+class DiscardSessionChangesButton extends GetView<SessionController> {
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
@@ -227,6 +228,7 @@ class CancelCreateSessionButton extends GetView<SessionController> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                  Get.offAndToNamed('/home');
                 },
               ),
             ],

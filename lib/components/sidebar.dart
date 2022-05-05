@@ -23,6 +23,7 @@ class Sidebar extends GetView<SidebarController> {
         ),
         onPressed: () {},
       ),
+      heroTag: 0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -80,153 +81,9 @@ class Sidebar extends GetView<SidebarController> {
                         style: kTextStyleSidebarTile,
                       ),
                       value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '784 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('758'),
-                      onPressed: (BuildContext context) {},
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '4051 Tanner Street',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('913'),
-                    ),
-                    SettingsTile.navigation(
-                      title: Text(
-                        '1967 Robson St',
-                        style: kTextStyleSidebarTile,
-                      ),
-                      value: Text('857'),
+                      onPressed: (BuildContext context) {
+                        Get.offAndToNamed('/session/445');
+                      },
                     ),
                   ],
                 ),
