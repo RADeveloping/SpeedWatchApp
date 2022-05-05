@@ -1,5 +1,1 @@
-enum SpeedRange {
-  first,
-  second,
-  third
-}
+enum SpeedRange { green, yellow, orange, red }
