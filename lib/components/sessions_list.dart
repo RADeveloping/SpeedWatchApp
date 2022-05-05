@@ -57,21 +57,20 @@ class SessionsList extends GetView<SidebarController> {
                   ),
                 ),
               ),
-              SettingsSection(
-                title: Text('FRIDAY, APRIL 29, 2022'),
-                tiles: <SettingsTile>[
-                  SettingsTile.navigation(
-                    title: Text(
-                      '784 Robson St',
-                      style: kTextStyleSidebarTile,
-                    ),
-                    value: Text('758'),
-                    onPressed: (BuildContext context) {
-                      Get.toNamed('/session/445');
-                    },
-                  ),
-                ],
-              ),
+              CustomSettingsSection(
+                  child: Obx(() => SettingsSection(
+                        title: Text('FRIDAY, JANUARY 4, 2021'),
+                        tiles: controller.sessions != [] ? controller.sessions
+                            .map((session) => SettingsTile.navigation(
+                                  title: Text(
+                                    session.streetAddress,
+                                    style: kTextStyleSidebarTile,
+                                  ),
+                                  value: Text('599'),
+                                  onPressed: (BuildContext context) {},
+                                ))
+                            .toList() : [SettingsTile.navigation(title: Text("HEY"))],
+                      ))),
               SettingsSection(
                 title: Text('THURSDAY, APRIL 28, 2022'),
                 tiles: <SettingsTile>[

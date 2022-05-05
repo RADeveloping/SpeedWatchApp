@@ -1,9 +1,10 @@
-import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
+import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../collections/session_collection.dart';
 import '../collections/settings_collection.dart';
+import '../controllers/sidebar_controller.dart';
 
 class DbService extends GetxService {
   Future<Isar> init() async {
@@ -12,7 +13,12 @@ class DbService extends GetxService {
       schemas: [SessionCollectionSchema, SettingsCollectionSchema],
       directory: dir.path,
       inspector: true,
-    );
+    ).then((db) {
+      SidebarController s = Get.find();
+      s.getSessions(db);
+      s.setSessionsListener(db);
+      return db;
+    });
     return isar;
   }
 }
