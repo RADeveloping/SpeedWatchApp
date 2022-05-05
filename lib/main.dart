@@ -6,7 +6,7 @@ import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/screens/home_view.dart';
 
-import 'controllers/create_session_controller.dart';
+import 'controllers/session_controller.dart';
 
 void makeStatusBarTransparent() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
-    Get.put<CreateSessionController>(CreateSessionController());
+    Get.put<SessionController>(SessionController());
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

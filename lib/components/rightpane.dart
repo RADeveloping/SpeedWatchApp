@@ -39,22 +39,20 @@ class RightPane extends GetView<RightPane> {
                   ],
                 ),
               ),
-              Expanded(
-                child: UnconstrainedBox(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      homeController.masterDetailList[1] = Session();
-                    },
-                    icon: FaIcon(CupertinoIcons.calendar_badge_plus),
-                    label: Text(
-                      'New Session',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kColourLight)),
-                  ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  homeController.masterDetailList[1] = Session(
+                    title: 'Create Session',
+                    submitButtonText: 'Update Session',
+                  );
+                },
+                icon: FaIcon(CupertinoIcons.calendar_badge_plus),
+                label: Text(
+                  'New Session',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(kColourLight)),
               )
             ],
           ),

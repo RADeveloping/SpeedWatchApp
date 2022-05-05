@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class CreateSessionController extends GetxController {
+class SessionController extends GetxController {
   RxSet<String> mockUserListFromDatabase = {
     'Sandy Wesker',
     'Rahim Askarzadeh',
@@ -92,14 +92,8 @@ class CreateSessionController extends GetxController {
   ];
 }
 
-class DateTimePickerController extends CreateSessionController {
+class DateTimePickerController extends SessionController {
   Rx<DateTime> date;
   DateTimePickerController({required this.date}); // Start
-
-  // date = DateTime.now().obs;
-  // RxInt tag = 0.obs;
-  // RxList<String> options =
-  //     [DateFormat('MMMM d, y h:mm aa').format(DateTime.now())].obs;
-
   final DateFormat formatter = DateFormat('MMMM d, y h:mm aa');
 }

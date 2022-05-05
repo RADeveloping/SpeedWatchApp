@@ -6,15 +6,20 @@ import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/components/text_field_input.dart';
-import 'package:speedwatch/controllers/create_session_controller.dart';
+import 'package:speedwatch/controllers/session_controller.dart';
 import '../constants.dart';
 import 'cupertino_page_scaffold_custom.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
-class Session extends GetView<CreateSessionController> {
+class Session extends GetView<SessionController> {
   late DatePickerChoice startDatePicker;
   late DatePickerChoice endDatePicker;
+
+  String title;
+  String submitButtonText;
+
+  Session({required this.title, required this.submitButtonText});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,7 @@ class Session extends GetView<CreateSessionController> {
     return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
       leading: CancelCreateSessionButton(),
-      largeTitle: 'Create Session',
+      largeTitle: title,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -166,7 +171,7 @@ class Session extends GetView<CreateSessionController> {
                       child: ElevatedButton.icon(
                         onPressed: () {},
                         icon: FaIcon(CupertinoIcons.add),
-                        label: Text('Create Session'),
+                        label: Text(submitButtonText),
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(kColourLight)),
@@ -183,7 +188,7 @@ class Session extends GetView<CreateSessionController> {
   }
 }
 
-class CancelCreateSessionButton extends GetView<CreateSessionController> {
+class CancelCreateSessionButton extends GetView<SessionController> {
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
@@ -204,7 +209,7 @@ class CancelCreateSessionButton extends GetView<CreateSessionController> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'Are you sure you want to discard this new session?',
+                    'Are you sure you want to discard changes?',
                     style: TextStyle(fontSize: 14, color: Colors.white24),
                     textAlign: TextAlign.center,
                   ),
@@ -226,7 +231,7 @@ class CancelCreateSessionButton extends GetView<CreateSessionController> {
               ),
             ],
           ),
-          direction: PopoverDirection.top,
+          direction: PopoverDirection.bottom,
           width: 300,
           height: 125,
           arrowHeight: 15,
