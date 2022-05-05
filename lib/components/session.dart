@@ -173,13 +173,7 @@ class Session extends GetView<SessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: ()
-                          async {
-                            Isar db = Get.find();
-                            await db.writeTxn(((isar) async {
-                              await db.sessionCollections.put(controller.getSession(startDatePicker.date.value, endDatePicker.date.value));
-                            }));
-                        },
+                        onPressed: ()=>controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value),
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text(submitButtonText),
                         style: ButtonStyle(

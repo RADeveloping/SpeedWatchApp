@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 
 import '../collections/session_collection.dart';
+import '../collections/settings_collection.dart';
 import '../enums/direction.dart';
 import '../enums/road_condition.dart';
 import '../enums/road_lighting.dart';
@@ -10,25 +12,15 @@ import '../enums/road_zone.dart';
 import '../enums/weather.dart';
 
 class SessionController extends GetxController {
-  RxSet<String> mockUserListFromDatabase = {
-    'Sandy Wesker',
-    'Rahim Askarzadeh',
-    'John Walker',
-    'Sunwoo Park',
-    'John Brady',
-    'Medhat Elmasry',
-    'Justin Jones',
-  }.obs;
 
   void volunteerSearchValueChanged(String value) {
     if (value.isEmpty) {
       volunteerOptions.value =
-          (volunteerTags.value + mockUserListFromDatabase.value.toList())
+          (volunteerTags.value + volunteerOptions.value)
               .toSet()
               .toList();
     } else {
-      volunteerOptions.value = mockUserListFromDatabase.value
-          .toList()
+      volunteerOptions.value = volunteerOptions.value
           .where((element) => element.isCaseInsensitiveContains(value))
           .toList();
     }
@@ -53,11 +45,7 @@ class SessionController extends GetxController {
       TextEditingController(text: '').obs;
 
   RxList<String> volunteerTags = <String>[].obs;
-  RxList<String> volunteerOptions = [
-    'Sandy Wesker',
-    'Rahim Askarzadeh',
-    'John Walker',
-  ].obs;
+  RxList<String> volunteerOptions = <String>[].obs;
 
   // Road Zone
   RxInt roadZoneTag = 0.obs;
@@ -106,6 +94,40 @@ class SessionController extends GetxController {
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
       ..hasExportedSession = false;
   }
+
+  void writeSessionToDB(DateTime startDate, DateTime endDate) async {
+    Isar db = Get.find();
+    SettingsCollection newSettings = await getNewSetting(db);
+
+    await db.writeTxn(((isar) async {
+      await db.sessionCollections.put(getSession(startDate, endDate));
+      await db.settingsCollections.put(newSettings);
+    }));
+  }
+
+  Future<SettingsCollection> getNewSetting(Isar db) async {
+    SettingsCollection? currentSettings = await getCurrentSetting(db, 0);
+    List<String>? oldVolunteerTags = currentSettings?.value;
+    if (oldVolunteerTags == null) {
+      oldVolunteerTags = volunteerTags;
+    } else {
+      oldVolunteerTags.addAll(volunteerTags);
+    }
+    List<String> newVolunteerTags = oldVolunteerTags.toSet().toList();
+    SettingsCollection newSettings = SettingsCollection()
+      ..id = 0
+      ..value = newVolunteerTags
+      ..key = 'names';
+    return newSettings;
+  }
+
+  Future<SettingsCollection?> getCurrentSetting(Isar db, int id) async {
+    return await db.settingsCollections.get(id);
+  }
+
+  Session() {
+
+}
 }
 
 class DateTimePickerController extends SessionController {
