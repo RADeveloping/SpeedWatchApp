@@ -13,12 +13,14 @@ class SessionTextFieldEntry extends GetView<SessionController> {
   final bool onlyTopRadius = false;
   final bool onlyBottomRadius = false;
   final TextInputType keyboardType;
+  final Function()? onTap;
 
   SessionTextFieldEntry({
     Key? key,
     required this.placeholder,
     required this.keyboardType,
     required this.textEditingController,
+    this.onTap,
     this.onSubmitted,
     this.onChanged,
     this.onEditingComplete,
@@ -51,6 +53,9 @@ class SessionTextFieldEntry extends GetView<SessionController> {
       onSubmitted: onSubmitted,
       onTap: () {
         textEditingController.clear();
+        if (onTap != null) {
+          onTap!();
+        }
       },
     );
   }

@@ -93,26 +93,20 @@ class Session extends GetView<SessionController> {
                         () => CupertinoTheme(
                             data:
                                 CupertinoThemeData(brightness: Brightness.dark),
-                            child: CupertinoSearchTextField(
-                              backgroundColor: Colors.transparent,
-                              controller:
-                                  controller.volunteer_textController.value,
-                              itemColor: kColourLight,
-                              placeholder: 'Search Volunteers',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
+                            child: SessionTextFieldEntry(
+                              onTap: () {
+                                controller.volunteerSearchValueChanged('');
+                              },
                               onChanged: (String value) {
                                 controller.volunteerSearchValueChanged(value);
                               },
                               onSubmitted: (String value) {
                                 controller.volunteerSearchValueChanged(value);
                               },
-                              onSuffixTap: () {
-                                controller.volunteer_textController.value
-                                    .clear();
-                                controller.volunteerSearchValueChanged('');
-                              },
+                              keyboardType: TextInputType.name,
+                              textEditingController:
+                                  controller.volunteer_textController.value,
+                              placeholder: 'Volunteer Name',
                             )),
                       ),
                     ),
@@ -173,12 +167,14 @@ class Session extends GetView<SessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: ()
-                          async {
-                            Isar db = Get.find();
-                            await db.writeTxn(((isar) async {
-                              await db.sessionCollections.put(controller.getSession(startDatePicker.date.value, endDatePicker.date.value));
-                            }));
+                        onPressed: () async {
+                          Isar db = Get.find();
+                          await db.writeTxn(((isar) async {
+                            await db.sessionCollections.put(
+                                controller.getSession(
+                                    startDatePicker.date.value,
+                                    endDatePicker.date.value));
+                          }));
                         },
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text(submitButtonText),
