@@ -167,14 +167,14 @@ class Session extends GetView<SessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: () async {
-                          Isar db = Get.find();
-                          await db.writeTxn(((isar) async {
-                            await db.sessionCollections.put(
-                                controller.getSession(
-                                    startDatePicker.date.value,
-                                    endDatePicker.date.value));
-                          }));
+                        onPressed: ()
+                          async {
+                            if (controller.address_textController.value.toString().length > 0 && controller.volunteerTags.value.isNotEmpty) {
+                              Isar db = Get.find();
+                              await db.writeTxn(((isar) async {
+                                await db.sessionCollections.put(controller.getSession(startDatePicker.date.value, endDatePicker.date.value));
+                              }));
+                            }
                         },
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text(submitButtonText),
