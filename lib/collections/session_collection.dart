@@ -13,10 +13,10 @@ import '../converters/road_zone_converter.dart';
 import '../converters/weather_converter.dart';
 import '../enums/direction.dart';
 
-part 'session.g.dart';
+part 'session_collection.g.dart';
 
 @Collection()
-class Session {
+class SessionCollection {
   @Id()
   int id = Isar.autoIncrement;
   late String streetAddress;

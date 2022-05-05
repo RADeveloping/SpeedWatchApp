@@ -3,27 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:speedwatch/collections/session.dart';
-import 'package:speedwatch/components/rightpane.dart';
+import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/session_controller.dart';
-import 'package:speedwatch/controllers/create_session_controller.dart';
-import 'package:speedwatch/controllers/home_controller.dart';
-import 'package:speedwatch/enums/direction.dart';
-import 'package:speedwatch/enums/road_condition.dart';
-import 'package:speedwatch/enums/road_lighting.dart';
-import 'package:speedwatch/enums/road_zone.dart';
-import 'package:speedwatch/enums/weather.dart';
 
 import '../constants.dart';
 import 'cupertino_page_scaffold_custom.dart';
-import '../enums/speed_range.dart';
-import '../services/db_service.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
@@ -41,10 +29,10 @@ class Session extends GetView<SessionController> {
     startDatePicker = DatePickerChoice(
         dateTime: DateTime.now(),
         onChange: (dateTime) {
-          endDatePicker.date.value = dateTime.add(Duration(hours: 1));
+          endDatePicker.date.value = dateTime.add(Duration(hours: 2));
         });
     endDatePicker = DatePickerChoice(
-        dateTime: DateTime.now().add(Duration(hours: 1)),
+        dateTime: DateTime.now().add(Duration(hours: 2)),
         minDate: startDatePicker.date.value);
     return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
@@ -172,7 +160,7 @@ class Session extends GetView<SessionController> {
                         child: CustomTileWithChoices(
                       leadingText: 'Road Conditions',
                       tileTag: controller.roadConditionTag,
-                      tileOptions: controller.roadLightingOptions,
+                      tileOptions: controller.roadConditionOptions,
                     )),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
@@ -185,13 +173,12 @@ class Session extends GetView<SessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: () {
+                        onPressed: ()
                           async {
                             Isar db = Get.find();
                             await db.writeTxn(((isar) async {
-                              await db.sessions.put(controller.getSession());
+                              await db.sessionCollections.put(controller.getSession(startDatePicker.date.value, endDatePicker.date.value));
                             }));
-                          }
                         },
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text(submitButtonText),

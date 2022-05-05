@@ -1,15 +1,15 @@
 import 'package:isar/isar.dart';
-import 'package:speedwatch/collections/session.dart';
+import 'package:speedwatch/collections/session_collection.dart';
 
 import '../converters/speed_range_converter.dart';
 import '../converters/vehicle_type_converter.dart';
 import '../enums/speed_range.dart';
 import '../enums/vehicle_type.dart';
 
-part 'record.g.dart';
+part 'record_collection.g.dart';
 
 @Collection()
-class Record {
+class RecordCollection {
   @Id()
   int id = Isar.autoIncrement;
   @Index()
@@ -20,5 +20,5 @@ class Record {
 
   @VehicleTypeConverter()
   late VehicleType vehicleType;
-  final session = IsarLink<Session>();
+  final session = IsarLink<SessionCollection>();
 }

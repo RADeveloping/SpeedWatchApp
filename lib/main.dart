@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/session.dart';
 import 'package:speedwatch/components/sidebar.dart';
-import 'package:speedwatch/collections/session.dart';
+import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/screens/home_view.dart';
@@ -16,7 +16,6 @@ import 'package:speedwatch/services/db_service.dart';
 import 'controllers/session_controller.dart';
 
 Future<void> main() async {
-  makeStatusBarTransparent();
   runApp(MyApp());
   await initServices();
 }
