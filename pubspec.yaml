@@ -42,6 +42,7 @@ dependencies:
   chips_choice_null_safety: ^2.0.6
   popover: ^0.2.6+3
   intl: ^0.17.0
+  sticky_headers: ^0.2.0
 
 dev_dependencies:
   flutter_test:

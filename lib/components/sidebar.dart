@@ -7,43 +7,24 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import 'cupertino_page_scaffold_custom.dart';
+
 class Sidebar extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: kColourSidebarBackground,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: kColourSidebarBackground,
-        trailing: CupertinoButton(
-          child: Icon(
-            CupertinoIcons.share_up,
-            color: kColourLight,
-          ),
-          onPressed: () {
-            // do something
-          },
+    return CupertinoPageScaffoldCustom(
+      largeTitle: 'Sessions',
+      trailing: CupertinoButton(
+        padding: EdgeInsets.zero,
+        child: Icon(
+          CupertinoIcons.share_up,
+          color: kColourLight,
         ),
+        onPressed: () {},
       ),
-      resizeToAvoidBottomInset: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Sessions',
-                      style: kTextStyleLargeTitle,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
           Expanded(
             child: SettingsList(
               applicationType: ApplicationType.both,
