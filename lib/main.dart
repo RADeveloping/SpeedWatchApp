@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,13 +6,27 @@ import 'package:get/get.dart';
 import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/session.dart';
 import 'package:speedwatch/components/sidebar.dart';
+import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/screens/home_view.dart';
 
+import 'components/logs_list.dart';
+import 'components/session_detail.dart';
+import 'components/sessions_list.dart';
 import 'controllers/session_controller.dart';
 
-void main() {
+// Global variable for storing the list of cameras available
+List<CameraDescription> cameras = [];
+
+Future<void> main() async {
+  // Fetch the available cameras before initializing the app
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    debugPrint('CameraError: ${e.description}');
+  }
   runApp(MyApp());
 }
 
@@ -31,7 +46,10 @@ class MyApp extends StatelessWidget {
         title: 'Speed Watch',
         theme: CupertinoThemeData(brightness: Brightness.light),
         home: HomeView(
-          leftChild: Sidebar(),
+          leftChild: Sidebar(
+            largeTitle: 'Sessions',
+            child: SessionsList(),
+          ),
           rightChild: RightPane(),
         ),
         initialRoute: '/',
@@ -39,7 +57,10 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/',
             page: () => HomeView(
-              leftChild: Sidebar(),
+              leftChild: Sidebar(
+                largeTitle: 'Sessions',
+                child: SessionsList(),
+              ),
               rightChild: RightPane(),
             ),
             transition: Transition.noTransition,
@@ -47,7 +68,10 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/create',
             page: () => HomeView(
-              leftChild: Sidebar(),
+              leftChild: Sidebar(
+                largeTitle: 'Sessions',
+                child: SessionsList(),
+              ),
               rightChild: Session(
                 title: 'Create Session',
                 submitButtonText: 'Create Session',
@@ -58,11 +82,31 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/session/:sessionID',
             page: () => HomeView(
-              leftChild: Sidebar(),
-              rightChild: Session(
-                title: 'Create Session',
-                submitButtonText: 'Create Session',
+              leftChild: Sidebar(
+                leading: CupertinoButton(
+                  padding: EdgeInsetsDirectional.zero,
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.back,
+                        color: kColourLight,
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Sessions',
+                          style: TextStyle(color: kColourLight),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                largeTitle: 'Log',
+                child: LogsList(),
               ),
+              rightChild: SessionDetail(),
             ),
             transition: Transition.noTransition,
           ),
