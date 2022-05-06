@@ -103,12 +103,6 @@ class MyApp extends StatelessWidget {
                         CupertinoIcons.back,
                         color: kColourLight,
                       ),
-                      Expanded(
-                        child: Text(
-                          '',
-                          style: TextStyle(color: kColourLight),
-                        ),
-                      ),
                     ],
                   ),
                 ),
