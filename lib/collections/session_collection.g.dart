@@ -37,8 +37,8 @@ const SessionCollectionSchema = CollectionSchema(
       IndexValueType.long,
     ]
   },
-  linkIds: {},
-  backlinkLinkNames: {},
+  linkIds: {'records': 0},
+  backlinkLinkNames: {'records': 'session'},
   getId: _sessionCollectionGetId,
   setId: _sessionCollectionSetId,
   getLinks: _sessionCollectionGetLinks,
@@ -65,7 +65,7 @@ void _sessionCollectionSetId(SessionCollection object, int id) {
 }
 
 List<IsarLinkBase> _sessionCollectionGetLinks(SessionCollection object) {
-  return [];
+  return [object.records];
 }
 
 const _sessionCollectionDirectionConverter = DirectionConverter();
@@ -158,6 +158,7 @@ SessionCollection _sessionCollectionDeserializeNative(
   object.volunteerNames = reader.readStringList(offsets[9]) ?? [];
   object.weatherOptions =
       _sessionCollectionWeatherConverter.fromIsar(reader.readLong(offsets[10]));
+  _sessionCollectionAttachLinks(collection, id, object);
   return object;
 }
 
@@ -268,6 +269,8 @@ SessionCollection _sessionCollectionDeserializeWeb(
   object.weatherOptions = _sessionCollectionWeatherConverter.fromIsar(
       IsarNative.jsObjectGet(jsObj, 'weatherOptions') ??
           double.negativeInfinity);
+  _sessionCollectionAttachLinks(collection,
+      IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity, object);
   return object;
 }
 
@@ -330,7 +333,9 @@ P _sessionCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
 }
 
 void _sessionCollectionAttachLinks(
-    IsarCollection col, int id, SessionCollection object) {}
+    IsarCollection col, int id, SessionCollection object) {
+  object.records.attach(col, col.isar.recordCollections, 'records', id);
+}
 
 extension SessionCollectionQueryWhereSort
     on QueryBuilder<SessionCollection, SessionCollection, QWhere> {
@@ -1163,7 +1168,16 @@ extension SessionCollectionQueryFilter
 }
 
 extension SessionCollectionQueryLinks
-    on QueryBuilder<SessionCollection, SessionCollection, QFilterCondition> {}
+    on QueryBuilder<SessionCollection, SessionCollection, QFilterCondition> {
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      records(FilterQuery<RecordCollection> q) {
+    return linkInternal(
+      isar.recordCollections,
+      q,
+      'records',
+    );
+  }
+}
 
 extension SessionCollectionQueryWhereSortBy
     on QueryBuilder<SessionCollection, SessionCollection, QSortBy> {
