@@ -17,28 +17,28 @@ class SessionsList extends GetView<SidebarController> {
       children: [
         Expanded(
           child: Obx(() => SettingsList(
-                applicationType: ApplicationType.both,
-                brightness: Brightness.light,
-                lightTheme: SettingsThemeData(
-                  settingsListBackground: kColourSidebarBackground,
-                  settingsSectionBackground: kColourSidebarTile,
-                  settingsTileTextColor: kColourSidebarTileText,
-                  tileHighlightColor: kColourLight,
-                  dividerColor: kColourTileDivider,
-                ),
-                sections: buildList(context),
-              )),
+            applicationType: ApplicationType.both,
+            brightness: Brightness.light,
+            lightTheme: SettingsThemeData(
+              settingsListBackground: kColourSidebarBackground,
+              settingsSectionBackground: kColourSidebarTile,
+              settingsTileTextColor: kColourSidebarTileText,
+              tileHighlightColor: kColourLight,
+              dividerColor: kColourTileDivider,
+            ),
+            sections: buildList(context),
+          )),
         ),
       ],
     );
   }
 
   List<AbstractSettingsSection> buildList(BuildContext context) {
+    List<AbstractSettingsSection> list = [searchBar()];
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
-    var groupByArchived = groupBy(controller.sessions.reversed,
-        (obj) => (obj as SessionCollection).hasExportedSession);
+    var groupByArchived = groupBy(controller.sessions, (obj) => (obj as SessionCollection).hasExportedSession);
 
     groupByArchived.forEach((hasExportedSession, groupedList) {
       if (hasExportedSession) {
@@ -48,17 +48,8 @@ class SessionsList extends GetView<SidebarController> {
       }
     });
 
-    List<AbstractSettingsSection> list =
-        mainList.length > 0 || archivedList.length > 0 ? [searchBar()] : [];
-
-    var groupByDate = groupBy(
-        mainList,
-        (obj) => DateFormat('EEEEEE, MMMM dd, y')
-            .format((obj as SessionCollection).startTime));
-    var groupByDateArchived = groupBy(
-        archivedList,
-        (obj) => DateFormat('EEEEEE, MMMM dd, y')
-            .format((obj as SessionCollection).startTime));
+    var groupByDate = groupBy(mainList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
+    var groupByDateArchived = groupBy(archivedList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
     groupByDate.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), false));
     });
