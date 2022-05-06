@@ -4,12 +4,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:speedwatch/collections/record_collection.dart';
 
 import '../collections/session_collection.dart';
+import '../collections/settings_collection.dart';
 
 class DbService extends GetxService {
   Future<Isar> init() async {
     final dir = await getApplicationSupportDirectory();
     final Isar isar = await Isar.open(
-      schemas: [SessionCollectionSchema, RecordCollectionSchema],
+      schemas: [SessionCollectionSchema, SettingsCollectionSchema, RecordCollectionSchema],
       directory: dir.path,
       inspector: true,
     );

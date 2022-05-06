@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:isar/isar.dart';
 import 'package:speedwatch/collections/record_collection.dart';
