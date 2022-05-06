@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:speedwatch/controllers/record_controller.dart';
+import 'package:speedwatch/services/db_service.dart';
 
 import '../constants.dart';
 import 'springboard.dart';
 
 class SessionDetail extends GetView<SessionDetail> {
-  RecordController recordController = RecordController();
   RxInt _sliding = 0.obs;
 
   @override
@@ -45,9 +44,10 @@ class SessionDetail extends GetView<SessionDetail> {
             color: kColourRightPaneBackground,
             child: SpringBoard(
               onPressed: (speedRange, vehicleType) async {
+                DbService dbService = Get.find();
                 String currentSessionIDInString = await Get.parameters['sessionID'] as String;
                 int currentSessionId = int.parse(currentSessionIDInString);
-                recordController.writeRecordToDB(speedRange, vehicleType, currentSessionId);
+                dbService.writeRecordToDB(speedRange, vehicleType, currentSessionId);
               },
             )),
       ),
