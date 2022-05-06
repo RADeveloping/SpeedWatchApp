@@ -16,16 +16,7 @@ class SidebarController extends GetxController {
 
   final sessions = <SessionCollection>[].obs;
 
-  void setSessionsListener(Isar db) async {
-    Stream<void> sessionsChanged = db.sessionCollections.watchLazy();
-    sessionsChanged.listen((s) {
-      getSessions(db);
-    });
-  }
-
-  void getSessions(Isar db) async {
-    db.sessionCollections.where().sortByStartTimeDesc().findAll().then((newSessions) {
-      sessions.value = newSessions;
-    });
+  void handleNewSessions(List<SessionCollection> newSessions) {
+    sessions.value = newSessions;
   }
 }

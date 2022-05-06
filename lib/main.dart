@@ -31,7 +31,7 @@ Future<void> main() async {
 
 Future<void> initServices() async {
   print('starting services ...');
-  await Get.putAsync(() => DbService().init());
+  await Get.putAsync(() => DbService().init(), permanent: true);
   print('All services started...');
 }
 
