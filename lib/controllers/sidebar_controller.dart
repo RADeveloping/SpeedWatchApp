@@ -7,10 +7,12 @@ import '../collections/session_collection.dart';
 
 class SidebarController extends GetxController {
   RxString title = 'Title'.obs;
+
   Rx<TextEditingController> textController =
       TextEditingController(text: '').obs;
 
   RxBool archiveExpanded = false.obs;
+  RxBool isEditMode = false.obs;
 
   final sessions = <SessionCollection>[].obs;
 

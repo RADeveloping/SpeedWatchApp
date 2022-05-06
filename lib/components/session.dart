@@ -58,14 +58,18 @@ class Session extends GetView<SessionController> {
                 sections: [
                   SettingsSection(tiles: [
                     SettingsTile(
-                      title: SessionTextFieldEntry(
-                        placeholder: 'Address',
-                        onChanged: (String value) => print(value),
-                        textEditingController:
-                            controller.address_textController.value,
-                        keyboardType: TextInputType.streetAddress,
-                      ),
-                    ),
+                        title: SessionTextFieldEntry(
+                      placeholder: 'Address',
+                      textEditingController:
+                          controller.address_textController.value,
+                      onChanged: (String value) {
+                        controller.address.value = value;
+                      },
+                      onTap: () {
+                        controller.address.value = '';
+                      },
+                      keyboardType: TextInputType.streetAddress,
+                    )),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
                       leadingText: 'Direction',
@@ -94,27 +98,20 @@ class Session extends GetView<SessionController> {
                         () => CupertinoTheme(
                             data:
                                 CupertinoThemeData(brightness: Brightness.dark),
-                            child: CupertinoSearchTextField(
-                              backgroundColor: Colors.transparent,
-                              prefixIcon: Container(),
-                              controller:
-                                  controller.volunteer_textController.value,
-                              itemColor: kColourLight,
-                              placeholder: 'Volunteers',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
+                            child: SessionTextFieldEntry(
+                              onTap: () {
+                                controller.volunteerSearchValueChanged('');
+                              },
                               onChanged: (String value) {
                                 controller.volunteerSearchValueChanged(value);
                               },
                               onSubmitted: (String value) {
                                 controller.volunteerSearchValueChanged(value);
                               },
-                              onSuffixTap: () {
-                                controller.volunteer_textController.value
-                                    .clear();
-                                controller.volunteerSearchValueChanged('');
-                              },
+                              keyboardType: TextInputType.name,
+                              textEditingController:
+                                  controller.volunteer_textController.value,
+                              placeholder: 'Volunteer Name',
                             )),
                       ),
                     ),
@@ -125,13 +122,24 @@ class Session extends GetView<SessionController> {
                                 value: controller.volunteerTags.value,
                                 onChanged: (val) {
                                   controller.volunteerTags.value = val;
-                                  controller.userListFromDatabase
-                                      .addAll(val);
+                                  controller.userListFromDatabase.addAll(val);
                                   controller.volunteer_textController.value
                                       .clear();
                                   controller.volunteerSearchValueChanged('');
                                 },
-                                placeholder: 'No Saved Volunteers',
+                                placeholderBuilder: (BuildContext context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Center(
+                                      child: Text(
+                                        'No Saved Volunteers',
+                                        style: TextStyle(
+                                            color: kColourPlaceHolderText,
+                                            fontSize: 16),
+                                      ),
+                                    ),
+                                  );
+                                },
                                 runSpacing: 20,
                                 choiceItems: C2Choice.listFrom<String, String>(
                                   source: controller.volunteerOptions,
@@ -177,21 +185,35 @@ class Session extends GetView<SessionController> {
                   ]),
                   SettingsSection(tiles: [
                     CustomSettingsTile(
-                        child: Center(
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          int id = await controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value);
-                          if (id > -1) {
-                            Get.toNamed('/session/${id}');
-                          }
+                      child: Center(
+                          child: CupertinoTheme(
+                        child: CupertinoButton.filled(
+                          onPressed: controller.address.value.isEmpty ||
+                                  controller.volunteerTags.value.isEmpty
+                              ? null
+                              : () async {
+                            int id = await controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value);
+                            if (id > -1) {
+                              Get.toNamed('/session/${id}');
+                            }
                           },
-                        icon: FaIcon(CupertinoIcons.add),
-                        label: Text(submitButtonText),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(kColourLight)),
-                      ),
-                    ))
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(CupertinoIcons.add),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(submitButtonText)
+                            ],
+                          ),
+                        ),
+                        data: CupertinoThemeData(
+                            brightness: Brightness.dark,
+                            primaryColor: kColourLight),
+                      )),
+                    ),
                   ]),
                 ],
               ),

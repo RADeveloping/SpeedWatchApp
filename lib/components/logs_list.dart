@@ -7,6 +7,7 @@ import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import '../constants.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LogsList extends GetView<SidebarController> {
   @override
@@ -20,7 +21,7 @@ class LogsList extends GetView<SidebarController> {
             brightness: Brightness.light,
             lightTheme: SettingsThemeData(
               settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: kColourSidebarTile,
+              settingsSectionBackground: Colors.transparent,
               settingsTileTextColor: kColourSidebarTileText,
               tileHighlightColor: kColourLight,
               dividerColor: kColourTileDivider,
@@ -28,6 +29,7 @@ class LogsList extends GetView<SidebarController> {
             sections: [
               SettingsSection(
                 title: Text('FRIDAY, APRIL 29, 2022'),
+                margin: EdgeInsetsDirectional.zero,
                 tiles: <SettingsTile>[
                   SettingsTile(
                     trailing: Row(
@@ -39,10 +41,7 @@ class LogsList extends GetView<SidebarController> {
                             style: TextStyle(color: kColourPlaceHolderText),
                           ),
                         ),
-                        FaIcon(
-                          CupertinoIcons.ellipsis,
-                          color: kColourPlaceHolderText,
-                        ),
+                        LogsTileMoreButton(),
                       ],
                     ),
                     leading: Icon(
@@ -62,76 +61,6 @@ class LogsList extends GetView<SidebarController> {
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
-                    onPressed: (BuildContext context) {
-                      showPopover(
-                        context: context,
-                        backgroundColor: kColourRightPaneBackground,
-                        transitionDuration: const Duration(milliseconds: 150),
-                        bodyBuilder: (context) => Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CupertinoButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => CameraCamera(
-                                              cameraSide: CameraSide.front,
-                                              onFile: (file) {
-                                                print(file);
-                                                //When take foto you should close camera
-                                                Navigator.pop(context);
-                                              },
-                                            )));
-                              },
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              color: Colors.transparent,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  FaIcon(
-                                    CupertinoIcons.camera,
-                                    size: 32,
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Text('Take Photo')
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 1,
-                              color: kColourTileDivider,
-                            ),
-                            CupertinoButton(
-                              onPressed: null,
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  FaIcon(
-                                    CupertinoIcons.camera,
-                                    size: 32,
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Text('View Photo')
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        direction: PopoverDirection.right,
-                        width: 400,
-                        height: 50,
-                        arrowHeight: 15,
-                        arrowWidth: 30,
-                      );
-                    },
                   ),
                   SettingsTile.navigation(
                     trailing: Row(
@@ -143,10 +72,7 @@ class LogsList extends GetView<SidebarController> {
                             style: TextStyle(color: kColourPlaceHolderText),
                           ),
                         ),
-                        FaIcon(
-                          CupertinoIcons.ellipsis,
-                          color: kColourPlaceHolderText,
-                        ),
+                        LogsTileMoreButton(),
                       ],
                     ),
                     leading: Icon(
@@ -166,9 +92,6 @@ class LogsList extends GetView<SidebarController> {
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
-                    onPressed: (BuildContext context) {
-                      Get.offAndToNamed('/session/445');
-                    },
                   ),
                   SettingsTile.navigation(
                     trailing: Row(
@@ -180,10 +103,7 @@ class LogsList extends GetView<SidebarController> {
                             style: TextStyle(color: kColourPlaceHolderText),
                           ),
                         ),
-                        FaIcon(
-                          CupertinoIcons.ellipsis,
-                          color: kColourPlaceHolderText,
-                        ),
+                        LogsTileMoreButton(),
                       ],
                     ),
                     leading: Icon(
@@ -203,9 +123,6 @@ class LogsList extends GetView<SidebarController> {
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
-                    onPressed: (BuildContext context) {
-                      Get.offAndToNamed('/session/445');
-                    },
                   ),
                   SettingsTile.navigation(
                     trailing: Row(
@@ -217,10 +134,7 @@ class LogsList extends GetView<SidebarController> {
                             style: TextStyle(color: kColourPlaceHolderText),
                           ),
                         ),
-                        FaIcon(
-                          CupertinoIcons.ellipsis,
-                          color: kColourPlaceHolderText,
-                        ),
+                        LogsTileMoreButton(),
                       ],
                     ),
                     leading: Icon(
@@ -240,7 +154,6 @@ class LogsList extends GetView<SidebarController> {
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
-                    onPressed: (BuildContext context) {},
                   ),
                 ],
               ),
@@ -248,6 +161,94 @@ class LogsList extends GetView<SidebarController> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class LogsTileMoreButton extends StatelessWidget {
+  const LogsTileMoreButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showPopover(
+          context: context,
+          backgroundColor: kColourRightPaneBackground,
+          transitionDuration: const Duration(milliseconds: 150),
+          bodyBuilder: (context) => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CupertinoButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => CameraCamera(
+                                cameraSide: CameraSide.front,
+                                onFile: (file) {
+                                  print(file);
+                                  //When take foto you should close camera
+                                  Navigator.pop(context);
+                                },
+                              )));
+                },
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FaIcon(
+                      CupertinoIcons.camera,
+                      size: 32,
+                      color: kColourLight,
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text('Take Photo')
+                  ],
+                ),
+              ),
+              Container(
+                width: 1,
+                color: kColourTileDivider,
+              ),
+              CupertinoButton(
+                onPressed: null,
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FaIcon(
+                      CupertinoIcons.photo,
+                      size: 32,
+                      // TODO UPDATE DISABLED COLOUR
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text('View Photo')
+                  ],
+                ),
+              ),
+            ],
+          ),
+          direction: PopoverDirection.right,
+          width: 400,
+          height: 50,
+          arrowHeight: 15,
+          arrowWidth: 30,
+        );
+      },
+      child: Icon(
+        CupertinoIcons.ellipsis,
+        color: kColourLight,
+      ),
     );
   }
 }

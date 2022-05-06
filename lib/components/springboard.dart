@@ -106,7 +106,7 @@ class SpeedButtonGroup extends StatelessWidget {
             maxSpeed != null
                 ? 'Speed: ${minSpeed} to ${maxSpeed}'
                 : 'Speed: Over ${minSpeed - 1}',
-            style: TextStyle(color: Colors.white, fontSize: 28),
+            style: TextStyle(color: Colors.white, fontSize: 24),
           ),
         ),
         Container(

@@ -12,43 +12,56 @@ class RightPane extends GetView<RightPane> {
   Widget build(BuildContext context) {
     return Container(
         color: kColourRightPaneBackground,
-        child: Padding(
-          padding: const EdgeInsets.all(50),
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset('lib/assets/images/logo_large.png'),
-                    Text(
-                      'Kerrisdale Oakridge Marpole Community Policing Centre Speed Watch',
-                      style: kTextStyleWelcomeMessage,
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Create a session or tap an existing session on the left sidebar to begin.',
-                      style: kTextStylePlaceHelpPlaceholder,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              Image.asset('lib/assets/images/logo_large.png'),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Kerrisdale Oakridge Marpole Community Policing Centre Speed Watch',
+                    style: kTextStyleWelcomeMessage,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    'Create a session or tap an existing session on the left sidebar to begin.',
+                    style: kTextStylePlaceHelpPlaceholder,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Get.offAndToNamed('/create');
-                },
-                icon: FaIcon(CupertinoIcons.calendar_badge_plus),
-                label: Text(
-                  'New Session',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+              Center(
+                  child: CupertinoTheme(
+                child: CupertinoButton.filled(
+                  onPressed: () {
+                    Get.offAndToNamed('/create');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        CupertinoIcons.calendar_badge_plus,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        'New Session',
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
                 ),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kColourLight)),
-              )
+                data: CupertinoThemeData(
+                    brightness: Brightness.dark, primaryColor: kColourLight),
+              )),
             ],
           ),
         ));
