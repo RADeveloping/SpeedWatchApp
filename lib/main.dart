@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          'Sessions',
+                          '',
                           style: TextStyle(color: kColourLight),
                         ),
                       ),
