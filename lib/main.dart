@@ -44,8 +44,6 @@ class MyApp extends StatelessWidget {
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
 
-    final HomeController homeController = Get.find();
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
@@ -80,7 +78,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             transition: Transition.noTransition,
-            preventDuplicates: true,
+            preventDuplicates: false,
           ),
           GetPage(
             name: '/session/:sessionID',

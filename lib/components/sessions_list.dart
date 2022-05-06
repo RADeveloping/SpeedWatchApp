@@ -146,41 +146,45 @@ class SessionsList extends GetView<SidebarController> {
         child: GestureDetector(
           onTap: () => controller.archiveExpanded.value =
               !controller.archiveExpanded.value,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: FaIcon(
-                        CupertinoIcons.archivebox,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                    Text(
-                      'Archived',
-                      style: TextStyle(
+          child: Container(
+            color: Colors.transparent,
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: FaIcon(
+                          CupertinoIcons.archivebox,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                  ],
-                ),
-                Obx(() => Padding(
-                      padding: const EdgeInsets.only(right: 24),
-                      child: FaIcon(
-                        controller.archiveExpanded.value
-                            ? CupertinoIcons.chevron_right
-                            : CupertinoIcons.chevron_down,
-                        color: kColourLight,
-                        size: 18 * MediaQuery.of(context).textScaleFactor,
+                          size: 18,
+                        ),
                       ),
-                    )),
-              ],
+                      Text(
+                        'Exported',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  Obx(() => Padding(
+                        padding: const EdgeInsets.only(right: 24),
+                        child: FaIcon(
+                          controller.archiveExpanded.value
+                              ? CupertinoIcons.chevron_right
+                              : CupertinoIcons.chevron_down,
+                          color: kColourLight,
+                          size: 18 * MediaQuery.of(context).textScaleFactor,
+                        ),
+                      )),
+                ],
+              ),
             ),
           ),
         ),

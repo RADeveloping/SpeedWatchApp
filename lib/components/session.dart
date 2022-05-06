@@ -262,15 +262,21 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                 color: kColourTileDivider,
               ),
               GestureDetector(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Discard Changes',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
-                ),
                 onTap: () {
-                  Navigator.pop(context);
-                  Get.offAndToNamed('/home');
+                  controller.address_textController().clear();
+                  controller.volunteerTags().clear();
+                  Get.offAllNamed('/');
                 },
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('Discard Changes',
+                        style: TextStyle(color: Colors.red, fontSize: 18)),
+                  ),
+                ),
               ),
             ],
           ),

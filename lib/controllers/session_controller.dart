@@ -99,7 +99,7 @@ class SessionController extends GetxController {
       ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
       ..volunteerNames = volunteerTags.value
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
-      ..hasExportedSession = false;
+      ..hasExportedSession = true;
   }
 
   Future<int> writeSessionToDB(DateTime startDate, DateTime endDate) async {
