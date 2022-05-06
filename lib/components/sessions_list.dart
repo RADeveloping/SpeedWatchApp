@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
-
+import 'package:collection/collection.dart';
 import '../constants.dart';
 
 class SessionsList extends GetView<SidebarController> {
@@ -33,17 +34,23 @@ class SessionsList extends GetView<SidebarController> {
   }
 
   List<AbstractSettingsSection> buildList(BuildContext context) {
-    List<CustomSettingsSection> sessionList = controller.sessions.map((session)=> sessionListSection([session], session.startTime.toString(), false)).toList();
+    List<CustomSettingsSection> sessionList;
     List<AbstractSettingsSection> list = [searchBar()];
 
-    for (final s in sessionList) {
-      list.add(s);
-    }
+    var groupByDate = groupBy(controller.sessions, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
+
+    groupByDate.forEach((date, groupedList) {
+      print('${date}:');
+      list.add(sessionListSection(groupedList, date.toUpperCase(), false));
+    });
+    print(groupByDate);
+
     list.add(archivedTab(context));
     list.add(sessionListSection(controller.sessions, "yo", true));
 
         return list;
   }
+
 
   CustomSettingsSection searchBar() {
     return CustomSettingsSection(
