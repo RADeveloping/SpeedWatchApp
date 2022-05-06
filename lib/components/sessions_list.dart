@@ -81,13 +81,13 @@ class SessionsList extends GetView<SidebarController> {
           title: Text(date),
           tiles: sessions.isNotEmpty ? sessions
               .map((session) => sessionListItem(session))
-              .toList() : [SettingsTile.navigation(title: Text("oh no!"))],
+              .toList() : [SettingsTile.navigation(title: Text(""))],
         ):
         controller.archiveExpanded.value ? SettingsSection(
     title: Text(date),
     tiles: sessions.isNotEmpty ? sessions
         .map((session) => sessionListItem(session))
-        .toList() : [SettingsTile.navigation(title: Text("oh no!"))] ) : Container());
+        .toList() : [SettingsTile.navigation(title: Text(""))] ) : Container());
   }
 
 

@@ -12,7 +12,7 @@ class SidebarController extends GetxController {
 
   RxBool archiveExpanded = false.obs;
 
-  RxList<SessionCollection> sessions = <SessionCollection>[].obs;
+  final sessions = <SessionCollection>[].obs;
 
   void setSessionsListener(Isar db) async {
     Stream<void> sessionsChanged = db.sessionCollections.watchLazy();
@@ -23,8 +23,7 @@ class SidebarController extends GetxController {
 
   void getSessions(Isar db) async {
     db.sessionCollections.where().findAll().then((newSessions) {
-      sessions = RxList<SessionCollection>(newSessions);
-
+      sessions.value = newSessions;
     });
   }
 }
