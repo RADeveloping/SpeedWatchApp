@@ -17,28 +17,28 @@ class SessionsList extends GetView<SidebarController> {
       children: [
         Expanded(
           child: Obx(() => SettingsList(
-            applicationType: ApplicationType.both,
-            brightness: Brightness.light,
-            lightTheme: SettingsThemeData(
-              settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: kColourSidebarTile,
-              settingsTileTextColor: kColourSidebarTileText,
-              tileHighlightColor: kColourLight,
-              dividerColor: kColourTileDivider,
-            ),
-            sections: buildList(context),
-          )),
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: kColourSidebarTile,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
+                ),
+                sections: buildList(context),
+              )),
         ),
       ],
     );
   }
 
   List<AbstractSettingsSection> buildList(BuildContext context) {
-    List<AbstractSettingsSection> list = [searchBar()];
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
-    var groupByArchived = groupBy(controller.sessions.reversed, (obj) => (obj as SessionCollection).hasExportedSession);
+    var groupByArchived = groupBy(controller.sessions.reversed,
+        (obj) => (obj as SessionCollection).hasExportedSession);
 
     groupByArchived.forEach((hasExportedSession, groupedList) {
       if (hasExportedSession) {
@@ -48,12 +48,23 @@ class SessionsList extends GetView<SidebarController> {
       }
     });
 
-    var groupByDate = groupBy(mainList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
-    var groupByDateArchived = groupBy(archivedList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
+    List<AbstractSettingsSection> list =
+        mainList.length > 0 || archivedList.length > 0 ? [searchBar()] : [];
+
+    var groupByDate = groupBy(
+        mainList,
+        (obj) => DateFormat('EEEEEE, MMMM dd, y')
+            .format((obj as SessionCollection).startTime));
+    var groupByDateArchived = groupBy(
+        archivedList,
+        (obj) => DateFormat('EEEEEE, MMMM dd, y')
+            .format((obj as SessionCollection).startTime));
     groupByDate.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), false));
     });
-    list.add(archivedTab(context));
+
+    archivedList.length > 0 ? list.add(archivedTab(context)) : null;
+
     groupByDateArchived.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), true));
     });
@@ -95,19 +106,27 @@ class SessionsList extends GetView<SidebarController> {
     );
   }
 
-  CustomSettingsSection sessionListSection(List<SessionCollection> sessions, String date, bool archivable) {
+  CustomSettingsSection sessionListSection(
+      List<SessionCollection> sessions, String date, bool archivable) {
     return CustomSettingsSection(
-        child: !archivable ? SettingsSection(
-          title: Text(date),
-          tiles: sessions.isNotEmpty ? sessions
-              .map((session) => sessionListItem(session))
-              .toList() : [SettingsTile.navigation(title: Text(""))],
-        ):
-        controller.archiveExpanded.value ? SettingsSection(
-    title: Text(date),
-    tiles: sessions.isNotEmpty ? sessions
-        .map((session) => sessionListItem(session))
-        .toList() : [SettingsTile.navigation(title: Text(""))] ) : Container());
+        child: !archivable
+            ? SettingsSection(
+                title: Text(date),
+                tiles: sessions.isNotEmpty
+                    ? sessions
+                        .map((session) => sessionListItem(session))
+                        .toList()
+                    : [SettingsTile.navigation(title: Text(''))],
+              )
+            : controller.archiveExpanded.value
+                ? SettingsSection(
+                    title: Text(date),
+                    tiles: sessions.isNotEmpty
+                        ? sessions
+                            .map((session) => sessionListItem(session))
+                            .toList()
+                        : [SettingsTile.navigation(title: Text(''))])
+                : Container());
   }
 
   SettingsTile sessionListItem(SessionCollection session) {
@@ -128,7 +147,7 @@ class SessionsList extends GetView<SidebarController> {
       child: CustomSettingsTile(
         child: GestureDetector(
           onTap: () => controller.archiveExpanded.value =
-          !controller.archiveExpanded.value,
+              !controller.archiveExpanded.value,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -154,16 +173,15 @@ class SessionsList extends GetView<SidebarController> {
                   ],
                 ),
                 Obx(() => Padding(
-                  padding: const EdgeInsets.only(right: 24),
-                  child: FaIcon(
-                    controller.archiveExpanded.value
-                        ? CupertinoIcons.chevron_right
-                        : CupertinoIcons.chevron_down,
-                    color: kColourLight,
-                    size: 18 *
-                        MediaQuery.of(context).textScaleFactor,
-                  ),
-                )),
+                      padding: const EdgeInsets.only(right: 24),
+                      child: FaIcon(
+                        controller.archiveExpanded.value
+                            ? CupertinoIcons.chevron_right
+                            : CupertinoIcons.chevron_down,
+                        color: kColourLight,
+                        size: 18 * MediaQuery.of(context).textScaleFactor,
+                      ),
+                    )),
               ],
             ),
           ),
@@ -171,5 +189,4 @@ class SessionsList extends GetView<SidebarController> {
       ),
     );
   }
-
 }
