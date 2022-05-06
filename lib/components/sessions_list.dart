@@ -17,17 +17,17 @@ class SessionsList extends GetView<SidebarController> {
       children: [
         Expanded(
           child: Obx(() => SettingsList(
-            applicationType: ApplicationType.both,
-            brightness: Brightness.light,
-            lightTheme: SettingsThemeData(
-              settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: kColourSidebarTile,
-              settingsTileTextColor: kColourSidebarTileText,
-              tileHighlightColor: kColourLight,
-              dividerColor: kColourTileDivider,
-            ),
-            sections: buildList(context),
-          )),
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: kColourSidebarTile,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
+                ),
+                sections: buildList(context),
+              )),
         ),
       ],
     );
@@ -38,7 +38,8 @@ class SessionsList extends GetView<SidebarController> {
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
-    var groupByArchived = groupBy(controller.sessions, (obj) => (obj as SessionCollection).hasExportedSession);
+    var groupByArchived = groupBy(controller.sessions,
+        (obj) => (obj as SessionCollection).hasExportedSession);
 
     groupByArchived.forEach((hasExportedSession, groupedList) {
       if (hasExportedSession) {
@@ -48,8 +49,14 @@ class SessionsList extends GetView<SidebarController> {
       }
     });
 
-    var groupByDate = groupBy(mainList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
-    var groupByDateArchived = groupBy(archivedList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
+    var groupByDate = groupBy(
+        mainList,
+        (obj) => DateFormat('EEEEEE, MMMM dd, y')
+            .format((obj as SessionCollection).startTime));
+    var groupByDateArchived = groupBy(
+        archivedList,
+        (obj) => DateFormat('EEEEEE, MMMM dd, y')
+            .format((obj as SessionCollection).startTime));
     groupByDate.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), false));
     });
@@ -128,7 +135,7 @@ class SessionsList extends GetView<SidebarController> {
       ),
       value: Text('599'),
       onPressed: (BuildContext context) {
-        Get.toNamed('/session/${session.id}');
+        Get.offAndToNamed('/session/${session.id}');
       },
     );
   }

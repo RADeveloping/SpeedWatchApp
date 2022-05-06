@@ -6,21 +6,28 @@ import 'package:speedwatch/controllers/home_controller.dart';
 
 // ALWAYS remember to pass the `Type` you used to register your controller
 class HomeView extends GetView<HomeController> {
-  Widget leftChild;
-  Widget rightChild;
+  final Widget? leftChild;
+  final Widget? rightChild;
 
-  HomeView({required this.leftChild, required this.rightChild});
+  HomeView({this.leftChild, this.rightChild}) {
+    if (leftChild != null) {
+      controller.children.value[0] = leftChild!;
+    }
+    if (rightChild != null) {
+      controller.children.value[1] = rightChild!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return Obx(() => CupertinoPageScaffold(
         resizeToAvoidBottomInset: false,
         child: MultiSplitViewTheme(
           data: MultiSplitViewThemeData(dividerThickness: 1),
           child: MultiSplitView(
               resizable: false,
               initialWeights: [0.3, 0.7],
-              children: [leftChild, rightChild]),
-        ));
+              children: controller.children.value),
+        )));
   }
 }

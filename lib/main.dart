@@ -23,16 +23,16 @@ import 'controllers/session_controller.dart';
 // Global variable for storing the list of cameras available
 List<CameraDescription> cameras = [];
 
-Future<void> main() async {
-  // Fetch the available cameras before initializing the app
-  runApp(MyApp());
-  await initServices();
-}
-
 Future<void> initServices() async {
   print('starting services ...');
   await Get.putAsync(() => DbService().init());
   print('All services started...');
+}
+
+Future<void> main() async {
+  // Fetch the available cameras before initializing the app
+  runApp(MyApp());
+  await initServices();
 }
 
 class MyApp extends StatelessWidget {
@@ -40,26 +40,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put<SessionController>(SessionController());
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
-    Get.put<SessionController>(SessionController());
+
+    final HomeController homeController = Get.find();
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
-        defaultTransition: Transition.cupertino,
+        defaultTransition: Transition.noTransition,
         title: 'Speed Watch',
         theme: CupertinoThemeData(
           brightness: Brightness.light,
           primaryColor: kColourLight,
           scaffoldBackgroundColor: kColourSidebarBackground,
-        ),
-        home: HomeView(
-          leftChild: Sidebar(
-            largeTitle: 'Sessions',
-            child: SessionsList(),
-          ),
-          rightChild: RightPane(),
         ),
         initialRoute: '/',
         getPages: [
@@ -67,26 +62,25 @@ class MyApp extends StatelessWidget {
             name: '/',
             page: () => HomeView(
               leftChild: Sidebar(
-                largeTitle: 'Sessions',
                 child: SessionsList(),
+                largeTitle: 'Sessions',
               ),
               rightChild: RightPane(),
             ),
+            preventDuplicates: true,
             transition: Transition.noTransition,
           ),
           GetPage(
             name: '/create',
             page: () => HomeView(
-              leftChild: Sidebar(
-                largeTitle: 'Sessions',
-                child: SessionsList(),
-              ),
+              leftChild: null,
               rightChild: Session(
                 title: 'Create Session',
                 submitButtonText: 'Create Session',
               ),
             ),
             transition: Transition.noTransition,
+            preventDuplicates: true,
           ),
           GetPage(
             name: '/session/:sessionID',
@@ -95,7 +89,7 @@ class MyApp extends StatelessWidget {
                 leading: CupertinoButton(
                   padding: EdgeInsetsDirectional.zero,
                   onPressed: () {
-                    Get.back();
+                    Get.offAndToNamed('/');
                   },
                   child: Row(
                     children: [
@@ -112,6 +106,7 @@ class MyApp extends StatelessWidget {
               rightChild: SessionDetail(),
             ),
             transition: Transition.noTransition,
+            preventDuplicates: true,
           ),
         ],
         localizationsDelegates: [

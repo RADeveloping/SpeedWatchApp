@@ -19,6 +19,7 @@ class DbService extends GetxService {
       s.setSessionsListener(db);
       return db;
     });
+    Get.put(isar, permanent: true);
     return isar;
   }
 }
