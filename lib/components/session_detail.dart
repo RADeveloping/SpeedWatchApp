@@ -6,8 +6,7 @@ import 'package:speedwatch/controllers/record_controller.dart';
 import '../constants.dart';
 import 'springboard.dart';
 
-class SessionDetail extends GetView<SessionDetail> {
-  RecordController recordController = RecordController();
+class SessionDetail extends GetView<RecordController> {
   RxInt _sliding = 0.obs;
 
   @override
@@ -49,7 +48,7 @@ class SessionDetail extends GetView<SessionDetail> {
                 print('${speedRange}, ${vehicleType}');
                 String currentSessionIDInString = await Get.parameters['sessionID'] as String;
                 int currentSessionId = int.parse(currentSessionIDInString);
-                recordController.writeRecordToDB(speedRange, vehicleType, currentSessionId);
+                controller.writeRecordToDB(speedRange, vehicleType, currentSessionId);
               },
             )),
       ),
