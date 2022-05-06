@@ -104,7 +104,7 @@ class SessionController extends GetxController {
 
   void setVolunteerOptions() async {
     DbService dbService = Get.find();
-    volunteerOptions.value = await dbService.getCurrentVolunteerOptions();
+    volunteerOptions.value = await dbService.getCurrentSettingValue(0);
     userListFromDatabase.value = volunteerOptions.value.toSet();
   }
 

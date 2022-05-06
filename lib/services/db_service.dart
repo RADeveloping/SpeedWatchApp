@@ -51,9 +51,9 @@ class DbService extends GetxService {
     return await db.settingsCollections.get(id);
   }
 
-  Future<List<String>> getCurrentVolunteerOptions() async {
+  Future<List<String>> getCurrentSettingValue(int id) async {
     Isar db = Get.find();
-    SettingsCollection? currentSettings = await db.settingsCollections.get(0);
+    SettingsCollection? currentSettings = await db.settingsCollections.get(id);
     List<String> output = [];
     if (currentSettings != null) {
       output = currentSettings.value;
