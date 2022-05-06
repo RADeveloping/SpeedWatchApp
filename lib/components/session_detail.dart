@@ -6,12 +6,12 @@ import 'package:speedwatch/controllers/record_controller.dart';
 import '../constants.dart';
 import 'springboard.dart';
 
-class SessionDetail extends GetView<RecordController> {
+class SessionDetail extends GetView<SessionDetail> {
+  RecordController recordController = RecordController();
   RxInt _sliding = 0.obs;
 
   @override
   Widget build(BuildContext context) {
-    print(Get.parameters['sessionID']);
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         leading: CupertinoButton(
@@ -45,10 +45,9 @@ class SessionDetail extends GetView<RecordController> {
             color: kColourRightPaneBackground,
             child: SpringBoard(
               onPressed: (speedRange, vehicleType) async {
-                print('${speedRange}, ${vehicleType}');
                 String currentSessionIDInString = await Get.parameters['sessionID'] as String;
                 int currentSessionId = int.parse(currentSessionIDInString);
-                controller.writeRecordToDB(speedRange, vehicleType, currentSessionId);
+                recordController.writeRecordToDB(speedRange, vehicleType, currentSessionId);
               },
             )),
       ),
