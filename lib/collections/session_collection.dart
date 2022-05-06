@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:isar/isar.dart';
+import 'package:speedwatch/collections/record_collection.dart';
 import 'package:speedwatch/enums/road_condition.dart';
 import 'package:speedwatch/enums/road_lighting.dart';
 import 'package:speedwatch/enums/road_zone.dart';
@@ -36,4 +37,6 @@ class SessionCollection {
   @LightingConverter()
   late RoadLighting roadLightingOptions;
   late bool hasExportedSession;
+  @Backlink(to: 'session')
+  final records = IsarLinks<RecordCollection>();
 }
