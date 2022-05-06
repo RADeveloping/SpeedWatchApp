@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 
 import '../collections/session_collection.dart';
+import '../collections/settings_collection.dart';
 import '../enums/direction.dart';
 import '../enums/road_condition.dart';
 import '../enums/road_lighting.dart';
@@ -10,25 +12,16 @@ import '../enums/road_zone.dart';
 import '../enums/weather.dart';
 
 class SessionController extends GetxController {
-  RxSet<String> mockUserListFromDatabase = {
-    'Sandy Wesker',
-    'Rahim Askarzadeh',
-    'John Walker',
-    'Sunwoo Park',
-    'John Brady',
-    'Medhat Elmasry',
-    'Justin Jones',
-  }.obs;
+  RxSet<String> userListFromDatabase = <String>{}.obs;
 
   void volunteerSearchValueChanged(String value) {
     if (value.isEmpty) {
       volunteerOptions.value =
-          (volunteerTags.value + mockUserListFromDatabase.value.toList())
+          (volunteerTags.value + userListFromDatabase.value.toList())
               .toSet()
               .toList();
     } else {
-      volunteerOptions.value = mockUserListFromDatabase.value
-          .toList()
+      volunteerOptions.value = userListFromDatabase.value
           .where((element) => element.isCaseInsensitiveContains(value))
           .toList();
     }
@@ -56,11 +49,7 @@ class SessionController extends GetxController {
       TextEditingController(text: '').obs;
 
   RxList<String> volunteerTags = <String>[].obs;
-  RxList<String> volunteerOptions = [
-    'Sandy Wesker',
-    'Rahim Askarzadeh',
-    'John Walker',
-  ].obs;
+  RxList<String> volunteerOptions = <String>[].obs;
 
   // Road Zone
   RxInt roadZoneTag = 0.obs;
@@ -113,9 +102,52 @@ class SessionController extends GetxController {
       ..hasExportedSession = false;
   }
 
-  bool isValid() {
-    return address_textController.value.text.length > 0 &&
-        volunteerTags.value.isNotEmpty;
+  void writeSessionToDB(DateTime startDate, DateTime endDate) async {
+    if (address_textController.value.toString().length > 0 &&
+        volunteerTags.value.isNotEmpty) {
+      Isar db = Get.find();
+      SettingsCollection newSettings = await getNewSetting(db);
+
+      await db.writeTxn(((isar) async {
+        await db.sessionCollections.put(getSession(startDate, endDate));
+        await db.settingsCollections.put(newSettings);
+      }));
+    }
+  }
+
+  Future<SettingsCollection> getNewSetting(Isar db) async {
+    SettingsCollection? currentSettings = await getCurrentSetting(db, 0);
+    List<String>? oldVolunteerTags = currentSettings?.value;
+    if (oldVolunteerTags == null) {
+      oldVolunteerTags = volunteerTags;
+    } else {
+      oldVolunteerTags.addAll(volunteerTags);
+    }
+    List<String> newVolunteerTags = oldVolunteerTags.toSet().toList();
+    SettingsCollection newSettings = SettingsCollection()
+      ..id = 0
+      ..value = newVolunteerTags
+      ..key = 'names';
+    return newSettings;
+  }
+
+  Future<SettingsCollection?> getCurrentSetting(Isar db, int id) async {
+    return await db.settingsCollections.get(id);
+  }
+
+  Future<List<String>> getCurrentVolunteerOptions(Isar db) async {
+    SettingsCollection? currentSettings = await db.settingsCollections.get(0);
+    List<String> output = [];
+    if (currentSettings != null) {
+      output = currentSettings.value;
+    }
+    return output;
+  }
+
+  void setVolunteerOptions() async {
+    Isar db = Get.find();
+    volunteerOptions.value = await getCurrentVolunteerOptions(db);
+    userListFromDatabase.value = volunteerOptions.value.toSet();
   }
 }
 

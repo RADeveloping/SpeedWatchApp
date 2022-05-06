@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:isar/isar.dart';
 import 'package:speedwatch/enums/road_condition.dart';
