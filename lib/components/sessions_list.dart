@@ -14,250 +14,150 @@ class SessionsList extends GetView<SidebarController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: SettingsList(
-            applicationType: ApplicationType.both,
-            brightness: Brightness.light,
-            lightTheme: SettingsThemeData(
-              settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: kColourSidebarTile,
-              settingsTileTextColor: kColourSidebarTileText,
-              tileHighlightColor: kColourLight,
-              dividerColor: kColourTileDivider,
-            ),
-            sections: [
-              CustomSettingsSection(
-                child: Container(
-                  margin: EdgeInsetsDirectional.only(bottom: 10),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: CupertinoTheme(
-                              data: CupertinoThemeData(
-                                brightness: Brightness.dark,
-                                primaryColor: kColourLight,
-                              ),
-                              child: CupertinoSearchTextField(
-                                controller: controller.textController.value,
-                                prefixIcon: Icon(
-                                  CupertinoIcons.search,
-                                  color: kColourLight,
-                                ),
-                                placeholder: 'Search Sessions',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                                prefixInsets: EdgeInsets.all(10),
-                                onChanged: (String value) {
-                                  print('The text has changed to: $value');
-                                },
-                                onSubmitted: (String value) {
-                                  print('Submitted text: $value');
-                                },
-                                onSuffixTap: () {
-                                  controller.textController.value.clear();
-                                },
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
+          child: Obx(() => SettingsList(
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: kColourSidebarTile,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
                 ),
-              ),
-              SettingsSection(
-                title: Text('FRIDAY, APRIL 29, 2022'),
-                tiles: <SettingsTile>[
-                  SettingsTile.navigation(
-                    title: Text(
-                      '784 Robson St',
-                      style: kTextStyleSidebarTile,
-                    ),
-                    value: Text('758'),
-                    onPressed: (BuildContext context) {
-                      Get.toNamed('/session/445');
-                    },
-                  ),
-                ],
-              ),
-              SettingsSection(
-                title: Text('THURSDAY, APRIL 28, 2022'),
-                tiles: <SettingsTile>[
-                  SettingsTile.navigation(
-                    title: Text(
-                      '164 Dunsmuir',
-                      style: kTextStyleSidebarTile,
-                    ),
-                    value: Text('1640'),
-                  ),
-                ],
-              ),
-              CustomSettingsSection(
-                child: CustomSettingsTile(
-                  child: GestureDetector(
-                    onTap: () => controller.archiveExpanded.value =
-                        !controller.archiveExpanded.value,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                sections: [
+                  CustomSettingsSection(
+                    child: Container(
+                      margin: EdgeInsetsDirectional.only(bottom: 10),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: FaIcon(
-                                  CupertinoIcons.archivebox,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                              Text(
-                                'Archived',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                              ),
-                            ],
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: CupertinoTheme(
+                                  data: CupertinoThemeData(
+                                    brightness: Brightness.dark,
+                                    primaryColor: kColourLight,
+                                  ),
+                                  child: CupertinoSearchTextField(
+                                    controller: controller.textController.value,
+                                    prefixIcon: Icon(
+                                      CupertinoIcons.search,
+                                      color: kColourLight,
+                                    ),
+                                    placeholder: 'Search Sessions',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    prefixInsets: EdgeInsets.all(10),
+                                    onChanged: (String value) {
+                                      print('The text has changed to: $value');
+                                    },
+                                    onSubmitted: (String value) {
+                                      print('Submitted text: $value');
+                                    },
+                                    onSuffixTap: () {
+                                      controller.textController.value.clear();
+                                    },
+                                  )),
+                            ),
                           ),
-                          Obx(() => Padding(
-                                padding: const EdgeInsets.only(right: 24),
-                                child: FaIcon(
-                                  controller.archiveExpanded.value
-                                      ? CupertinoIcons.chevron_right
-                                      : CupertinoIcons.chevron_down,
-                                  color: kColourLight,
-                                  size: 18 *
-                                      MediaQuery.of(context).textScaleFactor,
-                                ),
-                              )),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ),
-              CustomSettingsSection(
-                  child: Obx(() => controller.archiveExpanded.value
-                      ? SettingsSection(
-                          title: Text('FRIDAY, JANUARY 4, 2021'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              title: Text(
-                                '985 Alberni St',
-                                style: kTextStyleSidebarTile,
+                  SettingsSection(
+                    title: Text('FRIDAY, APRIL 29, 2022'),
+                    tiles: <SettingsTile>[
+                      SettingsTile.navigation(
+                        title: Text(
+                          '784 Robson St',
+                          style: kTextStyleSidebarTile,
+                        ),
+                        value: Text('758'),
+                        onPressed: (BuildContext context) {
+                          Get.toNamed('/session/445');
+                        },
+                      ),
+                    ],
+                  ),
+                  SettingsSection(
+                    title: Text('THURSDAY, APRIL 28, 2022'),
+                    tiles: <SettingsTile>[
+                      SettingsTile.navigation(
+                        title: Text(
+                          '164 Dunsmuir',
+                          style: kTextStyleSidebarTile,
+                        ),
+                        value: Text('1640'),
+                      ),
+                    ],
+                  ),
+                  CustomSettingsSection(
+                    child: CustomSettingsTile(
+                      child: GestureDetector(
+                        onTap: () => controller.archiveExpanded.value =
+                            !controller.archiveExpanded.value,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: FaIcon(
+                                      CupertinoIcons.archivebox,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Archived',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                ],
                               ),
-                              value: Text('599'),
-                              onPressed: (BuildContext context) {},
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                'W47 and 16TH',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1452'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '1967 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('567'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '985 Alberni St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('599'),
-                              onPressed: (BuildContext context) {},
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                'W47 and 16TH',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1452'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '1967 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('567'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '985 Alberni St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('599'),
-                              onPressed: (BuildContext context) {},
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                'W47 and 16TH',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1452'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '1967 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('567'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '985 Alberni St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('599'),
-                              onPressed: (BuildContext context) {},
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                'W47 and 16TH',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1452'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '1967 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('567'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '985 Alberni St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('599'),
-                              onPressed: (BuildContext context) {},
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                'W47 and 16TH',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('1452'),
-                            ),
-                            SettingsTile.navigation(
-                              title: Text(
-                                '1967 Robson St',
-                                style: kTextStyleSidebarTile,
-                              ),
-                              value: Text('567'),
-                            ),
-                          ],
-                        )
-                      : Container()))
-            ],
-          ),
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(right: 24),
+                                    child: FaIcon(
+                                      controller.archiveExpanded.value
+                                          ? CupertinoIcons.chevron_right
+                                          : CupertinoIcons.chevron_down,
+                                      color: kColourLight,
+                                      size: 18 *
+                                          MediaQuery.of(context)
+                                              .textScaleFactor,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  CustomSettingsSection(
+                      child: Obx(() => controller.archiveExpanded.value
+                          ? SettingsSection(
+                              title: Text('FRIDAY, JANUARY 4, 2021'),
+                              tiles: <SettingsTile>[
+                                SettingsTile.navigation(
+                                  title: Text(
+                                    '985 Alberni St',
+                                    style: kTextStyleSidebarTile,
+                                  ),
+                                  value: Text('599'),
+                                  onPressed: (BuildContext context) {},
+                                ),
+                              ],
+                            )
+                          : Container()))
+                ],
+              )),
         ),
       ],
     );

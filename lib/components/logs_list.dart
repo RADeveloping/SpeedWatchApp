@@ -7,6 +7,7 @@ import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import '../constants.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LogsList extends GetView<SidebarController> {
   @override
