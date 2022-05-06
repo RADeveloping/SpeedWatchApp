@@ -191,11 +191,12 @@ class Session extends GetView<SessionController> {
                           onPressed: controller.address.value.isEmpty ||
                                   controller.volunteerTags.value.isEmpty
                               ? null
-                              : () {
-                                  controller.writeSessionToDB(
-                                      startDatePicker.date.value,
-                                      endDatePicker.date.value);
-                                },
+                              : () async {
+                            int id = await controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value);
+                            if (id > -1) {
+                              Get.toNamed('/session/${id}');
+                            }
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             mainAxisSize: MainAxisSize.min,

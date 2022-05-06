@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
+
+import '../collections/session_collection.dart';
+
 
 class SidebarController extends GetxController {
   RxString title = 'Title'.obs;
@@ -9,4 +13,19 @@ class SidebarController extends GetxController {
 
   RxBool archiveExpanded = false.obs;
   RxBool isEditMode = false.obs;
+
+  final sessions = <SessionCollection>[].obs;
+
+  void setSessionsListener(Isar db) async {
+    Stream<void> sessionsChanged = db.sessionCollections.watchLazy();
+    sessionsChanged.listen((s) {
+      getSessions(db);
+    });
+  }
+
+  void getSessions(Isar db) async {
+    db.sessionCollections.where().findAll().then((newSessions) {
+      sessions.value = newSessions;
+    });
+  }
 }
