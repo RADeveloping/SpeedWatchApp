@@ -224,7 +224,10 @@ class Session extends GetView<SessionController> {
   void createNewSessionClick() async {
     DbService dbService = Get.find();
     SessionCollection newSessionCollection = controller.getSession(startDatePicker.date.value, endDatePicker.date.value);
-    SettingsCollection newSettingsCollection = await controller.getNewSetting();
+    SettingsCollection newSettingsCollection = SettingsCollection()
+      ..id=0
+      ..value=await controller.getNewVolunteerNamesValue()
+      ..key='names';
     int id = await dbService.writeSessionToDB(newSessionCollection, newSettingsCollection);
     Get.toNamed('/session/${id}');
   }

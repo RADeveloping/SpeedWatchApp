@@ -35,10 +35,8 @@ class DbService extends GetxService {
     db.sessionCollections.where().sortByStartTimeDesc().findAll().then((newSession) => handleNewSession(newSession));
   }
 
-  Future<int> writeSessionToDB(SessionCollection session, SettingsCollection settings) async {
+  Future<int> writeSessionToDB(SessionCollection newSession, SettingsCollection newSettings) async {
       Isar db = Get.find();
-      SettingsCollection newSettings = settings;
-      SessionCollection newSession = session;
       await db.writeTxn(((isar) async {
         await db.sessionCollections.put(newSession);
         await db.settingsCollections.put(newSettings);

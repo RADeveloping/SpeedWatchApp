@@ -108,7 +108,7 @@ class SessionController extends GetxController {
     userListFromDatabase.value = volunteerOptions.value.toSet();
   }
 
-  Future<SettingsCollection> getNewSetting() async {
+  Future<List<String>> getNewVolunteerNamesValue() async {
     DbService dbService = Get.find();
     SettingsCollection? currentSettings = await dbService.getCurrentSetting(0);
     List<String>? oldVolunteerTags = currentSettings?.value;
@@ -118,11 +118,7 @@ class SessionController extends GetxController {
       oldVolunteerTags.addAll(volunteerTags);
     }
     List<String> newVolunteerTags = oldVolunteerTags.toSet().toList();
-    SettingsCollection newSettings = SettingsCollection()
-      ..id = 0
-      ..value = newVolunteerTags
-      ..key = 'names';
-    return newSettings;
+    return newVolunteerTags;
   }
 
 }
