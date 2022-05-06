@@ -67,7 +67,9 @@ class SessionsList extends GetView<SidebarController> {
                                     style: kTextStyleSidebarTile,
                                   ),
                                   value: Text('599'),
-                                  onPressed: (BuildContext context) {},
+                          onPressed: (BuildContext context) {
+                            Get.toNamed('/session/${session.id}');
+                          },
                                 ))
                             .toList() : [SettingsTile.navigation(title: Text("HEY"))],
                       ))),
