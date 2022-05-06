@@ -33,10 +33,15 @@ class SessionsList extends GetView<SidebarController> {
   }
 
   List<AbstractSettingsSection> buildList(BuildContext context) {
-    List<AbstractSettingsSection> list = [searchBar(),
-      sessionListSection(controller.sessions, "ass", false),
-      archivedTab(context), sessionListSection(controller.sessions, "yo", true)
-    ];
+    List<CustomSettingsSection> sessionList = controller.sessions.map((session)=> sessionListSection([session], session.startTime.toString(), false)).toList();
+    List<AbstractSettingsSection> list = [searchBar()];
+
+    for (final s in sessionList) {
+      list.add(s);
+    }
+    list.add(archivedTab(context));
+    list.add(sessionListSection(controller.sessions, "yo", true));
+
         return list;
   }
 
