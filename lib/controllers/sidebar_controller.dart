@@ -24,7 +24,7 @@ class SidebarController extends GetxController {
   void getSessions(Isar db) async {
     db.sessionCollections.where().findAll().then((newSessions) {
       sessions = RxList<SessionCollection>(newSessions);
-      sessions.refresh();
+
     });
   }
 }

@@ -60,7 +60,7 @@ class SessionsList extends GetView<SidebarController> {
               CustomSettingsSection(
                   child: Obx(() => SettingsSection(
                         title: Text('FRIDAY, JANUARY 4, 2021'),
-                        tiles: controller.sessions != [] ? controller.sessions
+                        tiles: controller.sessions.isNotEmpty ? controller.sessions
                             .map((session) => SettingsTile.navigation(
                                   title: Text(
                                     session.streetAddress,
@@ -71,7 +71,7 @@ class SessionsList extends GetView<SidebarController> {
                             Get.toNamed('/session/${session.id}');
                           },
                                 ))
-                            .toList() : [SettingsTile.navigation(title: Text("HEY"))],
+                            .toList() : [SettingsTile.navigation(title: Text("oh no!"))],
                       ))),
               SettingsSection(
                 title: Text('THURSDAY, APRIL 28, 2022'),

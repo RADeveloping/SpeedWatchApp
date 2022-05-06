@@ -179,7 +179,12 @@ class Session extends GetView<SessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: ()=>controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value),
+                        onPressed: () async {
+                          int id = await controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value);
+                          if (id > -1) {
+                            Get.toNamed('/session/${id}');
+                          }
+                          },
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text(submitButtonText),
                         style: ButtonStyle(
