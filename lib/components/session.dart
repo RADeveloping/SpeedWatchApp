@@ -12,7 +12,9 @@ import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/session_controller.dart';
 
+import '../collections/settings_collection.dart';
 import '../constants.dart';
+import '../services/db_service.dart';
 import 'cupertino_page_scaffold_custom.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
@@ -194,14 +196,7 @@ class Session extends GetView<SessionController> {
                           onPressed: controller.address.value.isEmpty ||
                                   controller.volunteerTags.value.isEmpty
                               ? null
-                              : () async {
-                                  int id = await controller.writeSessionToDB(
-                                      startDatePicker.date.value,
-                                      endDatePicker.date.value);
-                                  if (id > -1) {
-                                    Get.offAllNamed('/session/${id}');
-                                  }
-                                },
+                              : createNewSessionClick,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             mainAxisSize: MainAxisSize.min,
@@ -227,6 +222,17 @@ class Session extends GetView<SessionController> {
         ],
       ),
     );
+  }
+
+  void createNewSessionClick() async {
+    DbService dbService = Get.find();
+    SessionCollection newSessionCollection = controller.getSession(startDatePicker.date.value, endDatePicker.date.value);
+    SettingsCollection newSettingsCollection = SettingsCollection()
+      ..id=0
+      ..value=await controller.getNewVolunteerNamesValue()
+      ..key='names';
+    int id = await dbService.writeSessionToDB(newSessionCollection, newSettingsCollection);
+    Get.offAllNamed('/session/${id}');
   }
 }
 

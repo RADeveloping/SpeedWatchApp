@@ -25,7 +25,7 @@ List<CameraDescription> cameras = [];
 
 Future<void> initServices() async {
   print('starting services ...');
-  await Get.putAsync(() => DbService().init());
+  await Get.putAsync(() => DbService().init(), permanent: true);
   print('All services started...');
 }
 
@@ -99,6 +99,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
                 largeTitle: 'Log',
+                previousPageTitle: 'Sessions',
                 child: LogsList(),
               ),
               rightChild: SessionDetail(),

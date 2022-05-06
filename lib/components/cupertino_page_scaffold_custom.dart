@@ -5,6 +5,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
   final Widget child;
   final Widget? leading;
   final String largeTitle;
+  String? previousPageTitle;
   final Widget? trailing;
   final Color backgroundColor;
   final int heroTag;
@@ -13,6 +14,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
       {required this.child,
       this.leading,
       required this.largeTitle,
+      this.previousPageTitle,
       this.trailing,
       required this.backgroundColor,
       required this.heroTag});
@@ -29,6 +31,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                 leading: leading,
                 brightness: Brightness.dark,
                 backgroundColor: backgroundColor,
+                previousPageTitle: previousPageTitle,
                 trailing: trailing,
                 largeTitle: Text(
                   largeTitle,
