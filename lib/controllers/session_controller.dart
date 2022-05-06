@@ -10,10 +10,10 @@ import '../enums/road_condition.dart';
 import '../enums/road_lighting.dart';
 import '../enums/road_zone.dart';
 import '../enums/weather.dart';
+import '../services/db_service.dart';
 
 class SessionController extends GetxController {
   RxSet<String> userListFromDatabase = <String>{}.obs;
-
   void volunteerSearchValueChanged(String value) {
     if (value.isEmpty) {
       volunteerOptions.value =
@@ -102,22 +102,15 @@ class SessionController extends GetxController {
       ..hasExportedSession = false;
   }
 
-  Future<int> writeSessionToDB(DateTime startDate, DateTime endDate) async {
-    if (address_textController.value.toString().length > 0 && volunteerTags.value.isNotEmpty) {
-      Isar db = Get.find();
-      SettingsCollection newSettings = await getNewSetting(db);
-      SessionCollection newSession = getSession(startDate, endDate);
-      await db.writeTxn(((isar) async {
-        await db.sessionCollections.put(newSession);
-        await db.settingsCollections.put(newSettings);
-      }));
-      return newSession.id;
-      }
-    return -1;
-    }
+  void setVolunteerOptions() async {
+    DbService dbService = Get.find();
+    volunteerOptions.value = await dbService.getCurrentVolunteerOptions();
+    userListFromDatabase.value = volunteerOptions.value.toSet();
+  }
 
-  Future<SettingsCollection> getNewSetting(Isar db) async {
-    SettingsCollection? currentSettings = await getCurrentSetting(db, 0);
+  Future<SettingsCollection> getNewSetting() async {
+    DbService dbService = Get.find();
+    SettingsCollection? currentSettings = await dbService.getCurrentSetting(0);
     List<String>? oldVolunteerTags = currentSettings?.value;
     if (oldVolunteerTags == null) {
       oldVolunteerTags = volunteerTags;
@@ -132,24 +125,6 @@ class SessionController extends GetxController {
     return newSettings;
   }
 
-  Future<SettingsCollection?> getCurrentSetting(Isar db, int id) async {
-    return await db.settingsCollections.get(id);
-  }
-
-  Future<List<String>> getCurrentVolunteerOptions(Isar db) async {
-    SettingsCollection? currentSettings = await db.settingsCollections.get(0);
-    List<String> output = [];
-    if (currentSettings != null) {
-      output = currentSettings.value;
-    }
-    return output;
-  }
-
-  void setVolunteerOptions() async {
-    Isar db = Get.find();
-    volunteerOptions.value = await getCurrentVolunteerOptions(db);
-    userListFromDatabase.value = volunteerOptions.value.toSet();
-  }
 }
 
 class DateTimePickerController extends SessionController {
