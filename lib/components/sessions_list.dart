@@ -37,18 +37,30 @@ class SessionsList extends GetView<SidebarController> {
     List<CustomSettingsSection> sessionList;
     List<AbstractSettingsSection> list = [searchBar()];
 
-    var groupByDate = groupBy(controller.sessions, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
 
+    List<SessionCollection> mainList = [];
+    List<SessionCollection> archivedList = [];
+
+    var groupByArchived = groupBy(controller.sessions, (obj) => (obj as SessionCollection).hasExportedSession);
+
+    groupByArchived.forEach((hasExportedSession, groupedList) {
+      if (hasExportedSession) {
+        archivedList = groupedList;
+      } else {
+        mainList = groupedList;
+      }
+    });
+
+    var groupByDate = groupBy(mainList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
+    var groupByDateArchived = groupBy(archivedList, (obj) => DateFormat('EEEEEE, MMMM dd, y').format((obj as SessionCollection).startTime));
     groupByDate.forEach((date, groupedList) {
-      print('${date}:');
       list.add(sessionListSection(groupedList, date.toUpperCase(), false));
     });
-    print(groupByDate);
-
     list.add(archivedTab(context));
-    list.add(sessionListSection(controller.sessions, "yo", true));
-
-        return list;
+    groupByDateArchived.forEach((date, groupedList) {
+      list.add(sessionListSection(groupedList, date.toUpperCase(), true));
+    });
+    return list;
   }
 
 
