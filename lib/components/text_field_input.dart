@@ -13,12 +13,14 @@ class SessionTextFieldEntry extends GetView<SessionController> {
   final bool onlyTopRadius = false;
   final bool onlyBottomRadius = false;
   final TextInputType keyboardType;
+  final Function()? onTap;
 
   SessionTextFieldEntry({
     Key? key,
     required this.placeholder,
     required this.keyboardType,
     required this.textEditingController,
+    this.onTap,
     this.onSubmitted,
     this.onChanged,
     this.onEditingComplete,
@@ -38,20 +40,25 @@ class SessionTextFieldEntry extends GetView<SessionController> {
       placeholderStyle: kTextStyleTilePlaceholder,
       textCapitalization: TextCapitalization.sentences,
       style: kTextStyleTileText,
-      suffix: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: FaIcon(
-          CupertinoIcons.clear_circled_solid,
-          color: kColourSuffixIcon,
+      suffix: GestureDetector(
+        onTap: () {
+          textEditingController.clear();
+          if (onTap != null) {
+            onTap!();
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: FaIcon(
+            CupertinoIcons.clear_circled_solid,
+            color: kColourSuffixIcon,
+          ),
         ),
       ),
       suffixMode: OverlayVisibilityMode.editing,
       onChanged: onChanged,
       onEditingComplete: onEditingComplete,
       onSubmitted: onSubmitted,
-      onTap: () {
-        textEditingController.clear();
-      },
     );
   }
 }

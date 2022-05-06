@@ -55,7 +55,10 @@ class MyApp extends StatelessWidget {
       child: GetCupertinoApp(
         defaultTransition: Transition.cupertino,
         title: 'Speed Watch',
-        theme: CupertinoThemeData(brightness: Brightness.light),
+        theme: CupertinoThemeData(
+          brightness: Brightness.light,
+          scaffoldBackgroundColor: kColourSidebarBackground,
+        ),
         home: HomeView(
           leftChild: Sidebar(
             largeTitle: 'Sessions',

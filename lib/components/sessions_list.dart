@@ -33,24 +33,32 @@ class SessionsList extends GetView<SidebarController> {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: CupertinoSearchTextField(
-                            controller: controller.textController.value,
-                            itemColor: kColourLight,
-                            placeholder: 'Search Sessions',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                            prefixInsets: EdgeInsets.all(10),
-                            onChanged: (String value) {
-                              print('The text has changed to: $value');
-                            },
-                            onSubmitted: (String value) {
-                              print('Submitted text: $value');
-                            },
-                            onSuffixTap: () {
-                              controller.textController.value.clear();
-                            },
-                          ),
+                          child: CupertinoTheme(
+                              data: CupertinoThemeData(
+                                brightness: Brightness.dark,
+                                primaryColor: kColourLight,
+                              ),
+                              child: CupertinoSearchTextField(
+                                controller: controller.textController.value,
+                                prefixIcon: Icon(
+                                  CupertinoIcons.search,
+                                  color: kColourLight,
+                                ),
+                                placeholder: 'Search Sessions',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                prefixInsets: EdgeInsets.all(10),
+                                onChanged: (String value) {
+                                  print('The text has changed to: $value');
+                                },
+                                onSubmitted: (String value) {
+                                  print('Submitted text: $value');
+                                },
+                                onSuffixTap: () {
+                                  controller.textController.value.clear();
+                                },
+                              )),
                         ),
                       ),
                     ],
