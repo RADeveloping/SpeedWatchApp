@@ -75,7 +75,7 @@ class SessionsList extends GetView<SidebarController> {
                     ),
                     value: Text('758'),
                     onPressed: (BuildContext context) {
-                      Get.toNamed('/session/445');
+                      Get.toNamed('/session/1');
                     },
                   ),
                 ],

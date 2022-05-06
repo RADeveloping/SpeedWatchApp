@@ -1,15 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 import 'package:speedwatch/collections/record_collection.dart';
+import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/enums/speed_range.dart';
 import 'package:speedwatch/enums/vehicle_type.dart';
 
 class RecordController extends GetxController {
+  // RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, SessionCollection currentSession) {
   RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType) {
     return RecordCollection()
         ..createdAt = DateTime.now()
         ..speedRange = speedRange
         ..vehicleType = vehicleType;
+        // ..session.value = currentSession;
+  }
+
+  // void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionId) async {
+  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType) async {
+    Isar db = Get.find();
+    // final currentSession = await db.sessionCollections.get(sessionId);
+    await db.writeTxn(((isar) async {
+      // await db.recordCollections.put(getRecord(speedRange, vehicleType, currentSession!));
+      await db.recordCollections.put(getRecord(speedRange, vehicleType));
+    }));
   }
 }
