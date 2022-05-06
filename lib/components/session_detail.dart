@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
-import 'package:speedwatch/collections/record_collection.dart';
-import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/controllers/record_controller.dart';
 
 import '../constants.dart';
@@ -49,12 +46,10 @@ class SessionDetail extends GetView<SessionDetail> {
             color: kColourRightPaneBackground,
             child: SpringBoard(
               onPressed: (speedRange, vehicleType) async {
-                // print('${speedRange}, ${vehicleType}');
-                // if (Get.parameters['sessionID'] != null) {
-                //   int currentSessionId = int.parse(Get.parameters['sessionId']!);
-                //   recordController.writeRecordToDB(speedRange, vehicleType, currentSessionId);
-                // }
-                recordController.writeRecordToDB(speedRange, vehicleType);
+                print('${speedRange}, ${vehicleType}');
+                String currentSessionIDInString = await Get.parameters['sessionID'] as String;
+                int currentSessionId = int.parse(currentSessionIDInString);
+                recordController.writeRecordToDB(speedRange, vehicleType, currentSessionId);
               },
             )),
       ),

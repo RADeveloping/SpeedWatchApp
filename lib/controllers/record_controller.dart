@@ -6,22 +6,19 @@ import 'package:speedwatch/enums/speed_range.dart';
 import 'package:speedwatch/enums/vehicle_type.dart';
 
 class RecordController extends GetxController {
-  // RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, SessionCollection currentSession) {
-  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType) {
+  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, SessionCollection session) {
     return RecordCollection()
         ..createdAt = DateTime.now()
         ..speedRange = speedRange
-        ..vehicleType = vehicleType;
-        // ..session.value = currentSession;
+        ..vehicleType = vehicleType
+        ..session.value = session;
   }
 
-  // void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionId) async {
-  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType) async {
+  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionID) async {
     Isar db = Get.find();
-    // final currentSession = await db.sessionCollections.get(sessionId);
+    final currentSession = await db.sessionCollections.get(sessionID);
     await db.writeTxn(((isar) async {
-      // await db.recordCollections.put(getRecord(speedRange, vehicleType, currentSession!));
-      await db.recordCollections.put(getRecord(speedRange, vehicleType));
+      await db.recordCollections.put(getRecord(speedRange, vehicleType, currentSession!));
     }));
   }
 }
