@@ -16,10 +16,15 @@ class Sidebar extends GetView<SidebarController> {
   final Widget child;
   final String largeTitle;
   final Widget? leading;
+  String? previousPageTitle;
   Rx<TapPosition> position =
       TapPosition(Offset(0.0, 0.0), Offset(0.0, 0.0)).obs;
 
-  Sidebar({required this.child, required this.largeTitle, this.leading});
+  Sidebar(
+      {required this.child,
+      required this.largeTitle,
+      this.leading,
+      this.previousPageTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,7 @@ class Sidebar extends GetView<SidebarController> {
       leading: leading,
       backgroundColor: kColourSidebarBackground,
       largeTitle: largeTitle,
+      previousPageTitle: previousPageTitle,
       trailing: CupertinoButton(
         padding: EdgeInsets.zero,
         child: PositionedTapDetector2(
