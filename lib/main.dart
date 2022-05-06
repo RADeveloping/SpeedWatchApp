@@ -92,21 +92,8 @@ class MyApp extends StatelessWidget {
             name: '/session/:sessionID',
             page: () => HomeView(
               leftChild: Sidebar(
-                leading: CupertinoButton(
-                  padding: EdgeInsetsDirectional.zero,
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.back,
-                        color: kColourLight,
-                      ),
-                    ],
-                  ),
-                ),
                 largeTitle: 'Log',
+                previousPageTitle: 'Sessions',
                 child: LogsList(),
               ),
               rightChild: SessionDetail(),
