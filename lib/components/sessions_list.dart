@@ -38,7 +38,7 @@ class SessionsList extends GetView<SidebarController> {
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
-    var groupByArchived = groupBy(controller.sessions, (obj) => (obj as SessionCollection).hasExportedSession);
+    var groupByArchived = groupBy(controller.sessions.reversed, (obj) => (obj as SessionCollection).hasExportedSession);
 
     groupByArchived.forEach((hasExportedSession, groupedList) {
       if (hasExportedSession) {
