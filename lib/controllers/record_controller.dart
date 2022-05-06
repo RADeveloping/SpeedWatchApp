@@ -10,7 +10,6 @@ class RecordController extends GetxController {
     return RecordCollection()
         ..createdAt = DateTime.now()
         ..speedRange = speedRange
-        ..vehicleType = vehicleType
-        ..session.value =
+        ..vehicleType = vehicleType;
   }
 }
