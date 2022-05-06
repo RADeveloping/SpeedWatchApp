@@ -34,10 +34,7 @@ class SessionsList extends GetView<SidebarController> {
   }
 
   List<AbstractSettingsSection> buildList(BuildContext context) {
-    List<CustomSettingsSection> sessionList;
     List<AbstractSettingsSection> list = [searchBar()];
-
-
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
@@ -62,7 +59,6 @@ class SessionsList extends GetView<SidebarController> {
     });
     return list;
   }
-
 
   CustomSettingsSection searchBar() {
     return CustomSettingsSection(
@@ -113,8 +109,6 @@ class SessionsList extends GetView<SidebarController> {
         .map((session) => sessionListItem(session))
         .toList() : [SettingsTile.navigation(title: Text(""))] ) : Container());
   }
-
-
 
   SettingsTile sessionListItem(SessionCollection session) {
     return SettingsTile.navigation(
@@ -177,6 +171,5 @@ class SessionsList extends GetView<SidebarController> {
       ),
     );
   }
-
 
 }
