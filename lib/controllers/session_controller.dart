@@ -40,13 +40,16 @@ class SessionController extends GetxController {
 
   RxString title = 'Create Session'.obs;
 
+  RxString address = ''.obs;
+
   // Address
   Rx<TextEditingController> address_textController =
       TextEditingController(text: '').obs;
 
   // Direction
   RxInt directionTag = 0.obs;
-  List<String> directionOptions = Direction.values.map((val) => val.name).toList();
+  List<String> directionOptions =
+      Direction.values.map((val) => val.name).toList();
 
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
@@ -61,7 +64,8 @@ class SessionController extends GetxController {
 
   // Road Zone
   RxInt roadZoneTag = 0.obs;
-  List<String> roadZoneOptions = RoadZone.values.map((val) => val.name).toList();
+  List<String> roadZoneOptions =
+      RoadZone.values.map((val) => val.name).toList();
 
   // Speed Limit
 
@@ -86,11 +90,13 @@ class SessionController extends GetxController {
 
   // Road Conditions
   RxInt roadConditionTag = 0.obs;
-  List<String> roadConditionOptions = RoadCondition.values.map((val) => val.name).toList();
+  List<String> roadConditionOptions =
+      RoadCondition.values.map((val) => val.name).toList();
 
   // Road Lighting
   RxInt roadLightingTag = 2.obs;
-  List<String> roadLightingOptions = RoadLighting.values.map((val) => val.name).toList();
+  List<String> roadLightingOptions =
+      RoadLighting.values.map((val) => val.name).toList();
 
   SessionCollection getSession(DateTime startDate, DateTime endDate) {
     return SessionCollection()
@@ -105,6 +111,11 @@ class SessionController extends GetxController {
       ..volunteerNames = volunteerTags.value
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
       ..hasExportedSession = false;
+  }
+
+  bool isValid() {
+    return address_textController.value.text.length > 0 &&
+        volunteerTags.value.isNotEmpty;
   }
 }
 

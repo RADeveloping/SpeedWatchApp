@@ -40,23 +40,25 @@ class SessionTextFieldEntry extends GetView<SessionController> {
       placeholderStyle: kTextStyleTilePlaceholder,
       textCapitalization: TextCapitalization.sentences,
       style: kTextStyleTileText,
-      suffix: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: FaIcon(
-          CupertinoIcons.clear_circled_solid,
-          color: kColourSuffixIcon,
+      suffix: GestureDetector(
+        onTap: () {
+          textEditingController.clear();
+          if (onTap != null) {
+            onTap!();
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: FaIcon(
+            CupertinoIcons.clear_circled_solid,
+            color: kColourSuffixIcon,
+          ),
         ),
       ),
       suffixMode: OverlayVisibilityMode.editing,
       onChanged: onChanged,
       onEditingComplete: onEditingComplete,
       onSubmitted: onSubmitted,
-      onTap: () {
-        textEditingController.clear();
-        if (onTap != null) {
-          onTap!();
-        }
-      },
     );
   }
 }

@@ -57,14 +57,18 @@ class Session extends GetView<SessionController> {
                 sections: [
                   SettingsSection(tiles: [
                     SettingsTile(
-                      title: SessionTextFieldEntry(
-                        placeholder: 'Address',
-                        onChanged: (String value) => print(value),
-                        textEditingController:
-                            controller.address_textController.value,
-                        keyboardType: TextInputType.streetAddress,
-                      ),
-                    ),
+                        title: SessionTextFieldEntry(
+                      placeholder: 'Address',
+                      textEditingController:
+                          controller.address_textController.value,
+                      onChanged: (String value) {
+                        controller.address.value = value;
+                      },
+                      onTap: () {
+                        controller.address.value = '';
+                      },
+                      keyboardType: TextInputType.streetAddress,
+                    )),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
                       leadingText: 'Direction',
@@ -165,24 +169,32 @@ class Session extends GetView<SessionController> {
                   ]),
                   SettingsSection(tiles: [
                     CustomSettingsTile(
-                        child: Center(
-                      child: ElevatedButton.icon(
-                        onPressed: ()
-                          async {
-                            if (controller.address_textController.value.toString().length > 0 && controller.volunteerTags.value.isNotEmpty) {
-                              Isar db = Get.find();
-                              await db.writeTxn(((isar) async {
-                                await db.sessionCollections.put(controller.getSession(startDatePicker.date.value, endDatePicker.date.value));
-                              }));
-                            }
-                        },
-                        icon: FaIcon(CupertinoIcons.add),
-                        label: Text(submitButtonText),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(kColourLight)),
-                      ),
-                    ))
+                      child: Center(
+                          child: CupertinoTheme(
+                        child: CupertinoButton.filled(
+                          onPressed: controller.address.value.isEmpty ||
+                                  controller.volunteerTags.value.isEmpty
+                              ? null
+                              : () {
+                                  print(controller.address.value);
+                                },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(CupertinoIcons.add),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(submitButtonText)
+                            ],
+                          ),
+                        ),
+                        data: CupertinoThemeData(
+                            brightness: Brightness.dark,
+                            primaryColor: kColourLight),
+                      )),
+                    ),
                   ]),
                 ],
               ),
