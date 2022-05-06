@@ -125,13 +125,24 @@ class Session extends GetView<SessionController> {
                                 value: controller.volunteerTags.value,
                                 onChanged: (val) {
                                   controller.volunteerTags.value = val;
-                                  controller.userListFromDatabase
-                                      .addAll(val);
+                                  controller.userListFromDatabase.addAll(val);
                                   controller.volunteer_textController.value
                                       .clear();
                                   controller.volunteerSearchValueChanged('');
                                 },
-                                placeholder: 'No Saved Volunteers',
+                                placeholderBuilder: (BuildContext context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Center(
+                                      child: Text(
+                                        'No Saved Volunteers',
+                                        style: TextStyle(
+                                            color: kColourPlaceHolderText,
+                                            fontSize: 16),
+                                      ),
+                                    ),
+                                  );
+                                },
                                 runSpacing: 20,
                                 choiceItems: C2Choice.listFrom<String, String>(
                                   source: controller.volunteerOptions,
@@ -179,7 +190,9 @@ class Session extends GetView<SessionController> {
                     CustomSettingsTile(
                         child: Center(
                       child: ElevatedButton.icon(
-                        onPressed: ()=>controller.writeSessionToDB(startDatePicker.date.value, endDatePicker.date.value),
+                        onPressed: () => controller.writeSessionToDB(
+                            startDatePicker.date.value,
+                            endDatePicker.date.value),
                         icon: FaIcon(CupertinoIcons.add),
                         label: Text(submitButtonText),
                         style: ButtonStyle(
