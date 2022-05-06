@@ -33,13 +33,16 @@ class SessionController extends GetxController {
 
   RxString title = 'Create Session'.obs;
 
+  RxString address = ''.obs;
+
   // Address
   Rx<TextEditingController> address_textController =
       TextEditingController(text: '').obs;
 
   // Direction
   RxInt directionTag = 0.obs;
-  List<String> directionOptions = Direction.values.map((val) => val.name).toList();
+  List<String> directionOptions =
+      Direction.values.map((val) => val.name).toList();
 
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
@@ -50,7 +53,8 @@ class SessionController extends GetxController {
 
   // Road Zone
   RxInt roadZoneTag = 0.obs;
-  List<String> roadZoneOptions = RoadZone.values.map((val) => val.name).toList();
+  List<String> roadZoneOptions =
+      RoadZone.values.map((val) => val.name).toList();
 
   // Speed Limit
 
@@ -75,11 +79,13 @@ class SessionController extends GetxController {
 
   // Road Conditions
   RxInt roadConditionTag = 0.obs;
-  List<String> roadConditionOptions = RoadCondition.values.map((val) => val.name).toList();
+  List<String> roadConditionOptions =
+      RoadCondition.values.map((val) => val.name).toList();
 
   // Road Lighting
   RxInt roadLightingTag = 2.obs;
-  List<String> roadLightingOptions = RoadLighting.values.map((val) => val.name).toList();
+  List<String> roadLightingOptions =
+      RoadLighting.values.map((val) => val.name).toList();
 
   SessionCollection getSession(DateTime startDate, DateTime endDate) {
     return SessionCollection()
@@ -97,7 +103,8 @@ class SessionController extends GetxController {
   }
 
   void writeSessionToDB(DateTime startDate, DateTime endDate) async {
-    if (address_textController.value.toString().length > 0 && volunteerTags.value.isNotEmpty) {
+    if (address_textController.value.toString().length > 0 &&
+        volunteerTags.value.isNotEmpty) {
       Isar db = Get.find();
       SettingsCollection newSettings = await getNewSetting(db);
 

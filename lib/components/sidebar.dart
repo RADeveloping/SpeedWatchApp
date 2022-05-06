@@ -28,7 +28,9 @@ class Sidebar extends GetView<SidebarController> {
           CupertinoIcons.share_up,
           color: kColourLight,
         ),
-        onPressed: () {},
+        onPressed: () {
+          print('Export');
+        },
       ),
       heroTag: 0,
       child: child,
