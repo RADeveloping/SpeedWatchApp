@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:popover/popover.dart';
+import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
@@ -13,6 +16,8 @@ class Sidebar extends GetView<SidebarController> {
   final Widget child;
   final String largeTitle;
   final Widget? leading;
+  Rx<TapPosition> position =
+      TapPosition(Offset(0.0, 0.0), Offset(0.0, 0.0)).obs;
 
   Sidebar({required this.child, required this.largeTitle, this.leading});
 
@@ -24,13 +29,21 @@ class Sidebar extends GetView<SidebarController> {
       largeTitle: largeTitle,
       trailing: CupertinoButton(
         padding: EdgeInsets.zero,
-        child: Icon(
-          CupertinoIcons.share_up,
-          color: kColourLight,
+        child: PositionedTapDetector2(
+          child: Icon(
+            CupertinoIcons.share_up,
+            color: kColourLight,
+          ),
+          onTap: (positioned) {
+            // controller.isEditMode.value = !controller.isEditMode.value;
+            Share.share(
+              'LOG NAME WOULD GO HERE',
+              sharePositionOrigin: Rect.fromLTWH(
+                  positioned.global.dx, positioned.global.dy, 0.5, 20),
+            );
+          },
         ),
-        onPressed: () {
-          print('Export');
-        },
+        onPressed: () {},
       ),
       heroTag: 0,
       child: child,
