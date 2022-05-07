@@ -138,10 +138,10 @@ class SessionsList extends GetView<SidebarController> {
       value: Text(''),
       onPressed: (BuildContext context) {
         DbService dbService = Get.find();
-        dbService.getRecordsWithId(controller.handleNewRecords, session.id);
         controller.records.value = [];
         controller.currentSession.value = session;
-        Get.offAndToNamed('/session/${session.id}');
+        Function callBack = () => Get.offAndToNamed('/session/${session.id}');
+        dbService.getRecordsWithId(controller.handleNewRecords, session.id, callBack);
       },
     );
   }
