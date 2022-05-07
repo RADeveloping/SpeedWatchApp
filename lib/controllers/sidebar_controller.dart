@@ -21,6 +21,7 @@ class SidebarController extends GetxController {
 
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
+  RxInt limitRecords = 20.obs;
 
   final currentSession = SessionCollection().obs;
 

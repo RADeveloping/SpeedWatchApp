@@ -174,6 +174,7 @@ class SessionsList extends GetView<SidebarController> {
         if (!controller.isEditMode.value) {
           DbService dbService = Get.find();
           controller.records.value = [];
+          controller.limitRecords.value = 20;
           controller.currentSession.value = session;
           Function callBack = () => Get.offAndToNamed('/session/${session.id}');
           dbService.getRecordsWithId(controller.handleNewRecords, session.id, callBack);
