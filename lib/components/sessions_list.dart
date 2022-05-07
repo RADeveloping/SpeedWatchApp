@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:collection/collection.dart';
+import 'package:speedwatch/services/db_service.dart';
 import '../constants.dart';
 
 class SessionsList extends GetView<SidebarController> {
@@ -133,8 +135,10 @@ class SessionsList extends GetView<SidebarController> {
         session.streetAddress,
         style: kTextStyleSidebarTile,
       ),
-      value: Text('599'),
+      value: Text(''),
       onPressed: (BuildContext context) {
+        DbService dbService = Get.find();
+        dbService.getRecordsWithId(controller.handleNewRecords, session.id);
         Get.offAndToNamed('/session/${session.id}');
       },
     );

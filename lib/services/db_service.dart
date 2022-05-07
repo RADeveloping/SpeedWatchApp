@@ -47,6 +47,12 @@ class DbService extends GetxService {
     db.recordCollections.where().sessionIdEqualTo(currentSessionId).findAll().then((newRecords) => handleNewRecords(newRecords));
   }
 
+  void getRecordsWithId(Function handleNewRecords, int currentSessionId) async {
+    Isar db = Get.find();
+    db.recordCollections.where().sessionIdEqualTo(currentSessionId).findAll().then((newRecords) => handleNewRecords(newRecords));
+  }
+
+
   void getSessions(Function handleNewSession, Isar db) async {
     db.sessionCollections.where().sortByStartTimeDesc().findAll().then((newSession) => handleNewSession(newSession));
   }
