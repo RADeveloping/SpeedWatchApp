@@ -55,7 +55,7 @@ class LogsList extends GetView<SidebarController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              getSpeedRange(record.speedRange),
+              controller.getSpeedRange(record.speedRange),
               style: TextStyle(color: kColourPlaceHolderText),
             ),
           ),
@@ -63,7 +63,7 @@ class LogsList extends GetView<SidebarController> {
         ],
       ),
       leading: Icon(
-        getIcon(record.vehicleType),
+        controller.getIcon(record.vehicleType),
         color: Colors.white,
       ),
       title: Column(
@@ -73,76 +73,13 @@ class LogsList extends GetView<SidebarController> {
             style: kTextStyleSidebarTile,
           ),
           Text(
-            getType(record.vehicleType),
+            controller.getType(record.vehicleType),
             style: kTextStyleTilePlaceholder,
           ),
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
     );
-  }
-
-  IconData getIcon(VehicleType type) {
-    switch (type) {
-      case VehicleType.largeTruck: {
-        return Icons.local_shipping;
-      }
-      case VehicleType.motorBike: {
-        return Icons.motorcycle;
-      }
-      case VehicleType.passenger: {
-        return Icons.directions_car;
-      }
-      case VehicleType.transit: {
-        return Icons.directions_bus;
-      }
-    }
-  }
-
-  String getType(VehicleType type) {
-    switch (type) {
-      case VehicleType.largeTruck: {
-        return 'Truck';
-      }
-      case VehicleType.motorBike: {
-        return 'Motor Bike';
-      }
-      case VehicleType.passenger: {
-        return 'Passenger';
-      }
-      case VehicleType.transit: {
-        return 'Transit';
-      }
-    }
-  }
-
-  String getSpeedRange(SpeedRange range) {
-    int speedLimit = controller.currentSession.value.speedLimit;
-    int lowerLimit;
-    int upperLimit;
-    switch (range) {
-      case SpeedRange.green: {
-        lowerLimit = 0;
-        upperLimit = speedLimit;
-      }
- break;
-      case SpeedRange.yellow: {
-        lowerLimit = speedLimit + 1;
-        upperLimit = speedLimit + 10;
-      }
- break;
-      case SpeedRange.orange: {
-        lowerLimit = speedLimit + 11;
-        upperLimit = speedLimit + 20;
-      }
- break;
-
-      case SpeedRange.red: {
-        return 'Over ${speedLimit + 20}';
-      }
-
-    }
-    return '${lowerLimit} to ${upperLimit}';
   }
 }
 

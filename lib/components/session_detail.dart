@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:speedwatch/services/db_service.dart';
 
 import '../constants.dart';
+import '../controllers/sidebar_controller.dart';
 import 'springboard.dart';
 
 class SessionDetail extends GetView<SessionDetail> {
@@ -11,6 +12,7 @@ class SessionDetail extends GetView<SessionDetail> {
 
   @override
   Widget build(BuildContext context) {
+    SidebarController s = Get.find();
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         leading: CupertinoButton(
@@ -18,20 +20,13 @@ class SessionDetail extends GetView<SessionDetail> {
           child: Text('Edit'),
           padding: EdgeInsets.zero,
         ),
-        middle: Obx(() => CupertinoSlidingSegmentedControl(
-                children: {
-                  0: Text(
-                    'Volunteer 0',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  1: Text('Volunteer 1', style: TextStyle(color: Colors.white)),
-                  2: Text('Volunteer 2', style: TextStyle(color: Colors.white)),
-                },
+        middle: s.currentSession.value.volunteerNames.length > 1 ? Obx(() => CupertinoSlidingSegmentedControl(
+                children: s.currentSession.value.volunteerNames.map((name) => Text(name, style: TextStyle(color: Colors.white))).toList().asMap(),
                 groupValue: _sliding.value,
                 thumbColor: kColourLight,
                 onValueChanged: (newValue) {
                   _sliding.value = newValue as int;
-                })),
+                })) : Text(s.currentSession.value.volunteerNames[0], style: TextStyle(color: Colors.white)),
         trailing: CupertinoButton(
             onPressed: () {}, child: Text('Undo'), padding: EdgeInsets.zero),
         backgroundColor: kColourRightPaneBackground,
@@ -53,4 +48,6 @@ class SessionDetail extends GetView<SessionDetail> {
       ),
     );
   }
+
+
 }

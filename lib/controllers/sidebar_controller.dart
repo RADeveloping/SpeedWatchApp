@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../collections/record_collection.dart';
 import '../collections/session_collection.dart';
+import '../enums/speed_range.dart';
+import '../enums/vehicle_type.dart';
 
 
 class SidebarController extends GetxController {
@@ -26,5 +29,68 @@ class SidebarController extends GetxController {
   void handleNewRecords(List<RecordCollection> newRecords) async {
     records.value = newRecords;
     print(records);
+  }
+
+  IconData getIcon(VehicleType type) {
+    switch (type) {
+      case VehicleType.largeTruck: {
+        return Icons.local_shipping;
+      }
+      case VehicleType.motorBike: {
+        return Icons.motorcycle;
+      }
+      case VehicleType.passenger: {
+        return Icons.directions_car;
+      }
+      case VehicleType.transit: {
+        return Icons.directions_bus;
+      }
+    }
+  }
+
+  String getType(VehicleType type) {
+    switch (type) {
+      case VehicleType.largeTruck: {
+        return 'Truck';
+      }
+      case VehicleType.motorBike: {
+        return 'Motor Bike';
+      }
+      case VehicleType.passenger: {
+        return 'Passenger';
+      }
+      case VehicleType.transit: {
+        return 'Transit';
+      }
+    }
+  }
+
+  String getSpeedRange(SpeedRange range) {
+    int speedLimit = currentSession.value.speedLimit;
+    int lowerLimit;
+    int upperLimit;
+    switch (range) {
+      case SpeedRange.green: {
+        lowerLimit = 0;
+        upperLimit = speedLimit;
+      }
+      break;
+      case SpeedRange.yellow: {
+        lowerLimit = speedLimit + 1;
+        upperLimit = speedLimit + 10;
+      }
+      break;
+      case SpeedRange.orange: {
+        lowerLimit = speedLimit + 11;
+        upperLimit = speedLimit + 20;
+      }
+      break;
+
+      case SpeedRange.red: {
+        return 'Over ${speedLimit + 20}';
+      }
+
+    }
+    return '${lowerLimit} to ${upperLimit}';
   }
 }
