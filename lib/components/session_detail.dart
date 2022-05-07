@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:speedwatch/collections/record_collection.dart';
 import 'package:speedwatch/services/db_service.dart';
 
 import '../constants.dart';
@@ -28,7 +29,12 @@ class SessionDetail extends GetView<SessionDetail> {
                   _sliding.value = newValue as int;
                 })) : Text(s.currentSession.value.volunteerNames[0], style: TextStyle(color: Colors.white)),
         trailing: CupertinoButton(
-            onPressed: () {}, child: Text('Undo'), padding: EdgeInsets.zero),
+            onPressed: () {
+              DbService dbService = Get.find();
+              List<RecordCollection> records = s.records.value;
+              RecordCollection latestRecord = records[0];
+              dbService.deleteLatestRecord(latestRecord);
+            }, child: Text('Undo'), padding: EdgeInsets.zero),
         backgroundColor: kColourRightPaneBackground,
         brightness: Brightness.dark,
       ),
