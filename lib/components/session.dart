@@ -273,7 +273,8 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                 onTap: () {
                   controller.address_textController().clear();
                   controller.volunteerTags().clear();
-                  Get.offAndToNamed('/');
+                  controller.volunteer_textController().clear();
+                  Get.offAllNamed('/');
                 },
                 child: Container(
                   alignment: Alignment.center,

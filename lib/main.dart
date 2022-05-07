@@ -66,7 +66,6 @@ class MyApp extends StatelessWidget {
               ),
               rightChild: RightPane(),
             ),
-            preventDuplicates: true,
             transition: Transition.noTransition,
           ),
           GetPage(
@@ -79,7 +78,6 @@ class MyApp extends StatelessWidget {
               ),
             ),
             transition: Transition.noTransition,
-            preventDuplicates: false,
           ),
           GetPage(
             name: '/session/:sessionID',
