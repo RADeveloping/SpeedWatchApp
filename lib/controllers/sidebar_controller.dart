@@ -19,6 +19,7 @@ class SidebarController extends GetxController {
 
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
+  final deletedRecords = <RecordCollection>[].obs;
 
   final currentSession = SessionCollection().obs;
 
@@ -28,6 +29,10 @@ class SidebarController extends GetxController {
 
   void handleNewRecords(List<RecordCollection> newRecords) async {
     records.value = newRecords;
+  }
+
+  void handleDeletedRecords(List<RecordCollection> recordsToBeRestored) async {
+    deletedRecords.value = recordsToBeRestored;
   }
 
   IconData getIcon(VehicleType type) {
