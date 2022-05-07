@@ -40,7 +40,7 @@ class LogsList extends GetView<SidebarController> {
 
   AbstractSettingsSection buildSection(BuildContext context) {
     return SettingsSection(
-      title: Text(DateFormat('EEEEEE, MMMM dd, y h:mm a')
+      title: Text(controller.currentSession.value.streetAddress + '\n' + DateFormat('EEEEEE, MMMM dd, y h:mm a')
           .format(controller.currentSession.value.startTime).toUpperCase()),
       margin: EdgeInsetsDirectional.zero,
       tiles: controller.records.isNotEmpty ? controller.records.map((record) => recordItem(record)).toList() 
