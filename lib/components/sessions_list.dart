@@ -56,22 +56,30 @@ class SessionsList extends GetView<SidebarController> {
         !mainList.isEmpty || !archivedList.isEmpty ? [searchBar()] : [];
 
     var groupByDate = groupBy(
-        mainList,
+        mainList.take(controller.limitSessionsMain.value),
         (obj) => DateFormat('EEEEEE, MMMM dd, y')
             .format((obj as SessionCollection).startTime));
     var groupByDateArchived = groupBy(
-        archivedList,
+        archivedList.take(controller.limitSessionsArchived.value),
         (obj) => DateFormat('EEEEEE, MMMM dd, y')
             .format((obj as SessionCollection).startTime));
     groupByDate.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), false));
     });
 
+    if (mainList.length > controller.limitSessionsMain.value) {
+      list.add(moreItems(false));
+    }
+
     archivedList.length > 0 ? list.add(archivedTab(context)) : null;
 
     groupByDateArchived.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), true));
     });
+
+    if (archivedList.length > controller.limitSessionsArchived.value) {
+      list.add(moreItems(true));
+    }
 
     return list;
   }
@@ -132,6 +140,20 @@ class SessionsList extends GetView<SidebarController> {
                             .toList()
                         : [SettingsTile.navigation(title: Text(''))])
                 : Container());
+  }
+
+  CustomSettingsSection moreItems(bool archivable) {
+    return CustomSettingsSection(
+        child: !archivable
+            ? SettingsSection(
+          title: Text(''),
+          tiles: [SettingsTile(title: Center(child: Text('Load more')), onPressed: (c) { controller.limitSessionsMain.value += 20; },)],
+        )
+            : controller.archiveExpanded.value
+            ? SettingsSection(
+            title: Text(''),
+            tiles: [SettingsTile(title: Center(child: Text('Load more')), onPressed: (c) { controller.limitSessionsArchived.value += 20; })],)
+            : Container());
   }
 
   SettingsTile sessionListItem(SessionCollection session) {
