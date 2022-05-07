@@ -95,7 +95,7 @@ class LogsList extends GetView<SidebarController> {
 
     groupByInfractionRecords.forEach((speedRange, groupedList) {
       if (speedRange != SpeedRange.green) {
-        infractionRecords = groupedList;
+        infractionRecords += groupedList;
       }
     });
     return infractionRecords.length;
