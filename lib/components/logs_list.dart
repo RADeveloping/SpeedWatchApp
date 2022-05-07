@@ -128,7 +128,6 @@ class LogsTileMoreButton extends StatelessWidget {
                                 cameraSide: CameraSide.front,
                                 onFile: (file) {
                                   print(file);
-                                  //When take foto you should close camera
                                   Navigator.pop(context);
                                 },
                               )));

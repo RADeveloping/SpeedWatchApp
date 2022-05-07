@@ -12,6 +12,8 @@ import 'package:speedwatch/services/db_service.dart';
 import '../constants.dart';
 
 class SessionsList extends GetView<SidebarController> {
+  RxBool editModeActive = false.obs;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,7 +38,6 @@ class SessionsList extends GetView<SidebarController> {
   }
 
   List<AbstractSettingsSection> buildList(BuildContext context) {
-    List<AbstractSettingsSection> list = [searchBar()];
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
@@ -50,6 +51,9 @@ class SessionsList extends GetView<SidebarController> {
         mainList = groupedList;
       }
     });
+
+    List<AbstractSettingsSection> list =
+        !mainList.isEmpty || !archivedList.isEmpty ? [searchBar()] : [];
 
     var groupByDate = groupBy(
         mainList,
@@ -68,6 +72,7 @@ class SessionsList extends GetView<SidebarController> {
     groupByDateArchived.forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), true));
     });
+
     return list;
   }
 
@@ -131,17 +136,57 @@ class SessionsList extends GetView<SidebarController> {
 
   SettingsTile sessionListItem(SessionCollection session) {
     return SettingsTile.navigation(
+      leading: Obx(() => controller.isEditMode.value
+          ? controller.selectedSessions.value.contains(session)
+              ? Icon(
+                  CupertinoIcons.check_mark_circled_solid,
+                  color: kColourLight,
+                )
+              : Icon(
+                  CupertinoIcons.circle,
+                  color: kColourLight,
+                )
+          : Container()),
       title: Text(
         session.streetAddress,
         style: kTextStyleSidebarTile,
       ),
-      value: Text(''),
+      key: Key(session.toString()),
+      trailing: controller.isEditMode.value
+          ? Container()
+          : Row(
+              children: [
+                Text(
+                  '',
+                  style: kTextStyleTilePlaceholder,
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 6, end: 2),
+                  child: Icon(
+                    CupertinoIcons.chevron_forward,
+                    size: Get.textScaleFactor * 18,
+                    color: kColourPlaceHolderText,
+                  ),
+                )
+              ],
+            ),
       onPressed: (BuildContext context) {
-        DbService dbService = Get.find();
-        controller.records.value = [];
-        controller.currentSession.value = session;
-        Function callBack = () => Get.offAndToNamed('/session/${session.id}');
-        dbService.getRecordsWithId(controller.handleNewRecords, session.id, callBack);
+        if (!controller.isEditMode.value) {
+          DbService dbService = Get.find();
+          controller.records.value = [];
+          controller.currentSession.value = session;
+          Function callBack = () => Get.offAndToNamed('/session/${session.id}');
+          dbService.getRecordsWithId(controller.handleNewRecords, session.id, callBack);
+        }
+
+        if (controller.isEditMode.value) {
+          if (controller.selectedSessions.contains(session)) {
+            controller.selectedSessions.remove(session);
+          } else {
+            controller.selectedSessions.value.add(session);
+          }
+        }
+        controller.selectedSessions.refresh();
       },
     );
   }

@@ -1,18 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/session.dart';
 import 'package:speedwatch/components/sidebar.dart';
-import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/screens/home_view.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:speedwatch/services/db_service.dart';
 
 import 'components/logs_list.dart';
@@ -66,7 +62,6 @@ class MyApp extends StatelessWidget {
               ),
               rightChild: RightPane(),
             ),
-            preventDuplicates: true,
             transition: Transition.noTransition,
           ),
           GetPage(
@@ -79,7 +74,6 @@ class MyApp extends StatelessWidget {
               ),
             ),
             transition: Transition.noTransition,
-            preventDuplicates: false,
           ),
           GetPage(
             name: '/session/:sessionID',
@@ -95,6 +89,15 @@ class MyApp extends StatelessWidget {
                       Icon(
                         CupertinoIcons.back,
                         color: kColourLight,
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Sessions',
+                          style: TextStyle(
+                            color: kColourLight,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

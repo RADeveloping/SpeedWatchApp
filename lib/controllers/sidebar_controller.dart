@@ -7,7 +7,6 @@ import '../collections/session_collection.dart';
 import '../enums/speed_range.dart';
 import '../enums/vehicle_type.dart';
 
-
 class SidebarController extends GetxController {
   RxString title = 'Title'.obs;
 
@@ -16,6 +15,9 @@ class SidebarController extends GetxController {
 
   RxBool archiveExpanded = false.obs;
   RxBool isEditMode = false.obs;
+  RxList<SessionCollection> selectedSessions = <SessionCollection>[].obs;
+
+  void selectAll() {}
 
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
