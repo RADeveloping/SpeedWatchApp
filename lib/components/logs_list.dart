@@ -28,7 +28,7 @@ class LogsList extends GetView<SidebarController> {
             ),
             sections: [
               SettingsSection(
-                title: Text('FRIDAY, APRIL 29, 2022'),
+                title: Text(controller.currentSessionDate.value),
                 margin: EdgeInsetsDirectional.zero,
                 tiles: <SettingsTile>[
                   SettingsTile(

@@ -17,6 +17,8 @@ class SidebarController extends GetxController {
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
 
+  final currentSessionDate = ''.obs;
+
   void handleNewSessions(List<SessionCollection> newSessions) {
     sessions.value = newSessions;
   }
