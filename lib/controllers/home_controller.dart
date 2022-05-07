@@ -8,6 +8,7 @@ import '../components/sidebar.dart';
 
 class HomeController extends GetxController {
   RxString title = 'Home'.obs;
+
   RxList<Widget> children = <Widget>[
     Sidebar(
       child: SessionsList(),

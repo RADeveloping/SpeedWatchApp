@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
-import 'package:speedwatch/controllers/home_controller.dart';
 
 import '../constants.dart';
 

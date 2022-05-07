@@ -25,8 +25,12 @@ class HomeView extends GetView<HomeController> {
         child: MultiSplitViewTheme(
           data: MultiSplitViewThemeData(dividerThickness: 1),
           child: MultiSplitView(
-              resizable: false,
-              initialWeights: [0.3, 0.7],
+              controller: MultiSplitViewController(
+                  weights:
+                      context.isPortrait ? [0.417, 0.583] : [0.347, 0.653]),
+              resizable: true,
+              initialWeights:
+                  context.isPortrait ? [0.417, 0.583] : [0.347, 0.653],
               children: controller.children.value),
         )));
   }
