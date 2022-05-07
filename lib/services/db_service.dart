@@ -71,18 +71,19 @@ class DbService extends GetxService {
     return await db.settingsCollections.get(id);
   }
 
-  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, int sessionId) {
+  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, int sessionId, String volunteerName) {
     return RecordCollection()
       ..createdAt = DateTime.now()
       ..speedRange = speedRange
       ..vehicleType = vehicleType
-        ..sessionId = sessionId;
+        ..sessionId = sessionId
+    ..volunteerName = volunteerName;
   }
 
-  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionId) async {
+  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionId, String volunteerName) async {
     Isar db = Get.find();
     await db.writeTxn(((isar) async {
-      await db.recordCollections.put(getRecord(speedRange, vehicleType, sessionId));
+      await db.recordCollections.put(getRecord(speedRange, vehicleType, sessionId, volunteerName));
     }));
   }
 

@@ -15,13 +15,14 @@ extension GetRecordCollectionCollection on Isar {
 const RecordCollectionSchema = CollectionSchema(
   name: 'RecordCollection',
   schema:
-      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
+      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"},{"name":"volunteerName","type":"String"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
   idName: 'id',
   propertyIds: {
     'createdAt': 0,
     'sessionId': 1,
     'speedRange': 2,
-    'vehicleType': 3
+    'vehicleType': 3,
+    'volunteerName': 4
   },
   listProperties: {},
   indexIds: {'createdAt': 0, 'sessionId': 1},
@@ -84,6 +85,9 @@ void _recordCollectionSerializeNative(
   final value3 =
       _recordCollectionVehicleTypeConverter.toIsar(object.vehicleType);
   final _vehicleType = value3;
+  final value4 = object.volunteerName;
+  final _volunteerName = IsarBinaryWriter.utf8Encoder.convert(value4);
+  dynamicSize += (_volunteerName.length) as int;
   final size = staticSize + dynamicSize;
 
   rawObj.buffer = alloc(size);
@@ -94,6 +98,7 @@ void _recordCollectionSerializeNative(
   writer.writeLong(offsets[1], _sessionId);
   writer.writeLong(offsets[2], _speedRange);
   writer.writeLong(offsets[3], _vehicleType);
+  writer.writeBytes(offsets[4], _volunteerName);
 }
 
 RecordCollection _recordCollectionDeserializeNative(
@@ -109,6 +114,7 @@ RecordCollection _recordCollectionDeserializeNative(
       .fromIsar(reader.readLong(offsets[2]));
   object.vehicleType = _recordCollectionVehicleTypeConverter
       .fromIsar(reader.readLong(offsets[3]));
+  object.volunteerName = reader.readString(offsets[4]);
   return object;
 }
 
@@ -127,6 +133,8 @@ P _recordCollectionDeserializePropNative<P>(
     case 3:
       return (_recordCollectionVehicleTypeConverter
           .fromIsar(reader.readLong(offset))) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
     default:
       throw 'Illegal propertyIndex';
   }
@@ -143,6 +151,7 @@ dynamic _recordCollectionSerializeWeb(
       _recordCollectionSpeedRangeConverter.toIsar(object.speedRange));
   IsarNative.jsObjectSet(jsObj, 'vehicleType',
       _recordCollectionVehicleTypeConverter.toIsar(object.vehicleType));
+  IsarNative.jsObjectSet(jsObj, 'volunteerName', object.volunteerName);
   return jsObj;
 }
 
@@ -162,6 +171,7 @@ RecordCollection _recordCollectionDeserializeWeb(
       IsarNative.jsObjectGet(jsObj, 'speedRange') ?? double.negativeInfinity);
   object.vehicleType = _recordCollectionVehicleTypeConverter.fromIsar(
       IsarNative.jsObjectGet(jsObj, 'vehicleType') ?? double.negativeInfinity);
+  object.volunteerName = IsarNative.jsObjectGet(jsObj, 'volunteerName') ?? '';
   return object;
 }
 
@@ -188,6 +198,8 @@ P _recordCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
       return (_recordCollectionVehicleTypeConverter.fromIsar(
           IsarNative.jsObjectGet(jsObj, 'vehicleType') ??
               double.negativeInfinity)) as P;
+    case 'volunteerName':
+      return (IsarNative.jsObjectGet(jsObj, 'volunteerName') ?? '') as P;
     default:
       throw 'Illegal propertyName';
   }
@@ -673,6 +685,113 @@ extension RecordCollectionQueryFilter
       includeUpper: includeUpper,
     ));
   }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'volunteerName',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameGreaterThan(
+    String value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'volunteerName',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameLessThan(
+    String value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'volunteerName',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameBetween(
+    String lower,
+    String upper, {
+    bool caseSensitive = true,
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'volunteerName',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.startsWith,
+      property: 'volunteerName',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.endsWith,
+      property: 'volunteerName',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameContains(String value, {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.contains,
+      property: 'volunteerName',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      volunteerNameMatches(String pattern, {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.matches,
+      property: 'volunteerName',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
 }
 
 extension RecordCollectionQueryLinks
@@ -728,6 +847,16 @@ extension RecordCollectionQueryWhereSortBy
       sortByVehicleTypeDesc() {
     return addSortByInternal('vehicleType', Sort.desc);
   }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortByVolunteerName() {
+    return addSortByInternal('volunteerName', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortByVolunteerNameDesc() {
+    return addSortByInternal('volunteerName', Sort.desc);
+  }
 }
 
 extension RecordCollectionQueryWhereSortThenBy
@@ -780,6 +909,16 @@ extension RecordCollectionQueryWhereSortThenBy
       thenByVehicleTypeDesc() {
     return addSortByInternal('vehicleType', Sort.desc);
   }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenByVolunteerName() {
+    return addSortByInternal('volunteerName', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenByVolunteerNameDesc() {
+    return addSortByInternal('volunteerName', Sort.desc);
+  }
 }
 
 extension RecordCollectionQueryWhereDistinct
@@ -807,6 +946,11 @@ extension RecordCollectionQueryWhereDistinct
       distinctByVehicleType() {
     return addDistinctByInternal('vehicleType');
   }
+
+  QueryBuilder<RecordCollection, RecordCollection, QDistinct>
+      distinctByVolunteerName({bool caseSensitive = true}) {
+    return addDistinctByInternal('volunteerName', caseSensitive: caseSensitive);
+  }
 }
 
 extension RecordCollectionQueryProperty
@@ -832,5 +976,10 @@ extension RecordCollectionQueryProperty
   QueryBuilder<RecordCollection, VehicleType, QQueryOperations>
       vehicleTypeProperty() {
     return addPropertyNameInternal('vehicleType');
+  }
+
+  QueryBuilder<RecordCollection, String, QQueryOperations>
+      volunteerNameProperty() {
+    return addPropertyNameInternal('volunteerName');
   }
 }

@@ -22,4 +22,5 @@ class RecordCollection {
   late VehicleType vehicleType;
   @Index()
   late int sessionId;
+  late String volunteerName;
 }

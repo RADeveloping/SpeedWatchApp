@@ -42,7 +42,7 @@ class SessionDetail extends GetView<SessionDetail> {
                 DbService dbService = Get.find();
                 String currentSessionIDInString = await Get.parameters['sessionID'] as String;
                 int currentSessionId = int.parse(currentSessionIDInString);
-                dbService.writeRecordToDB(speedRange, vehicleType, currentSessionId);
+                dbService.writeRecordToDB(speedRange, vehicleType, currentSessionId, s.currentSession.value.volunteerNames[_sliding.value]);
               },
             )),
       ),
