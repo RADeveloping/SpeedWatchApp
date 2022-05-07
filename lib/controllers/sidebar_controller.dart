@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 
+import '../collections/record_collection.dart';
 import '../collections/session_collection.dart';
 
 
@@ -15,8 +15,14 @@ class SidebarController extends GetxController {
   RxBool isEditMode = false.obs;
 
   final sessions = <SessionCollection>[].obs;
+  final records = <RecordCollection>[].obs;
 
   void handleNewSessions(List<SessionCollection> newSessions) {
     sessions.value = newSessions;
+  }
+
+  void handleNewRecords(List<RecordCollection> newRecords) async {
+    records.value = newRecords;
+    print(records);
   }
 }

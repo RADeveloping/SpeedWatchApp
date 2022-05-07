@@ -20,5 +20,6 @@ class RecordCollection {
 
   @VehicleTypeConverter()
   late VehicleType vehicleType;
-  final session = IsarLink<SessionCollection>();
+  @Index()
+  late int sessionId;
 }

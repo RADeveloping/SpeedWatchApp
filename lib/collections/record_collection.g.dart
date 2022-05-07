@@ -15,17 +15,25 @@ extension GetRecordCollectionCollection on Isar {
 const RecordCollectionSchema = CollectionSchema(
   name: 'RecordCollection',
   schema:
-      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]}],"links":[{"name":"session","target":"SessionCollection"}]}',
+      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
   idName: 'id',
-  propertyIds: {'createdAt': 0, 'speedRange': 1, 'vehicleType': 2},
+  propertyIds: {
+    'createdAt': 0,
+    'sessionId': 1,
+    'speedRange': 2,
+    'vehicleType': 3
+  },
   listProperties: {},
-  indexIds: {'createdAt': 0},
+  indexIds: {'createdAt': 0, 'sessionId': 1},
   indexValueTypes: {
     'createdAt': [
       IndexValueType.long,
+    ],
+    'sessionId': [
+      IndexValueType.long,
     ]
   },
-  linkIds: {'session': 0},
+  linkIds: {},
   backlinkLinkNames: {},
   getId: _recordCollectionGetId,
   setId: _recordCollectionSetId,
@@ -53,7 +61,7 @@ void _recordCollectionSetId(RecordCollection object, int id) {
 }
 
 List<IsarLinkBase> _recordCollectionGetLinks(RecordCollection object) {
-  return [object.session];
+  return [];
 }
 
 const _recordCollectionSpeedRangeConverter = SpeedRangeConverter();
@@ -69,11 +77,13 @@ void _recordCollectionSerializeNative(
   var dynamicSize = 0;
   final value0 = object.createdAt;
   final _createdAt = value0;
-  final value1 = _recordCollectionSpeedRangeConverter.toIsar(object.speedRange);
-  final _speedRange = value1;
-  final value2 =
+  final value1 = object.sessionId;
+  final _sessionId = value1;
+  final value2 = _recordCollectionSpeedRangeConverter.toIsar(object.speedRange);
+  final _speedRange = value2;
+  final value3 =
       _recordCollectionVehicleTypeConverter.toIsar(object.vehicleType);
-  final _vehicleType = value2;
+  final _vehicleType = value3;
   final size = staticSize + dynamicSize;
 
   rawObj.buffer = alloc(size);
@@ -81,8 +91,9 @@ void _recordCollectionSerializeNative(
   final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeDateTime(offsets[0], _createdAt);
-  writer.writeLong(offsets[1], _speedRange);
-  writer.writeLong(offsets[2], _vehicleType);
+  writer.writeLong(offsets[1], _sessionId);
+  writer.writeLong(offsets[2], _speedRange);
+  writer.writeLong(offsets[3], _vehicleType);
 }
 
 RecordCollection _recordCollectionDeserializeNative(
@@ -93,11 +104,11 @@ RecordCollection _recordCollectionDeserializeNative(
   final object = RecordCollection();
   object.createdAt = reader.readDateTime(offsets[0]);
   object.id = id;
+  object.sessionId = reader.readLong(offsets[1]);
   object.speedRange = _recordCollectionSpeedRangeConverter
-      .fromIsar(reader.readLong(offsets[1]));
-  object.vehicleType = _recordCollectionVehicleTypeConverter
       .fromIsar(reader.readLong(offsets[2]));
-  _recordCollectionAttachLinks(collection, id, object);
+  object.vehicleType = _recordCollectionVehicleTypeConverter
+      .fromIsar(reader.readLong(offsets[3]));
   return object;
 }
 
@@ -109,9 +120,11 @@ P _recordCollectionDeserializePropNative<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
+      return (reader.readLong(offset)) as P;
+    case 2:
       return (_recordCollectionSpeedRangeConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 2:
+    case 3:
       return (_recordCollectionVehicleTypeConverter
           .fromIsar(reader.readLong(offset))) as P;
     default:
@@ -125,6 +138,7 @@ dynamic _recordCollectionSerializeWeb(
   IsarNative.jsObjectSet(
       jsObj, 'createdAt', object.createdAt.toUtc().millisecondsSinceEpoch);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'sessionId', object.sessionId);
   IsarNative.jsObjectSet(jsObj, 'speedRange',
       _recordCollectionSpeedRangeConverter.toIsar(object.speedRange));
   IsarNative.jsObjectSet(jsObj, 'vehicleType',
@@ -142,12 +156,12 @@ RecordCollection _recordCollectionDeserializeWeb(
           .toLocal()
       : DateTime.fromMillisecondsSinceEpoch(0);
   object.id = IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity;
+  object.sessionId =
+      IsarNative.jsObjectGet(jsObj, 'sessionId') ?? double.negativeInfinity;
   object.speedRange = _recordCollectionSpeedRangeConverter.fromIsar(
       IsarNative.jsObjectGet(jsObj, 'speedRange') ?? double.negativeInfinity);
   object.vehicleType = _recordCollectionVehicleTypeConverter.fromIsar(
       IsarNative.jsObjectGet(jsObj, 'vehicleType') ?? double.negativeInfinity);
-  _recordCollectionAttachLinks(collection,
-      IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity, object);
   return object;
 }
 
@@ -163,6 +177,9 @@ P _recordCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity)
           as P;
+    case 'sessionId':
+      return (IsarNative.jsObjectGet(jsObj, 'sessionId') ??
+          double.negativeInfinity) as P;
     case 'speedRange':
       return (_recordCollectionSpeedRangeConverter.fromIsar(
           IsarNative.jsObjectGet(jsObj, 'speedRange') ??
@@ -177,9 +194,7 @@ P _recordCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
 }
 
 void _recordCollectionAttachLinks(
-    IsarCollection col, int id, RecordCollection object) {
-  object.session.attach(col, col.isar.sessionCollections, 'session', id);
-}
+    IsarCollection col, int id, RecordCollection object) {}
 
 extension RecordCollectionQueryWhereSort
     on QueryBuilder<RecordCollection, RecordCollection, QWhere> {
@@ -190,6 +205,11 @@ extension RecordCollectionQueryWhereSort
   QueryBuilder<RecordCollection, RecordCollection, QAfterWhere> anyCreatedAt() {
     return addWhereClauseInternal(
         const IndexWhereClause.any(indexName: 'createdAt'));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhere> anySessionId() {
+    return addWhereClauseInternal(
+        const IndexWhereClause.any(indexName: 'sessionId'));
   }
 }
 
@@ -322,6 +342,79 @@ extension RecordCollectionQueryWhere
       includeUpper: includeUpper,
     ));
   }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      sessionIdEqualTo(int sessionId) {
+    return addWhereClauseInternal(IndexWhereClause.equalTo(
+      indexName: 'sessionId',
+      value: [sessionId],
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      sessionIdNotEqualTo(int sessionId) {
+    if (whereSortInternal == Sort.asc) {
+      return addWhereClauseInternal(IndexWhereClause.lessThan(
+        indexName: 'sessionId',
+        upper: [sessionId],
+        includeUpper: false,
+      )).addWhereClauseInternal(IndexWhereClause.greaterThan(
+        indexName: 'sessionId',
+        lower: [sessionId],
+        includeLower: false,
+      ));
+    } else {
+      return addWhereClauseInternal(IndexWhereClause.greaterThan(
+        indexName: 'sessionId',
+        lower: [sessionId],
+        includeLower: false,
+      )).addWhereClauseInternal(IndexWhereClause.lessThan(
+        indexName: 'sessionId',
+        upper: [sessionId],
+        includeUpper: false,
+      ));
+    }
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      sessionIdGreaterThan(
+    int sessionId, {
+    bool include = false,
+  }) {
+    return addWhereClauseInternal(IndexWhereClause.greaterThan(
+      indexName: 'sessionId',
+      lower: [sessionId],
+      includeLower: include,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      sessionIdLessThan(
+    int sessionId, {
+    bool include = false,
+  }) {
+    return addWhereClauseInternal(IndexWhereClause.lessThan(
+      indexName: 'sessionId',
+      upper: [sessionId],
+      includeUpper: include,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      sessionIdBetween(
+    int lowerSessionId,
+    int upperSessionId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addWhereClauseInternal(IndexWhereClause.between(
+      indexName: 'sessionId',
+      lower: [lowerSessionId],
+      includeLower: includeLower,
+      upper: [upperSessionId],
+      includeUpper: includeUpper,
+    ));
+  }
 }
 
 extension RecordCollectionQueryFilter
@@ -421,6 +514,57 @@ extension RecordCollectionQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'id',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      sessionIdEqualTo(int value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'sessionId',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      sessionIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'sessionId',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      sessionIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'sessionId',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      sessionIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'sessionId',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -532,16 +676,7 @@ extension RecordCollectionQueryFilter
 }
 
 extension RecordCollectionQueryLinks
-    on QueryBuilder<RecordCollection, RecordCollection, QFilterCondition> {
-  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
-      session(FilterQuery<SessionCollection> q) {
-    return linkInternal(
-      isar.sessionCollections,
-      q,
-      'session',
-    );
-  }
-}
+    on QueryBuilder<RecordCollection, RecordCollection, QFilterCondition> {}
 
 extension RecordCollectionQueryWhereSortBy
     on QueryBuilder<RecordCollection, RecordCollection, QSortBy> {
@@ -562,6 +697,16 @@ extension RecordCollectionQueryWhereSortBy
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
       sortByIdDesc() {
     return addSortByInternal('id', Sort.desc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortBySessionId() {
+    return addSortByInternal('sessionId', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortBySessionIdDesc() {
+    return addSortByInternal('sessionId', Sort.desc);
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
@@ -607,6 +752,16 @@ extension RecordCollectionQueryWhereSortThenBy
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenBySessionId() {
+    return addSortByInternal('sessionId', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenBySessionIdDesc() {
+    return addSortByInternal('sessionId', Sort.desc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
       thenBySpeedRange() {
     return addSortByInternal('speedRange', Sort.asc);
   }
@@ -639,6 +794,11 @@ extension RecordCollectionQueryWhereDistinct
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QDistinct>
+      distinctBySessionId() {
+    return addDistinctByInternal('sessionId');
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QDistinct>
       distinctBySpeedRange() {
     return addDistinctByInternal('speedRange');
   }
@@ -658,6 +818,10 @@ extension RecordCollectionQueryProperty
 
   QueryBuilder<RecordCollection, int, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<RecordCollection, int, QQueryOperations> sessionIdProperty() {
+    return addPropertyNameInternal('sessionId');
   }
 
   QueryBuilder<RecordCollection, SpeedRange, QQueryOperations>

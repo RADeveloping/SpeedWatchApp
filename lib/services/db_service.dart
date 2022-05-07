@@ -21,6 +21,7 @@ class DbService extends GetxService {
       SidebarController s = Get.find();
       getSessions(s.handleNewSessions, db);
       setSessionsListener(s.handleNewSessions, db);
+      setRecordsListener(s.handleNewRecords, db);
       return db;
     });
     Get.put(isar, permanent: true);
@@ -32,6 +33,18 @@ class DbService extends GetxService {
     sessionsChanged.listen((s) {
       getSessions(handleNewSession, db);
     });
+  }
+
+  void setRecordsListener(Function handleNewRecords, Isar db) async {
+    Stream<void> recordsChanged = db.recordCollections.watchLazy();
+    recordsChanged.listen((s) {
+      getRecords(handleNewRecords, db);
+    });
+  }
+
+  void getRecords(Function handleNewRecords, Isar db) async {
+    int currentSessionId = int.parse(await Get.parameters['sessionID'] as String);
+    db.recordCollections.where().sessionIdEqualTo(currentSessionId).findAll().then((newRecords) => handleNewRecords(newRecords));
   }
 
   void getSessions(Function handleNewSession, Isar db) async {
@@ -52,19 +65,18 @@ class DbService extends GetxService {
     return await db.settingsCollections.get(id);
   }
 
-  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, SessionCollection session) {
+  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, int sessionId) {
     return RecordCollection()
       ..createdAt = DateTime.now()
       ..speedRange = speedRange
       ..vehicleType = vehicleType
-      ..session.value = session;
+        ..sessionId = sessionId;
   }
 
-  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionID) async {
+  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionId) async {
     Isar db = Get.find();
-    final currentSession = await db.sessionCollections.get(sessionID);
     await db.writeTxn(((isar) async {
-      await db.recordCollections.put(getRecord(speedRange, vehicleType, currentSession!));
+      await db.recordCollections.put(getRecord(speedRange, vehicleType, sessionId));
     }));
   }
 

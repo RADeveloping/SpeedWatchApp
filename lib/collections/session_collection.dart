@@ -36,6 +36,4 @@ class SessionCollection {
   @LightingConverter()
   late RoadLighting roadLightingOptions;
   late bool hasExportedSession;
-  @Backlink(to: 'session')
-  final records = IsarLinks<RecordCollection>();
 }
