@@ -13,7 +13,7 @@ class Sidebar extends GetView<SidebarController> {
   final Widget child;
   final String largeTitle;
   final Widget? leading;
-  String? previousPageTitle;
+  final String? previousPageTitle;
   Rx<TapPosition> position =
       TapPosition(Offset(0.0, 0.0), Offset(0.0, 0.0)).obs;
 
