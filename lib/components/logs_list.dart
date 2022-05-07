@@ -40,22 +40,12 @@ class LogsList extends GetView<SidebarController> {
   }
 
   AbstractSettingsSection buildSection(BuildContext context) {
-    List<RecordCollection> infractionRecords = [];
-    var groupByInfractionRecords = groupBy(
-        controller.records.value,
-            (obj) => (obj as RecordCollection).speedRange);
-
-    groupByInfractionRecords.forEach((speedRange, groupedList) {
-      if (speedRange != SpeedRange.green) {
-        infractionRecords = groupedList;
-      }
-    });
     return SettingsSection(
       title: Text(controller.currentSession.value.streetAddress
           + '\n' + DateFormat('EEEEEE, MMMM dd, y h:mm a')
               .format(controller.currentSession.value.startTime).toUpperCase()
           +  '\nTotal: ${controller.records.value.length} '
-          'Infractions: ${infractionRecords.length} \n'
+          'Infractions: ${getInfractionCount()} \n'
           ),
       margin: EdgeInsetsDirectional.zero,
       tiles: controller.records.isNotEmpty ? controller.records.map((record) => recordItem(record)).toList() 
@@ -95,6 +85,20 @@ class LogsList extends GetView<SidebarController> {
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
     );
+  }
+
+  int getInfractionCount() {
+    List<RecordCollection> infractionRecords = [];
+    var groupByInfractionRecords = groupBy(
+        controller.records.value,
+            (obj) => (obj as RecordCollection).speedRange);
+
+    groupByInfractionRecords.forEach((speedRange, groupedList) {
+      if (speedRange != SpeedRange.green) {
+        infractionRecords = groupedList;
+      }
+    });
+    return infractionRecords.length;
   }
 }
 
