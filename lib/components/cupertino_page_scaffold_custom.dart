@@ -64,33 +64,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                       child: sidebarController.selectedSessions.isEmpty
                           ? GestureDetector(
                               onTapDown: (positioned) async {
-                                sidebarController.selectedSessions.value.addAll(
-                                    sidebarController.sessions.value.toList());
-                                sidebarController.selectedSessions.refresh();
-                                final result = await Share.shareWithResult(
-                                  'check out my website https://example.com',
-                                  sharePositionOrigin: Rect.fromLTWH(
-                                      positioned.globalPosition.dx,
-                                      positioned.globalPosition.dy,
-                                      1,
-                                      1),
-                                );
-
-                                if (result.status ==
-                                    ShareResultStatus.dismissed) {
-                                  sidebarController.isEditMode.value = false;
-                                } else if (result.status ==
-                                    ShareResultStatus.success) {
-                                  // TODO MOVE TO ARCHIVE!!!
-                                  Get.showSnackbar(GetSnackBar(
-                                    message:
-                                        'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW....',
-                                    duration: Duration(seconds: 3),
-                                  ));
-                                  sidebarController.sessions.value.clear();
-                                  sidebarController.sessions.refresh();
-                                  sidebarController.isEditMode.value = false;
-                                }
+                                Get.showOverlay(asyncFunction: () async {
+                                  await ShowExportAllShareSheet(positioned);
+                                });
                               },
                               child: Text(
                                 'Export All',
@@ -99,33 +75,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                             )
                           : GestureDetector(
                               onTapDown: (positioned) async {
-                                final result = await Share.shareWithResult(
-                                  'check out my website https://example.com',
-                                  sharePositionOrigin: Rect.fromLTWH(
-                                      positioned.globalPosition.dx,
-                                      positioned.globalPosition.dy,
-                                      1,
-                                      1),
-                                );
-
-                                if (result.status ==
-                                    ShareResultStatus.dismissed) {
-                                  sidebarController.isEditMode.value = false;
-                                } else if (result.status ==
-                                    ShareResultStatus.success) {
-                                  // TODO MOVE TO ARCHIVE!!!
-                                  Get.showSnackbar(GetSnackBar(
-                                    message:
-                                        'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW....',
-                                    duration: Duration(seconds: 3),
-                                  ));
-                                  sidebarController.sessions.value.removeWhere(
-                                      (element) => sidebarController
-                                          .selectedSessions
-                                          .contains(element));
-                                  sidebarController.sessions.refresh();
-                                  sidebarController.isEditMode.value = false;
-                                }
+                                Get.showOverlay(asyncFunction: () async {
+                                  await ShowSingleExportShareSheet(positioned);
+                                });
                               },
                               child: Text(
                                 'Export ${sidebarController.selectedSessions.length} items',
@@ -137,5 +89,54 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
             : Container())
       ],
     );
+  }
+
+  Future<void> ShowExportAllShareSheet(TapDownDetails positioned) async {
+    sidebarController.selectedSessions.value
+        .addAll(sidebarController.sessions.value.toList());
+    sidebarController.selectedSessions.refresh();
+    final result = await Share.shareWithResult(
+      'check out my website https://example.com',
+      sharePositionOrigin: Rect.fromLTWH(
+          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
+    );
+
+    if (result.status == ShareResultStatus.dismissed) {
+      sidebarController.isEditMode.value = false;
+    } else if (result.status == ShareResultStatus.success) {
+      // TODO MOVE TO ARCHIVE!!!
+      Get.showSnackbar(GetSnackBar(
+        message:
+            'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW.... ASK USER IF MOVE TO EXPORTED OR NOT ? ',
+        duration: Duration(seconds: 3),
+      ));
+      // sidebarController.sessions.value.clear();
+      // sidebarController.sessions.refresh();
+      sidebarController.isEditMode.value = false;
+    }
+  }
+
+  Future<void> ShowSingleExportShareSheet(TapDownDetails positioned) async {
+    final result = await Share.shareWithResult(
+      'check out my website https://example.com',
+      sharePositionOrigin: Rect.fromLTWH(
+          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
+    );
+
+    if (result.status == ShareResultStatus.dismissed) {
+      sidebarController.isEditMode.value = false;
+    } else if (result.status == ShareResultStatus.success) {
+      // TODO MOVE TO ARCHIVE!!!
+      Get.showSnackbar(GetSnackBar(
+        message:
+            'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW.... ASK USER IF MOVE TO EXPORTED OR NOT ? ',
+        duration: Duration(seconds: 3),
+      ));
+
+      // sidebarController.sessions.value.removeWhere(
+      //     (element) => sidebarController.selectedSessions.contains(element));
+      // sidebarController.sessions.refresh();
+      sidebarController.isEditMode.value = false;
+    }
   }
 }
