@@ -40,26 +40,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put<SessionController>(SessionController());
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
-    Get.put<SessionController>(SessionController());
+    Get.put(() => DbService(), permanent: true);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
-        defaultTransition: Transition.cupertino,
+        defaultTransition: Transition.noTransition,
         title: 'Speed Watch',
         theme: CupertinoThemeData(
           brightness: Brightness.light,
           primaryColor: kColourLight,
           scaffoldBackgroundColor: kColourSidebarBackground,
-        ),
-        home: HomeView(
-          leftChild: Sidebar(
-            largeTitle: 'Sessions',
-            child: SessionsList(),
-          ),
-          rightChild: RightPane(),
         ),
         initialRoute: '/',
         getPages: [
@@ -67,31 +61,44 @@ class MyApp extends StatelessWidget {
             name: '/',
             page: () => HomeView(
               leftChild: Sidebar(
-                largeTitle: 'Sessions',
                 child: SessionsList(),
+                largeTitle: 'Sessions',
               ),
               rightChild: RightPane(),
             ),
+            preventDuplicates: true,
             transition: Transition.noTransition,
           ),
           GetPage(
             name: '/create',
             page: () => HomeView(
-              leftChild: Sidebar(
-                largeTitle: 'Sessions',
-                child: SessionsList(),
-              ),
+              leftChild: null,
               rightChild: Session(
                 title: 'Create Session',
                 submitButtonText: 'Create Session',
               ),
             ),
             transition: Transition.noTransition,
+            preventDuplicates: false,
           ),
           GetPage(
             name: '/session/:sessionID',
             page: () => HomeView(
               leftChild: Sidebar(
+                leading: CupertinoButton(
+                  padding: EdgeInsetsDirectional.zero,
+                  onPressed: () {
+                    Get.offAndToNamed('/');
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.back,
+                        color: kColourLight,
+                      ),
+                    ],
+                  ),
+                ),
                 largeTitle: 'Log',
                 previousPageTitle: 'Sessions',
                 child: LogsList(),
@@ -99,6 +106,7 @@ class MyApp extends StatelessWidget {
               rightChild: SessionDetail(),
             ),
             transition: Transition.noTransition,
+            preventDuplicates: true,
           ),
         ],
         localizationsDelegates: [

@@ -7,7 +7,9 @@ import 'package:isar/isar.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
+import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/text_field_input.dart';
+import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/session_controller.dart';
 
 import '../collections/settings_collection.dart';
@@ -25,6 +27,7 @@ class Session extends GetView<SessionController> {
   String submitButtonText;
 
   Session({required this.title, required this.submitButtonText});
+  final HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -223,13 +226,15 @@ class Session extends GetView<SessionController> {
 
   void createNewSessionClick() async {
     DbService dbService = Get.find();
-    SessionCollection newSessionCollection = controller.getSession(startDatePicker.date.value, endDatePicker.date.value);
+    SessionCollection newSessionCollection = controller.getSession(
+        startDatePicker.date.value, endDatePicker.date.value);
     SettingsCollection newSettingsCollection = SettingsCollection()
-      ..id=0
-      ..value=await controller.getNewVolunteerNamesValue()
-      ..key='names';
-    int id = await dbService.writeSessionToDB(newSessionCollection, newSettingsCollection);
-    Get.toNamed('/session/${id}');
+      ..id = 0
+      ..value = await controller.getNewVolunteerNamesValue()
+      ..key = 'names';
+    int id = await dbService.writeSessionToDB(
+        newSessionCollection, newSettingsCollection);
+    Get.offAndToNamed('/session/${id}');
   }
 }
 
@@ -265,15 +270,21 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                 color: kColourTileDivider,
               ),
               GestureDetector(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Discard Changes',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
-                ),
                 onTap: () {
-                  Navigator.pop(context);
-                  Get.offAndToNamed('/home');
+                  controller.address_textController().clear();
+                  controller.volunteerTags().clear();
+                  Get.offAndToNamed('/');
                 },
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('Discard Changes',
+                        style: TextStyle(color: Colors.red, fontSize: 18)),
+                  ),
+                ),
               ),
             ],
           ),
