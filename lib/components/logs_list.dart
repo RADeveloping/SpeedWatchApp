@@ -64,7 +64,7 @@ class LogsList extends GetView<SidebarController> {
       ),
       leading: Icon(
         controller.getIcon(record.vehicleType),
-        color: Colors.white,
+        color: controller.getColor(record.speedRange),
       ),
       title: Column(
         children: [

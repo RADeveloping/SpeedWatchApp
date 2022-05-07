@@ -93,4 +93,17 @@ class SidebarController extends GetxController {
     }
     return '${lowerLimit} to ${upperLimit}';
   }
+
+  Color getColor(SpeedRange range) {
+    switch (range) {
+      case SpeedRange.green:
+        return Colors.white;
+      case SpeedRange.yellow:
+        return Color(0xFFF9D96D);
+      case SpeedRange.orange:
+        return Color(0xFFF19838);
+      case SpeedRange.red:
+        return Color(0xFFE5466B);
+    }
+  }
 }
