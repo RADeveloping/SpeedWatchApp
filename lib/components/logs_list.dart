@@ -7,58 +7,103 @@ import 'package:intl/intl.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
-import 'package:speedwatch/enums/vehicle_type.dart';
 import '../collections/record_collection.dart';
 import '../constants.dart';
 import 'package:collection/collection.dart';
-import 'package:share_plus/share_plus.dart';
-
 import '../enums/speed_range.dart';
 
 class LogsList extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: Obx(() => SettingsList(
-            applicationType: ApplicationType.both,
-            brightness: Brightness.light,
-            lightTheme: SettingsThemeData(
-              settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: Colors.transparent,
-              settingsTileTextColor: kColourSidebarTileText,
-              tileHighlightColor: kColourLight,
-              dividerColor: kColourTileDivider,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        children: [
+          Expanded(
+            child: Obx(() => SettingsList(
+                  applicationType: ApplicationType.both,
+                  brightness: Brightness.light,
+                  lightTheme: SettingsThemeData(
+                    settingsListBackground: kColourSidebarBackground,
+                    settingsSectionBackground: Colors.transparent,
+                    settingsTileTextColor: kColourSidebarTileText,
+                    tileHighlightColor: kColourLight,
+                    dividerColor: kColourTileDivider,
+                  ),
+                  sections: [buildSection(context)],
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Obx(() => Text(
+                            'Total: ${controller.records.value.length}',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    )),
+                Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Obx(() => Text(
+                          'Infractions: ${getInfractionCount()}',
+                          style: TextStyle(color: Colors.white))),
+                    )),
+              ],
             ),
-            sections: [buildSection(context)],
-          )),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
   AbstractSettingsSection buildSection(BuildContext context) {
     return SettingsSection(
-      title: Text(controller.currentSession.value.streetAddress
-          + '\n' + DateFormat('EEEEEE, MMMM dd, y h:mm a')
-              .format(controller.currentSession.value.startTime).toUpperCase()
-          +  '\nTotal: ${controller.records.value.length} '
-          'Infractions: ${getInfractionCount()} \n'
-          ),
-      margin: EdgeInsetsDirectional.zero,
-      tiles: controller.records.isNotEmpty ? (controller.records.take(controller.limitRecords.value).map((record) => recordItem(record)).toList()
-      + [moreItems()])
-      : [SettingsTile(title: Text(''),)],
+      title: Text(controller.currentSession.value.streetAddress.toUpperCase() +
+          ' | ' +
+          DateFormat('EEEEEE, MMMM dd')
+              .format(controller.currentSession.value.startTime)
+              .toUpperCase()),
+      tiles: controller.records.isNotEmpty
+          ? (controller.records
+                  .take(controller.limitRecords.value)
+                  .map((record) => recordItem(record))
+                  .toList() +
+              [moreItems()])
+          : [
+              SettingsTile(
+                title: Text(''),
+              )
+            ],
     );
   }
 
   SettingsTile moreItems() {
     if (controller.records.length > controller.limitRecords.value) {
-      return SettingsTile(title: Center(child: Text('Load more', style: TextStyle(color: kColourLight),)), onPressed: (c) { controller.limitRecords.value += 20; },);
+      return SettingsTile(
+        title: Center(
+            child: Text(
+          'Load more',
+          style: TextStyle(color: kColourLight),
+        )),
+        onPressed: (c) {
+          controller.limitRecords.value += 20;
+        },
+      );
     }
-    return SettingsTile(title: Text(''),);
+    return SettingsTile(
+      title: Text(''),
+    );
   }
 
   SettingsTile recordItem(RecordCollection record) {
@@ -97,9 +142,8 @@ class LogsList extends GetView<SidebarController> {
 
   int getInfractionCount() {
     List<RecordCollection> infractionRecords = [];
-    var groupByInfractionRecords = groupBy(
-        controller.records.value,
-            (obj) => (obj as RecordCollection).speedRange);
+    var groupByInfractionRecords = groupBy(controller.records.value,
+        (obj) => (obj as RecordCollection).speedRange);
 
     groupByInfractionRecords.forEach((speedRange, groupedList) {
       if (speedRange != SpeedRange.green) {
@@ -109,7 +153,6 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords.length;
   }
 }
-
 
 class LogsTileMoreButton extends StatelessWidget {
   const LogsTileMoreButton({

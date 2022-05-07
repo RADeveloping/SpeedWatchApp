@@ -238,6 +238,12 @@ class Session extends GetView<SessionController> {
         newSessionCollection, newSettingsCollection);
     s.records.value = [];
     s.currentSession.value = newSessionCollection;
+    controller.address_textController().clear();
+    controller.volunteer_textController().clear();
+    if (controller.volunteerTags.value.length > 0) {
+      controller.volunteerTags.value = [];
+    }
+
     Get.offAndToNamed('/session/${id}');
   }
 }
