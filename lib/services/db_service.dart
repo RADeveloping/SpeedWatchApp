@@ -44,12 +44,12 @@ class DbService extends GetxService {
 
   void getRecords(Function handleNewRecords, Isar db) async {
     int currentSessionId = int.parse(await Get.parameters['sessionID'] as String);
-    db.recordCollections.where().sessionIdEqualTo(currentSessionId).findAll().then((newRecords) => handleNewRecords(newRecords));
+    db.recordCollections.where().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) => handleNewRecords(newRecords));
   }
 
   void getRecordsWithId(Function handleNewRecords, int currentSessionId) async {
     Isar db = Get.find();
-    db.recordCollections.where().sessionIdEqualTo(currentSessionId).findAll().then((newRecords) => handleNewRecords(newRecords));
+    db.recordCollections.where().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) => handleNewRecords(newRecords));
   }
 
 

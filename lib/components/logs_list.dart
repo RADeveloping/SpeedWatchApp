@@ -3,11 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
+import 'package:speedwatch/enums/vehicle_type.dart';
+import '../collections/record_collection.dart';
 import '../constants.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../enums/speed_range.dart';
 
 class LogsList extends GetView<SidebarController> {
   @override
@@ -16,7 +21,7 @@ class LogsList extends GetView<SidebarController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: SettingsList(
+          child: Obx(() => SettingsList(
             applicationType: ApplicationType.both,
             brightness: Brightness.light,
             lightTheme: SettingsThemeData(
@@ -26,144 +31,121 @@ class LogsList extends GetView<SidebarController> {
               tileHighlightColor: kColourLight,
               dividerColor: kColourTileDivider,
             ),
-            sections: [
-              SettingsSection(
-                title: Text(controller.currentSessionDate.value),
-                margin: EdgeInsetsDirectional.zero,
-                tiles: <SettingsTile>[
-                  SettingsTile(
-                    trailing: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            '0-50 km/h',
-                            style: TextStyle(color: kColourPlaceHolderText),
-                          ),
-                        ),
-                        LogsTileMoreButton(),
-                      ],
-                    ),
-                    leading: Icon(
-                      Icons.motorcycle,
-                      color: Colors.white,
-                    ),
-                    title: Column(
-                      children: [
-                        Text(
-                          '10:32:38 AM',
-                          style: kTextStyleSidebarTile,
-                        ),
-                        Text(
-                          'Motor Bike',
-                          style: kTextStyleTilePlaceholder,
-                        ),
-                      ],
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
-                  ),
-                  SettingsTile.navigation(
-                    trailing: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            '0-50 km/h',
-                            style: TextStyle(color: kColourPlaceHolderText),
-                          ),
-                        ),
-                        LogsTileMoreButton(),
-                      ],
-                    ),
-                    leading: Icon(
-                      Icons.directions_car,
-                      color: Colors.white,
-                    ),
-                    title: Column(
-                      children: [
-                        Text(
-                          '10:31:15 AM',
-                          style: kTextStyleSidebarTile,
-                        ),
-                        Text(
-                          'Passenger',
-                          style: kTextStyleTilePlaceholder,
-                        ),
-                      ],
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
-                  ),
-                  SettingsTile.navigation(
-                    trailing: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            '0-50 km/h',
-                            style: TextStyle(color: kColourPlaceHolderText),
-                          ),
-                        ),
-                        LogsTileMoreButton(),
-                      ],
-                    ),
-                    leading: Icon(
-                      Icons.directions_bus,
-                      color: Colors.white,
-                    ),
-                    title: Column(
-                      children: [
-                        Text(
-                          '10:30:38 AM',
-                          style: kTextStyleSidebarTile,
-                        ),
-                        Text(
-                          'Transit',
-                          style: kTextStyleTilePlaceholder,
-                        ),
-                      ],
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
-                  ),
-                  SettingsTile.navigation(
-                    trailing: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            '0-50 km/h',
-                            style: TextStyle(color: kColourPlaceHolderText),
-                          ),
-                        ),
-                        LogsTileMoreButton(),
-                      ],
-                    ),
-                    leading: Icon(
-                      Icons.local_shipping,
-                      color: Colors.white,
-                    ),
-                    title: Column(
-                      children: [
-                        Text(
-                          '10:30:03 AM',
-                          style: kTextStyleSidebarTile,
-                        ),
-                        Text(
-                          'Large Truck',
-                          style: kTextStyleTilePlaceholder,
-                        ),
-                      ],
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            sections: [buildSection(context)],
+          )),
         ),
       ],
     );
   }
+
+  AbstractSettingsSection buildSection(BuildContext context) {
+    return SettingsSection(
+      title: Text(DateFormat('EEEEEE, MMMM dd, y h:mm a')
+          .format(controller.currentSession.value.startTime).toUpperCase()),
+      margin: EdgeInsetsDirectional.zero,
+      tiles: controller.records.isNotEmpty ? controller.records.map((record) => recordItem(record)).toList() 
+      : [SettingsTile(title: Text('No records', style: TextStyle(color: kColourPlaceHolderText)),)],
+    );
+  }
+
+  SettingsTile recordItem(RecordCollection record) {
+    return SettingsTile(
+      trailing: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              getSpeedRange(record.speedRange),
+              style: TextStyle(color: kColourPlaceHolderText),
+            ),
+          ),
+          LogsTileMoreButton(),
+        ],
+      ),
+      leading: Icon(
+        getIcon(record.vehicleType),
+        color: Colors.white,
+      ),
+      title: Column(
+        children: [
+          Text(
+            DateFormat('hh:mm:ss a').format(record.createdAt),
+            style: kTextStyleSidebarTile,
+          ),
+          Text(
+            getType(record.vehicleType),
+            style: kTextStyleTilePlaceholder,
+          ),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+    );
+  }
+
+  IconData getIcon(VehicleType type) {
+    switch (type) {
+      case VehicleType.largeTruck: {
+        return Icons.local_shipping;
+      }
+      case VehicleType.motorBike: {
+        return Icons.motorcycle;
+      }
+      case VehicleType.passenger: {
+        return Icons.directions_car;
+      }
+      case VehicleType.transit: {
+        return Icons.directions_bus;
+      }
+    }
+  }
+
+  String getType(VehicleType type) {
+    switch (type) {
+      case VehicleType.largeTruck: {
+        return 'Truck';
+      }
+      case VehicleType.motorBike: {
+        return 'Motor Bike';
+      }
+      case VehicleType.passenger: {
+        return 'Passenger';
+      }
+      case VehicleType.transit: {
+        return 'Transit';
+      }
+    }
+  }
+
+  String getSpeedRange(SpeedRange range) {
+    int speedLimit = controller.currentSession.value.speedLimit;
+    int lowerLimit;
+    int upperLimit;
+    switch (range) {
+      case SpeedRange.green: {
+        lowerLimit = 0;
+        upperLimit = speedLimit;
+      }
+ break;
+      case SpeedRange.yellow: {
+        lowerLimit = speedLimit + 1;
+        upperLimit = speedLimit + 10;
+      }
+ break;
+      case SpeedRange.orange: {
+        lowerLimit = speedLimit + 11;
+        upperLimit = speedLimit + 20;
+      }
+ break;
+
+      case SpeedRange.red: {
+        return 'Over ${speedLimit + 20}';
+      }
+
+    }
+    return '${lowerLimit} to ${upperLimit}';
+  }
 }
+
 
 class LogsTileMoreButton extends StatelessWidget {
   const LogsTileMoreButton({

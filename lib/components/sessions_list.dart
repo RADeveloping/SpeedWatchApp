@@ -139,8 +139,7 @@ class SessionsList extends GetView<SidebarController> {
       onPressed: (BuildContext context) {
         DbService dbService = Get.find();
         dbService.getRecordsWithId(controller.handleNewRecords, session.id);
-        controller.currentSessionDate.value = DateFormat('EEEEEE, MMMM dd, y h:mm a')
-            .format(session.startTime).toUpperCase();
+        controller.currentSession.value = session;
         Get.offAndToNamed('/session/${session.id}');
       },
     );
