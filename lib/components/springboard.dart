@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:speedwatch/controllers/sidebar_controller.dart';
 
 import '../constants.dart';
 import '../enums/speed_range.dart';
@@ -15,12 +18,13 @@ class SpringBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SidebarController s = Get.find();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SpeedButtonGroup(
           minSpeed: 0,
-          maxSpeed: 50,
+          maxSpeed: s.currentSession.value.speedLimit,
           onPressed: (vehicleType) {
             onPressed(SpeedRange.green, vehicleType);
           },
@@ -34,8 +38,8 @@ class SpringBoard extends StatelessWidget {
           ),
         ),
         SpeedButtonGroup(
-          minSpeed: 51,
-          maxSpeed: 60,
+          minSpeed: s.currentSession.value.speedLimit + 1,
+          maxSpeed: s.currentSession.value.speedLimit + 10,
           onPressed: (vehicleType) {
             onPressed(SpeedRange.yellow, vehicleType);
           },
@@ -49,8 +53,8 @@ class SpringBoard extends StatelessWidget {
           ),
         ),
         SpeedButtonGroup(
-          minSpeed: 61,
-          maxSpeed: 70,
+          minSpeed: s.currentSession.value.speedLimit + 11,
+          maxSpeed: s.currentSession.value.speedLimit + 20,
           onPressed: (vehicleType) {
             onPressed(SpeedRange.orange, vehicleType);
           },
@@ -64,7 +68,7 @@ class SpringBoard extends StatelessWidget {
           ),
         ),
         SpeedButtonGroup(
-          minSpeed: 71,
+          minSpeed: s.currentSession.value.speedLimit + 20,
           onPressed: (vehicleType) {
             onPressed(SpeedRange.red, vehicleType);
           },
@@ -105,7 +109,7 @@ class SpeedButtonGroup extends StatelessWidget {
           child: Text(
             maxSpeed != null
                 ? 'Speed: ${minSpeed} to ${maxSpeed}'
-                : 'Speed: Over ${minSpeed - 1}',
+                : 'Speed: Over ${minSpeed}',
             style: TextStyle(color: Colors.white, fontSize: 24),
           ),
         ),
