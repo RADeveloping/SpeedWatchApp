@@ -120,7 +120,6 @@ class SessionController extends GetxController {
     List<String> newVolunteerTags = oldVolunteerTags.toSet().toList();
     return newVolunteerTags;
   }
-
 }
 
 class DateTimePickerController extends SessionController {

@@ -226,13 +226,15 @@ class Session extends GetView<SessionController> {
 
   void createNewSessionClick() async {
     DbService dbService = Get.find();
-    SessionCollection newSessionCollection = controller.getSession(startDatePicker.date.value, endDatePicker.date.value);
+    SessionCollection newSessionCollection = controller.getSession(
+        startDatePicker.date.value, endDatePicker.date.value);
     SettingsCollection newSettingsCollection = SettingsCollection()
-      ..id=0
-      ..value=await controller.getNewVolunteerNamesValue()
-      ..key='names';
-    int id = await dbService.writeSessionToDB(newSessionCollection, newSettingsCollection);
-    Get.offAllNamed('/session/${id}');
+      ..id = 0
+      ..value = await controller.getNewVolunteerNamesValue()
+      ..key = 'names';
+    int id = await dbService.writeSessionToDB(
+        newSessionCollection, newSettingsCollection);
+    Get.offAndToNamed('/session/${id}');
   }
 }
 
@@ -271,7 +273,7 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                 onTap: () {
                   controller.address_textController().clear();
                   controller.volunteerTags().clear();
-                  Get.offAllNamed('/');
+                  Get.offAndToNamed('/');
                 },
                 child: Container(
                   alignment: Alignment.center,

@@ -23,16 +23,16 @@ import 'controllers/session_controller.dart';
 // Global variable for storing the list of cameras available
 List<CameraDescription> cameras = [];
 
-Future<void> initServices() async {
-  print('starting services ...');
-  await Get.putAsync(() => DbService().init(), permanent: true);
-  print('All services started...');
-}
-
 Future<void> main() async {
   // Fetch the available cameras before initializing the app
   runApp(MyApp());
   await initServices();
+}
+
+Future<void> initServices() async {
+  print('starting services ...');
+  await Get.putAsync(() => DbService().init(), permanent: true);
+  print('All services started...');
 }
 
 class MyApp extends StatelessWidget {
@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
     Get.put<SessionController>(SessionController());
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
+    Get.put(() => DbService(), permanent: true);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
