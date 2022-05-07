@@ -48,9 +48,17 @@ class LogsList extends GetView<SidebarController> {
           'Infractions: ${getInfractionCount()} \n'
           ),
       margin: EdgeInsetsDirectional.zero,
-      tiles: controller.records.isNotEmpty ? controller.records.map((record) => recordItem(record)).toList() 
+      tiles: controller.records.isNotEmpty ? (controller.records.take(controller.limitRecords.value).map((record) => recordItem(record)).toList()
+      + [moreItems()])
       : [SettingsTile(title: Text(''),)],
     );
+  }
+
+  SettingsTile moreItems() {
+    if (controller.records.length > controller.limitRecords.value) {
+      return SettingsTile(title: Center(child: Text('Load more', style: TextStyle(color: kColourLight),)), onPressed: (c) { controller.limitRecords.value += 20; },);
+    }
+    return SettingsTile(title: Text(''),);
   }
 
   SettingsTile recordItem(RecordCollection record) {
