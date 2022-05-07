@@ -14,6 +14,7 @@ import 'package:speedwatch/controllers/session_controller.dart';
 
 import '../collections/settings_collection.dart';
 import '../constants.dart';
+import '../controllers/sidebar_controller.dart';
 import '../services/db_service.dart';
 import 'cupertino_page_scaffold_custom.dart';
 import 'custom_tile_with_choices.dart';
@@ -226,6 +227,7 @@ class Session extends GetView<SessionController> {
 
   void createNewSessionClick() async {
     DbService dbService = Get.find();
+    SidebarController s = Get.find();
     SessionCollection newSessionCollection = controller.getSession(
         startDatePicker.date.value, endDatePicker.date.value);
     SettingsCollection newSettingsCollection = SettingsCollection()
@@ -234,6 +236,8 @@ class Session extends GetView<SessionController> {
       ..key = 'names';
     int id = await dbService.writeSessionToDB(
         newSessionCollection, newSettingsCollection);
+    s.records.value = [];
+    s.currentSession.value = newSessionCollection;
     Get.offAndToNamed('/session/${id}');
   }
 }
