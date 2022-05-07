@@ -15,6 +15,9 @@ class RecordCollection {
   @Index()
   late DateTime createdAt;
 
+  @Index()
+  late DateTime? deletedAt;
+
   @SpeedRangeConverter()
   late SpeedRange speedRange;
 
