@@ -44,7 +44,7 @@ class LogsList extends GetView<SidebarController> {
           .format(controller.currentSession.value.startTime).toUpperCase()),
       margin: EdgeInsetsDirectional.zero,
       tiles: controller.records.isNotEmpty ? controller.records.map((record) => recordItem(record)).toList() 
-      : [SettingsTile(title: Text('No records', style: TextStyle(color: kColourPlaceHolderText)),)],
+      : [SettingsTile(title: Text(''),)],
     );
   }
 

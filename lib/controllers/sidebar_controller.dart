@@ -28,7 +28,6 @@ class SidebarController extends GetxController {
 
   void handleNewRecords(List<RecordCollection> newRecords) async {
     records.value = newRecords;
-    print(records);
   }
 
   IconData getIcon(VehicleType type) {
