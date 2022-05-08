@@ -1,6 +1,4 @@
 import 'package:isar/isar.dart';
-import 'package:speedwatch/collections/session_collection.dart';
-
 import '../converters/speed_range_converter.dart';
 import '../converters/vehicle_type_converter.dart';
 import '../enums/speed_range.dart';

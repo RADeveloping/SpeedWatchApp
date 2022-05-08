@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
@@ -146,14 +145,28 @@ class SessionsList extends GetView<SidebarController> {
     return CustomSettingsSection(
         child: !archivable
             ? SettingsSection(
-          title: Text(''),
-          tiles: [SettingsTile(title: Center(child: Text('Load more')), onPressed: (c) { controller.limitSessionsMain.value += 20; },)],
-        )
+                title: Text(''),
+                tiles: [
+                  SettingsTile(
+                    title: Center(child: Text('Load more')),
+                    onPressed: (c) {
+                      controller.limitSessionsMain.value += 20;
+                    },
+                  )
+                ],
+              )
             : controller.archiveExpanded.value
-            ? SettingsSection(
-            title: Text(''),
-            tiles: [SettingsTile(title: Center(child: Text('Load more')), onPressed: (c) { controller.limitSessionsArchived.value += 20; })],)
-            : Container());
+                ? SettingsSection(
+                    title: Text(''),
+                    tiles: [
+                      SettingsTile(
+                          title: Center(child: Text('Load more')),
+                          onPressed: (c) {
+                            controller.limitSessionsArchived.value += 20;
+                          })
+                    ],
+                  )
+                : Container());
   }
 
   SettingsTile sessionListItem(SessionCollection session) {
@@ -199,8 +212,10 @@ class SessionsList extends GetView<SidebarController> {
           controller.limitRecords.value = 20;
           controller.currentSession.value = session;
           Function callBack = () => Get.offAndToNamed('/session/${session.id}');
-          dbService.getRecordsWithId(controller.handleNewRecords, session.id, callBack);
-          dbService.getDeletedRecordsWithId(controller.handleDeletedRecords, session.id, callBack);
+          dbService.getRecordsWithId(
+              controller.handleNewRecords, session.id, callBack);
+          dbService.getDeletedRecordsWithId(
+              controller.handleDeletedRecords, session.id, callBack);
         }
 
         if (controller.isEditMode.value) {
