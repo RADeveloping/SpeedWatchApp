@@ -13,29 +13,12 @@ import '../enums/weather.dart';
 import '../services/db_service.dart';
 
 class SessionController extends GetxController {
+  RxList<SessionCollection> existingCollection = <SessionCollection>[].obs;
+
   RxSet<String> userListFromDatabase = <String>{}.obs;
-  void volunteerSearchValueChanged(String value) {
-    if (value.isEmpty) {
-      volunteerOptions.value =
-          (volunteerTags.value + userListFromDatabase.value.toList())
-              .toSet()
-              .toList();
-    } else {
-      volunteerOptions.value = userListFromDatabase.value
-          .where((element) => element.isCaseInsensitiveContains(value))
-          .toList();
-    }
-
-    if (!volunteerOptions.contains(value) && !value.isEmpty) {
-      volunteerOptions.add(value);
-    }
-  }
-
   RxString title = 'Create Session'.obs;
-
-  RxString address = ''.obs;
-
   // Address
+  RxString address = ''.obs;
   Rx<TextEditingController> address_textController =
       TextEditingController(text: '').obs;
 
@@ -87,6 +70,23 @@ class SessionController extends GetxController {
   List<String> roadLightingOptions =
       RoadLighting.values.map((val) => val.name).toList();
 
+  void volunteerSearchValueChanged(String value) {
+    if (value.isEmpty) {
+      volunteerOptions.value =
+          (volunteerTags.value + userListFromDatabase.value.toList())
+              .toSet()
+              .toList();
+    } else {
+      volunteerOptions.value = userListFromDatabase.value
+          .where((element) => element.isCaseInsensitiveContains(value))
+          .toList();
+    }
+
+    if (!volunteerOptions.contains(value) && !value.isEmpty) {
+      volunteerOptions.add(value);
+    }
+  }
+
   SessionCollection getSession(DateTime startDate, DateTime endDate) {
     return SessionCollection()
       ..startTime = startDate
@@ -119,6 +119,30 @@ class SessionController extends GetxController {
     }
     List<String> newVolunteerTags = oldVolunteerTags.toSet().toList();
     return newVolunteerTags;
+  }
+
+  void setEditSessionDetails(SessionCollection session) {
+    address_textController.value.text = session.streetAddress;
+    address.value = session.streetAddress;
+
+    directionTag.value = session.direction.index;
+    volunteerTags.value = session.volunteerNames.toList();
+
+    // Road Zone
+    roadZoneTag.value = session.roadZoneOptions.index;
+
+    // Speed Limit
+    speedLimitTag.value =
+        speedLimitOptions.indexOf(session.speedLimit.toString());
+
+    // Weather
+    weatherTag.value = session.weatherOptions.index;
+
+    // Road Conditions
+    roadConditionTag.value = session.roadConditionOptions.index;
+
+    // Road Lighting
+    roadLightingTag.value = session.roadLightingOptions.index;
   }
 }
 

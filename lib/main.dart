@@ -111,6 +111,15 @@ class MyApp extends StatelessWidget {
             transition: Transition.noTransition,
             preventDuplicates: true,
           ),
+          GetPage(
+            name: '/edit',
+            page: () => Session(
+              title: 'Edit Session',
+              submitButtonText: 'Update Session',
+            ),
+            transition: Transition.noTransition,
+            preventDuplicates: true,
+          ),
         ],
         localizationsDelegates: [
           DefaultMaterialLocalizations.delegate,

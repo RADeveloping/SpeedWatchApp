@@ -20,7 +20,9 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         leading: CupertinoButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.offAndToNamed('/edit', arguments: s.currentSession.value);
+          },
           child: Text('Edit'),
           padding: EdgeInsets.zero,
         ),
