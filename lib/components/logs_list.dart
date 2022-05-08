@@ -32,23 +32,19 @@ class LogsList extends GetView<SidebarController> {
               )),
         ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(15),
+                        color: kColourRightPaneBackground),
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(7.0),
                       child: Column(
                         children: [
-                          Text(
-                            'RECORDS',
-                            style: TextStyle(color: Colors.white54),
-                          ),
                           Obx(() => Text(
                                 '${controller.records.value.length}',
                                 style: TextStyle(
@@ -57,31 +53,35 @@ class LogsList extends GetView<SidebarController> {
                                   fontSize: 30,
                                 ),
                               )),
+                          Text(
+                            'Records',
+                            style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     )),
               ),
               SizedBox(
-                width: 10,
+                width: 20,
               ),
               Expanded(
                 child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(15),
+                        color: kColourRightPaneBackground),
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(7.0),
                       child: Column(
                         children: [
-                          Text(
-                            'INFRACTIONS',
-                            style: TextStyle(color: Colors.white54),
-                          ),
                           Obx(() => Text('${getInfractionCount()}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold))),
+                          Text(
+                            'Infractions',
+                            style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     )),

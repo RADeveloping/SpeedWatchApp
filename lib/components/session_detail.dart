@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:speedwatch/services/db_service.dart';
 
-import '../constants.dart';
+import 'package:speedwatch/constants.dart';
 import '../controllers/sidebar_controller.dart';
 import 'springboard.dart';
 
@@ -22,8 +22,52 @@ class SessionDetail extends GetView<SessionDetail> {
           padding: EdgeInsets.zero,
         ),
         middle: SwitchUser(controller: s, sliding: _sliding),
-        trailing: CupertinoButton(
-            onPressed: () {}, child: Text('Undo'), padding: EdgeInsets.zero),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CupertinoButton(
+              // Undo
+              onPressed: () {},
+              child: GestureDetector(
+                child: Obx(() => Icon(
+                      CupertinoIcons.arrow_uturn_left_circle,
+                      color: s.records.length > 0
+                          ? kColourLight
+                          : kColourDisabledButton,
+                    )),
+                onTap: () {
+                  DbService dbService = Get.find();
+                  List<RecordCollection> records = s.records.value;
+                  records.length == 0
+                      ? null
+                      : dbService.deleteLatestRecord(records[0]);
+                },
+              ),
+              padding: EdgeInsets.zero,
+            ),
+            CupertinoButton(
+                // Redo
+                onPressed: () {},
+                child: GestureDetector(
+                  child: Obx(() => Icon(
+                        CupertinoIcons.arrow_uturn_right_circle,
+                        color: s.deletedRecords.length > 0
+                            ? kColourLight
+                            : kColourDisabledButton,
+                      )),
+                  onTap: () {
+                    DbService dbService = Get.find();
+                    List<RecordCollection> deletedRecords =
+                        s.deletedRecords.value;
+                    deletedRecords.length == 0
+                        ? null
+                        : dbService
+                            .restoreLatestDeletedRecord(deletedRecords[0]);
+                  },
+                ),
+                padding: EdgeInsets.zero),
+          ],
+        ),
         backgroundColor: kColourRightPaneBackground,
         brightness: Brightness.dark,
       ),

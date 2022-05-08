@@ -9,6 +9,7 @@ const kColourSidebarTileText = Colors.white;
 const kColourTileDivider = Color(0xFF48484A);
 const kColourSuffixIcon = Color(0xFF8E8E93);
 const kColourPlaceHolderText = Color(0xFF8E8E93);
+const kColourDisabledButton = Colors.grey;
 
 const kTextStyleWelcomeMessage =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);

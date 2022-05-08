@@ -21,7 +21,7 @@ class DbService extends GetxService {
       SidebarController s = Get.find();
       getSessions(s.handleNewSessions, db);
       setSessionsListener(s.handleNewSessions, db);
-      setRecordsListener(s.handleNewRecords, db);
+      setRecordsListener(s.handleNewRecords, s.handleDeletedRecords, db);
       return db;
     });
     Get.put(isar, permanent: true);
@@ -35,26 +35,40 @@ class DbService extends GetxService {
     });
   }
 
-  void setRecordsListener(Function handleNewRecords, Isar db) async {
+  void setRecordsListener(Function handleNewRecords, Function handleDeletedRecords, Isar db) async {
     Stream<void> recordsChanged = db.recordCollections.watchLazy();
     recordsChanged.listen((s) {
       getRecords(handleNewRecords, db);
+      getDeletedRecords(handleDeletedRecords, db);
     });
   }
 
   void getRecords(Function handleNewRecords, Isar db) async {
     int currentSessionId = int.parse(await Get.parameters['sessionID'] as String);
-    db.recordCollections.where().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) => handleNewRecords(newRecords));
+    db.recordCollections.where().deletedAtIsNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) => handleNewRecords(newRecords));
   }
 
   void getRecordsWithId(Function handleNewRecords, int currentSessionId, Function callBack) async {
     Isar db = Get.find();
-    db.recordCollections.where().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) {
+
+    db.recordCollections.where().deletedAtIsNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) {
       handleNewRecords(newRecords);
       callBack();
     });
   }
 
+  void getDeletedRecords(Function handleDeletedRecords, Isar db) async {
+    int currentSessionId = int.parse(await Get.parameters['sessionID'] as String);
+    db.recordCollections.where().deletedAtIsNotNull().filter().sessionIdEqualTo(currentSessionId).sortByDeletedAtDesc().findAll().then((recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
+  }
+
+  void getDeletedRecordsWithId(Function handleDeletedRecords, int currentSessionId, Function callBack) async {
+    Isar db = Get.find();
+    db.recordCollections.where().deletedAtIsNotNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((deletedRecords) {
+      handleDeletedRecords(deletedRecords);
+      callBack();
+    });
+  }
 
   void getSessions(Function handleNewSession, Isar db) async {
     db.sessionCollections.where().sortByStartTimeDesc().findAll().then((newSession) => handleNewSession(newSession));
@@ -77,6 +91,7 @@ class DbService extends GetxService {
   RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, int sessionId, String volunteerName) {
     return RecordCollection()
       ..createdAt = DateTime.now()
+      ..deletedAt = null
       ..speedRange = speedRange
       ..vehicleType = vehicleType
         ..sessionId = sessionId
@@ -87,6 +102,22 @@ class DbService extends GetxService {
     Isar db = Get.find();
     await db.writeTxn(((isar) async {
       await db.recordCollections.put(getRecord(speedRange, vehicleType, sessionId, volunteerName));
+    }));
+  }
+
+  void deleteLatestRecord(RecordCollection latestRecord) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      latestRecord.deletedAt = DateTime.now();
+      await db.recordCollections.put(latestRecord);
+    }));
+  }
+
+  void restoreLatestDeletedRecord(RecordCollection deletedRecord) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      deletedRecord.deletedAt = null;
+      await db.recordCollections.put(deletedRecord);
     }));
   }
 
