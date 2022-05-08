@@ -10,11 +10,14 @@ import '../enums/speed_range.dart';
 import '../enums/vehicle_type.dart';
 
 class DbService extends GetxService {
-
   Future<DbService> init() async {
     final dir = await getApplicationSupportDirectory();
     final Isar isar = await Isar.open(
-      schemas: [SessionCollectionSchema, SettingsCollectionSchema, RecordCollectionSchema],
+      schemas: [
+        SessionCollectionSchema,
+        SettingsCollectionSchema,
+        RecordCollectionSchema
+      ],
       directory: dir.path,
       inspector: true,
     ).then((db) {
@@ -35,7 +38,8 @@ class DbService extends GetxService {
     });
   }
 
-  void setRecordsListener(Function handleNewRecords, Function handleDeletedRecords, Isar db) async {
+  void setRecordsListener(
+      Function handleNewRecords, Function handleDeletedRecords, Isar db) async {
     Stream<void> recordsChanged = db.recordCollections.watchLazy();
     recordsChanged.listen((s) {
       getRecords(handleNewRecords, db);
@@ -44,43 +48,82 @@ class DbService extends GetxService {
   }
 
   void getRecords(Function handleNewRecords, Isar db) async {
-    int currentSessionId = int.parse(await Get.parameters['sessionID'] as String);
-    db.recordCollections.where().deletedAtIsNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) => handleNewRecords(newRecords));
+    int currentSessionId =
+        int.parse(await Get.parameters['sessionID'] as String);
+    db.recordCollections
+        .where()
+        .deletedAtIsNull()
+        .filter()
+        .sessionIdEqualTo(currentSessionId)
+        .sortByCreatedAtDesc()
+        .findAll()
+        .then((newRecords) => handleNewRecords(newRecords));
   }
 
-  void getRecordsWithId(Function handleNewRecords, int currentSessionId, Function callBack) async {
+  void getRecordsWithId(Function handleNewRecords, int currentSessionId,
+      Function callBack) async {
     Isar db = Get.find();
 
-    db.recordCollections.where().deletedAtIsNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) {
+    db.recordCollections
+        .where()
+        .deletedAtIsNull()
+        .filter()
+        .sessionIdEqualTo(currentSessionId)
+        .sortByCreatedAtDesc()
+        .findAll()
+        .then((newRecords) {
       handleNewRecords(newRecords);
       callBack();
     });
   }
 
   void getDeletedRecords(Function handleDeletedRecords, Isar db) async {
-    int currentSessionId = int.parse(await Get.parameters['sessionID'] as String);
-    db.recordCollections.where().deletedAtIsNotNull().filter().sessionIdEqualTo(currentSessionId).sortByDeletedAtDesc().findAll().then((recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
+    int currentSessionId =
+        int.parse(await Get.parameters['sessionID'] as String);
+    db.recordCollections
+        .where()
+        .deletedAtIsNotNull()
+        .filter()
+        .sessionIdEqualTo(currentSessionId)
+        .sortByDeletedAtDesc()
+        .findAll()
+        .then(
+            (recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
   }
 
-  void getDeletedRecordsWithId(Function handleDeletedRecords, int currentSessionId, Function callBack) async {
+  void getDeletedRecordsWithId(Function handleDeletedRecords,
+      int currentSessionId, Function callBack) async {
     Isar db = Get.find();
-    db.recordCollections.where().deletedAtIsNotNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((deletedRecords) {
+    db.recordCollections
+        .where()
+        .deletedAtIsNotNull()
+        .filter()
+        .sessionIdEqualTo(currentSessionId)
+        .sortByCreatedAtDesc()
+        .findAll()
+        .then((deletedRecords) {
       handleDeletedRecords(deletedRecords);
       callBack();
     });
   }
 
   void getSessions(Function handleNewSession, Isar db) async {
-    db.sessionCollections.where().sortByStartTimeDesc().findAll().then((newSession) => handleNewSession(newSession));
+    db.sessionCollections
+        .where()
+        .sortByStartTimeDesc()
+        .findAll()
+        .then((newSession) => handleNewSession(newSession));
   }
 
-  Future<int> writeSessionToDB(SessionCollection newSession, SettingsCollection newSettings) async {
-      Isar db = Get.find();
-      await db.writeTxn(((isar) async {
-        await db.sessionCollections.put(newSession);
-        await db.settingsCollections.put(newSettings);
-      }));
-      return newSession.id;
+  Future<int> writeSessionToDB(
+      SessionCollection newSession, SettingsCollection newSettings) async {
+    Isar db = Get.find();
+
+    await db.writeTxn(((isar) async {
+      await db.sessionCollections.put(newSession);
+      await db.settingsCollections.put(newSettings);
+    }));
+    return newSession.id;
   }
 
   Future<SettingsCollection?> getCurrentSetting(int id) async {
@@ -88,20 +131,23 @@ class DbService extends GetxService {
     return await db.settingsCollections.get(id);
   }
 
-  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType, int sessionId, String volunteerName) {
+  RecordCollection getRecord(SpeedRange speedRange, VehicleType vehicleType,
+      int sessionId, String volunteerName) {
     return RecordCollection()
       ..createdAt = DateTime.now()
       ..deletedAt = null
       ..speedRange = speedRange
       ..vehicleType = vehicleType
-        ..sessionId = sessionId
-    ..volunteerName = volunteerName;
+      ..sessionId = sessionId
+      ..volunteerName = volunteerName;
   }
 
-  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType, int sessionId, String volunteerName) async {
+  void writeRecordToDB(SpeedRange speedRange, VehicleType vehicleType,
+      int sessionId, String volunteerName) async {
     Isar db = Get.find();
     await db.writeTxn(((isar) async {
-      await db.recordCollections.put(getRecord(speedRange, vehicleType, sessionId, volunteerName));
+      await db.recordCollections
+          .put(getRecord(speedRange, vehicleType, sessionId, volunteerName));
     }));
   }
 

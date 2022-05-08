@@ -27,7 +27,13 @@ class Session extends GetView<SessionController> {
   String title;
   String submitButtonText;
 
-  Session({required this.title, required this.submitButtonText});
+  Session({required this.title, required this.submitButtonText}) {
+    if (Get.arguments != null) {
+      controller.existingCollection.value.clear();
+      controller.existingCollection.value.add(Get.arguments);
+      controller.setEditSessionDetails(Get.arguments);
+    }
+  }
   final HomeController homeController = Get.find();
 
   @override
@@ -197,7 +203,9 @@ class Session extends GetView<SessionController> {
                           onPressed: controller.address.value.isEmpty ||
                                   controller.volunteerTags.value.isEmpty
                               ? null
-                              : createNewSessionClick,
+                              : controller.existingCollection.isEmpty
+                                  ? createNewSessionClick
+                                  : updateSessionClick,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             mainAxisSize: MainAxisSize.min,
@@ -234,6 +242,7 @@ class Session extends GetView<SessionController> {
       ..id = 0
       ..value = await controller.getNewVolunteerNamesValue()
       ..key = 'names';
+
     int id = await dbService.writeSessionToDB(
         newSessionCollection, newSettingsCollection);
     s.records.value = [];
@@ -245,6 +254,17 @@ class Session extends GetView<SessionController> {
     }
 
     Get.offAndToNamed('/session/${id}');
+  }
+
+  void updateSessionClick() async {
+    // TODO UPDATE EXISTING RECORD WITH NEW DATA..
+
+    controller.address_textController().clear();
+    controller.volunteer_textController().clear();
+    if (controller.volunteerTags.value.length > 0) {
+      controller.volunteerTags.value = [];
+    }
+    Get.offAndToNamed('/session/${Get.arguments.id}');
   }
 }
 
@@ -284,7 +304,14 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                   controller.address_textController().clear();
                   controller.volunteerTags().clear();
                   controller.volunteer_textController().clear();
-                  Get.offAllNamed('/');
+
+                  if (controller.existingCollection.value.isEmpty) {
+                    Get.offAllNamed('/');
+                  } else {
+                    Get.offAllNamed(
+                        '/session/${controller.existingCollection.value[0].id}');
+                    controller.existingCollection.value = [];
+                  }
                 },
                 child: Container(
                   alignment: Alignment.center,

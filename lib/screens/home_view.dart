@@ -8,7 +8,7 @@ class HomeView extends GetView<HomeController> {
   final Widget? leftChild;
   final Widget? rightChild;
 
-  HomeView({this.leftChild, this.rightChild}) {
+  HomeView({this.leftChild, required this.rightChild}) {
     if (leftChild != null) {
       controller.children.value[0] = leftChild!;
     }
