@@ -15,65 +15,114 @@ import '../enums/speed_range.dart';
 class LogsList extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Column(
-        children: [
-          Expanded(
-            child: Obx(() => SettingsList(
-                  applicationType: ApplicationType.both,
-                  brightness: Brightness.light,
-                  lightTheme: SettingsThemeData(
-                    settingsListBackground: kColourSidebarBackground,
-                    settingsSectionBackground: Colors.transparent,
-                    settingsTileTextColor: kColourSidebarTileText,
-                    tileHighlightColor: kColourLight,
-                    dividerColor: kColourTileDivider,
-                  ),
-                  sections: [buildSection(context)],
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
+    return Column(
+      children: [
+        Expanded(
+          child: Obx(() => SettingsList(
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: Colors.transparent,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
+                ),
+                sections: [buildSection(context)],
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.white10),
+                        color: Colors.transparent),
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Obx(() => Text(
-                            'Total: ${controller.records.value.length}',
-                            style: TextStyle(color: Colors.white),
-                          )),
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'RECORDS',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                          Obx(() => Text(
+                                '${controller.records.value.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
+                              )),
+                        ],
+                      ),
                     )),
-                Container(
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.white10),
+                        color: Colors.transparent),
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Obx(() => Text(
-                          'Infractions: ${getInfractionCount()}',
-                          style: TextStyle(color: Colors.white))),
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'INFRACTIONS',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                          Obx(() => Text('${getInfractionCount()}',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold))),
+                        ],
+                      ),
                     )),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   AbstractSettingsSection buildSection(BuildContext context) {
     return SettingsSection(
-      title: Text(controller.currentSession.value.streetAddress.toUpperCase() +
-          ' | ' +
-          DateFormat('EEEEEE, MMMM dd')
-              .format(controller.currentSession.value.startTime)
-              .toUpperCase()),
+      margin: EdgeInsetsDirectional.zero,
+      title: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      controller.currentSession.value.streetAddress
+                          .toUpperCase(),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      '${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.startTime).toUpperCase()} - ${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.endTime).toUpperCase()}',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w200),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
       tiles: controller.records.isNotEmpty
           ? (controller.records
                   .take(controller.limitRecords.value)
