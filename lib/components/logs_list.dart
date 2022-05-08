@@ -15,65 +15,85 @@ import '../enums/speed_range.dart';
 class LogsList extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Column(
-        children: [
-          Expanded(
-            child: Obx(() => SettingsList(
-                  applicationType: ApplicationType.both,
-                  brightness: Brightness.light,
-                  lightTheme: SettingsThemeData(
-                    settingsListBackground: kColourSidebarBackground,
-                    settingsSectionBackground: Colors.transparent,
-                    settingsTileTextColor: kColourSidebarTileText,
-                    tileHighlightColor: kColourLight,
-                    dividerColor: kColourTileDivider,
-                  ),
-                  sections: [buildSection(context)],
-                )),
+    return Column(
+      children: [
+        Expanded(
+          child: Obx(() => SettingsList(
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: Colors.transparent,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
+                ),
+                sections: [buildSection(context)],
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Obx(() => Text(
+                          'Total: ${controller.records.value.length}',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  )),
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Obx(() => Text(
+                        'Infractions: ${getInfractionCount()}',
+                        style: TextStyle(color: Colors.white))),
+                  )),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Obx(() => Text(
-                            'Total: ${controller.records.value.length}',
-                            style: TextStyle(color: Colors.white),
-                          )),
-                    )),
-                Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Obx(() => Text(
-                          'Infractions: ${getInfractionCount()}',
-                          style: TextStyle(color: Colors.white))),
-                    )),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   AbstractSettingsSection buildSection(BuildContext context) {
     return SettingsSection(
-      title: Text(controller.currentSession.value.streetAddress.toUpperCase() +
-          ' | ' +
-          DateFormat('EEEEEE, MMMM dd')
-              .format(controller.currentSession.value.startTime)
-              .toUpperCase()),
+      margin: EdgeInsetsDirectional.zero,
+      title: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      controller.currentSession.value.streetAddress
+                          .toUpperCase(),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w100),
+                    ),
+                    Text(
+                      '${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.startTime).toUpperCase()} - ${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.endTime).toUpperCase()}',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w100),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
       tiles: controller.records.isNotEmpty
           ? (controller.records
                   .take(controller.limitRecords.value)
