@@ -34,6 +34,9 @@ class SessionController extends GetxController {
   RxList<String> volunteerTags = <String>[].obs;
   RxList<String> volunteerOptions = <String>[].obs;
 
+  final startEditDate = DateTime(0).obs;
+  final endEditDate = DateTime(0).obs;
+
   // Road Zone
   RxInt roadZoneTag = 0.obs;
   List<String> roadZoneOptions =
@@ -102,6 +105,21 @@ class SessionController extends GetxController {
       ..hasExportedSession = false;
   }
 
+  SessionCollection updateSession(DateTime startDate, DateTime endDate, SessionCollection currentSelection) {
+    return currentSelection
+      ..startTime = startDate
+      ..endTime = endDate
+      ..direction = Direction.values[directionTag.value]
+      ..streetAddress = address_textController.value.text
+      ..weatherOptions = Weather.values[weatherTag.value]
+      ..roadConditionOptions = RoadCondition.values[roadConditionTag.value]
+      ..roadLightingOptions = RoadLighting.values[roadLightingTag.value]
+      ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
+      ..volunteerNames = volunteerTags.value
+      ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
+      ..hasExportedSession = false;
+  }
+
   void setVolunteerOptions() async {
     DbService dbService = Get.find();
     volunteerOptions.value = await dbService.getCurrentSettingValue(0);
@@ -124,6 +142,9 @@ class SessionController extends GetxController {
   void setEditSessionDetails(SessionCollection session) {
     address_textController.value.text = session.streetAddress;
     address.value = session.streetAddress;
+
+    startEditDate.value = session.startTime;
+    endEditDate.value = session.endTime;
 
     directionTag.value = session.direction.index;
     volunteerTags.value = session.volunteerNames.toList();
