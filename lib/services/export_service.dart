@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:speedwatch/collections/record_collection.dart';
 import 'package:collection/collection.dart';
+import 'package:speedwatch/components/session.dart';
 import '../collections/session_collection.dart';
 import '../enums/speed_range.dart';
 import '../enums/vehicle_type.dart';
@@ -14,11 +16,11 @@ import 'db_service.dart';
 class ExportService {
 
 
-  Future<String> exportSessionToExcel(int sessionId) async {
+  Future<String> exportSessionToExcel(SessionCollection session) async {
     Excel excel = await getExcelTemplate();
     DbService dbService = Get.find();
-    List<RecordCollection> records = await dbService.getRecordsWithIdOnly(sessionId);
-    SessionCollection session = await dbService.getSessionsWithIdOnly(sessionId) as SessionCollection;
+    List<RecordCollection> records = await dbService.getRecordsWithIdOnly(session.id);
+    // SessionCollection session = await dbService.getSessionsWithIdOnly(sessionId) as SessionCollection;
     // List<RecordCollection> infractionRecords = getInfractionRecords(records);
 
     List<RecordCollection> passengerRecords = [];
@@ -67,8 +69,12 @@ class ExportService {
     excel = setExcelTableRow(['B6', 'C6', 'D6', 'E6', 'F6'], transitCounts, excel);
     excel = setExcelTableRow(['B7', 'C7', 'D7', 'E7', 'F7'], motorBikeCounts, excel);
     excel = setExcelTableRow(['B8', 'C8', 'D8', 'E8', 'F8'], speedRangeTotals, excel);
-    return await saveExcel('ass', excel);
+    return await saveExcel(getFileName(session), excel);
 
+  }
+
+  String getFileName(SessionCollection session) {
+    return 'SpeedWatch ${session.streetAddress} ${DateFormat('M-d-y h.mm aa').format(session.startTime)}';
   }
 
   List<String> getSpeedRangeTitles(int speedLimit) {

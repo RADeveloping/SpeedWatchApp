@@ -120,9 +120,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
 
   Future<void> ShowSingleExportShareSheet(TapDownDetails positioned) async {
 
-    final directory =  await ExportService().exportSessionToExcel(1);
+    final directory =  await ExportService().exportSessionToExcel(sidebarController.selectedSessions[0]);
 
-    final result = await Share.shareFilesWithResult([directory], text: 'Great picture', sharePositionOrigin: Rect.fromLTWH(
+    final result = await Share.shareFilesWithResult([directory], subject: 'Excel File', sharePositionOrigin: Rect.fromLTWH(
         positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
 
     if (result.status == ShareResultStatus.dismissed) {
