@@ -5,6 +5,7 @@ import 'package:popover/popover.dart';
 import 'package:speedwatch/services/db_service.dart';
 
 import 'package:speedwatch/constants.dart';
+import '../collections/record_collection.dart';
 import '../controllers/sidebar_controller.dart';
 import 'springboard.dart';
 
