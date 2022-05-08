@@ -8,6 +8,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import '../services/export_service.dart';
+
 class CupertinoPageScaffoldCustom extends StatelessWidget {
   final Widget child;
   final Widget? leading;
@@ -117,11 +119,11 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
   }
 
   Future<void> ShowSingleExportShareSheet(TapDownDetails positioned) async {
-    final result = await Share.shareWithResult(
-      'check out my website https://example.com',
-      sharePositionOrigin: Rect.fromLTWH(
-          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
-    );
+
+    final directory =  await ExportService().exportSessionToExcel(1);
+
+    final result = await Share.shareFilesWithResult([directory], text: 'Great picture', sharePositionOrigin: Rect.fromLTWH(
+        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
 
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;

@@ -13,7 +13,7 @@ import 'db_service.dart';
 class ExportService {
 
 
-  void exportSessionToExcel(int sessionId) async {
+  Future<String> exportSessionToExcel(int sessionId) async {
     Excel excel = await getExcelTemplate();
     DbService dbService = Get.find();
     List<RecordCollection> records = await dbService.getRecordsWithIdOnly(sessionId);
@@ -59,17 +59,18 @@ class ExportService {
     excel = setExcelTableRow(['B5', 'C5', 'D5', 'E5', 'F5'], largeTruckCounts, excel);
     excel = setExcelTableRow(['B6', 'C6', 'D6', 'E6', 'F6'], transitCounts, excel);
     excel = setExcelTableRow(['B7', 'C7', 'D7', 'E7', 'F7'], motorBikeCounts, excel);
-    await saveExcel('ass', excel);
+    return await saveExcel('ass', excel);
 
   }
 
-  Future<void> saveExcel(String fileName, Excel excel) async {
+  Future<String> saveExcel(String fileName, Excel excel) async {
     var fileBytes = excel.save();
     var directory = await getApplicationDocumentsDirectory();
 
-    File(join('${directory}/${fileName}.xlsx'))
+    File(join('${directory.path}/${fileName}.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
+    return '${directory.path}/${fileName}.xlsx';
   }
 
   void printExcel(Excel excel) {

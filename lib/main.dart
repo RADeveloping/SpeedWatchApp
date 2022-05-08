@@ -24,7 +24,7 @@ Future<void> main() async {
   // Fetch the available cameras before initializing the app
   runApp(MyApp());
   await initServices();
-  ExportService().exportSessionToExcel(1);
+
 }
 
 Future<void> initServices() async {
