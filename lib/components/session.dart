@@ -45,10 +45,12 @@ class Session extends GetView<SessionController> {
           if (Get.arguments == null) {
             endDatePicker.date.value = dateTime.add(Duration(hours: 2));
           }
-        });
+        },
+        minDate:  Get.arguments == null ? null : controller.startEditDate.value
+    );
     endDatePicker = DatePickerChoice(
         dateTime: Get.arguments == null ? DateTime.now().add(Duration(hours: 2)) : controller.endEditDate.value,
-        minDate: startDatePicker.date.value);
+        minDate:  Get.arguments == null ? startDatePicker.date.value : controller.startEditDate.value);
     return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
       leading: DiscardSessionChangesButton(),
