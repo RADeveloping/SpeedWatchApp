@@ -126,6 +126,11 @@ class DbService extends GetxService {
         .then((newSession) => handleNewSession(newSession));
   }
 
+  Future<SessionCollection?> getSessionsWithIdOnly(int sessionId) async {
+    Isar db = Get.find();
+    return db.sessionCollections.get(sessionId);
+  }
+
   Future<int> writeSessionToDB(
       SessionCollection newSession, SettingsCollection newSettings) async {
     Isar db = Get.find();

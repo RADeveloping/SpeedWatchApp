@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:speedwatch/collections/record_collection.dart';
 import 'package:collection/collection.dart';
+import '../collections/session_collection.dart';
 import '../enums/speed_range.dart';
 import '../enums/vehicle_type.dart';
 import 'db_service.dart';
@@ -17,7 +18,8 @@ class ExportService {
     Excel excel = await getExcelTemplate();
     DbService dbService = Get.find();
     List<RecordCollection> records = await dbService.getRecordsWithIdOnly(sessionId);
-    List<RecordCollection> infractionRecords = getInfractionRecords(records);
+    SessionCollection session = await dbService.getSessionsWithIdOnly(sessionId) as SessionCollection;
+    // List<RecordCollection> infractionRecords = getInfractionRecords(records);
 
     List<RecordCollection> passengerRecords = [];
     List<RecordCollection> largeTruckRecords = [];
@@ -29,6 +31,8 @@ class ExportService {
     List<int> largeTruckCounts = [];
     List<int> transitCounts = [];
     List<int> motorBikeCounts = [];
+    List<int> speedRangeTotals = [];
+    List<String> speedRangeTitles = [];
 
 
     var groupByType = groupBy(records,
@@ -54,13 +58,61 @@ class ExportService {
     largeTruckCounts = getTypeCounts(largeTruckRecords);
     transitCounts = getTypeCounts(transitRecords);
     motorBikeCounts = getTypeCounts(motorBikeRecords);
-    
+    speedRangeTotals = getSpeedRangeTotals(passengerCounts, largeTruckCounts, transitCounts, motorBikeCounts);
+    speedRangeTitles = getSpeedRangeTitles(session.speedLimit);
+
+    excel = setExcelTableRowString(['B3', 'C3', 'D3', 'E3'], speedRangeTitles, excel);
     excel = setExcelTableRow(['B4', 'C4', 'D4', 'E4', 'F4'], passengerCounts, excel);
     excel = setExcelTableRow(['B5', 'C5', 'D5', 'E5', 'F5'], largeTruckCounts, excel);
     excel = setExcelTableRow(['B6', 'C6', 'D6', 'E6', 'F6'], transitCounts, excel);
     excel = setExcelTableRow(['B7', 'C7', 'D7', 'E7', 'F7'], motorBikeCounts, excel);
+    excel = setExcelTableRow(['B8', 'C8', 'D8', 'E8', 'F8'], speedRangeTotals, excel);
     return await saveExcel('ass', excel);
 
+  }
+
+  List<String> getSpeedRangeTitles(int speedLimit) {
+    int lowerLimit = 0;
+    int upperLimit = 0;
+    String title;
+    List<String> output = [];
+    for (SpeedRange range in SpeedRange.values) {
+      switch (range) {
+        case SpeedRange.green: {
+          lowerLimit = 0;
+          upperLimit = speedLimit;
+          title = '${lowerLimit} to ${upperLimit}';
+        }
+        break;
+        case SpeedRange.yellow: {
+          lowerLimit = speedLimit + 1;
+          upperLimit = speedLimit + 10;
+          title = '${lowerLimit} to ${upperLimit}';
+        }
+        break;
+        case SpeedRange.orange: {
+          lowerLimit = speedLimit + 11;
+          upperLimit = speedLimit + 20;
+          title = '${lowerLimit} to ${upperLimit}';
+        }
+        break;
+        case SpeedRange.red: {
+          title = 'Over ${speedLimit + 20}';
+        }
+        break;
+      }
+      output.add(title);
+    }
+    return output;
+  }
+
+  List<int> getSpeedRangeTotals(List<int> passengerCounts, List<int> largeTruckCounts, List<int> transitCounts, List<int> motorBikeCounts) {
+    List<int> output = List<int>.filled(5, 0);
+    for (int i = 0; i < 5; i++) {
+      var sum = passengerCounts[i] + largeTruckCounts[i] +  transitCounts[i] + motorBikeCounts[i];
+      output[i] = sum;
+    }
+    return output;
   }
 
   Future<String> saveExcel(String fileName, Excel excel) async {
@@ -136,6 +188,14 @@ class ExportService {
   }
 
   Excel setExcelTableRow(List<String> indexes, List<int> values, Excel excel) {
+    Sheet sheetObject = excel['Sheet1'];
+    for (int i = 0; i < indexes.length; i++) {
+      sheetObject.cell(CellIndex.indexByString(indexes[i])).value = values[i];
+    }
+    return excel;
+  }
+
+  Excel setExcelTableRowString(List<String> indexes, List<String> values, Excel excel) {
     Sheet sheetObject = excel['Sheet1'];
     for (int i = 0; i < indexes.length; i++) {
       sheetObject.cell(CellIndex.indexByString(indexes[i])).value = values[i];
