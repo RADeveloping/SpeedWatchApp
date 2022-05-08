@@ -200,6 +200,7 @@ class SessionsList extends GetView<SidebarController> {
           controller.currentSession.value = session;
           Function callBack = () => Get.offAndToNamed('/session/${session.id}');
           dbService.getRecordsWithId(controller.handleNewRecords, session.id, callBack);
+          dbService.getDeletedRecordsWithId(controller.handleDeletedRecords, session.id, callBack);
         }
 
         if (controller.isEditMode.value) {

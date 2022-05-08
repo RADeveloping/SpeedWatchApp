@@ -15,19 +15,23 @@ extension GetRecordCollectionCollection on Isar {
 const RecordCollectionSchema = CollectionSchema(
   name: 'RecordCollection',
   schema:
-      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"},{"name":"volunteerName","type":"String"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
+      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"deletedAt","type":"Long"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"},{"name":"volunteerName","type":"String"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"deletedAt","unique":false,"properties":[{"name":"deletedAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
   idName: 'id',
   propertyIds: {
     'createdAt': 0,
-    'sessionId': 1,
-    'speedRange': 2,
-    'vehicleType': 3,
-    'volunteerName': 4
+    'deletedAt': 1,
+    'sessionId': 2,
+    'speedRange': 3,
+    'vehicleType': 4,
+    'volunteerName': 5
   },
   listProperties: {},
-  indexIds: {'createdAt': 0, 'sessionId': 1},
+  indexIds: {'createdAt': 0, 'deletedAt': 1, 'sessionId': 2},
   indexValueTypes: {
     'createdAt': [
+      IndexValueType.long,
+    ],
+    'deletedAt': [
       IndexValueType.long,
     ],
     'sessionId': [
@@ -78,15 +82,17 @@ void _recordCollectionSerializeNative(
   var dynamicSize = 0;
   final value0 = object.createdAt;
   final _createdAt = value0;
-  final value1 = object.sessionId;
-  final _sessionId = value1;
-  final value2 = _recordCollectionSpeedRangeConverter.toIsar(object.speedRange);
-  final _speedRange = value2;
-  final value3 =
+  final value1 = object.deletedAt;
+  final _deletedAt = value1;
+  final value2 = object.sessionId;
+  final _sessionId = value2;
+  final value3 = _recordCollectionSpeedRangeConverter.toIsar(object.speedRange);
+  final _speedRange = value3;
+  final value4 =
       _recordCollectionVehicleTypeConverter.toIsar(object.vehicleType);
-  final _vehicleType = value3;
-  final value4 = object.volunteerName;
-  final _volunteerName = IsarBinaryWriter.utf8Encoder.convert(value4);
+  final _vehicleType = value4;
+  final value5 = object.volunteerName;
+  final _volunteerName = IsarBinaryWriter.utf8Encoder.convert(value5);
   dynamicSize += (_volunteerName.length) as int;
   final size = staticSize + dynamicSize;
 
@@ -95,10 +101,11 @@ void _recordCollectionSerializeNative(
   final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeDateTime(offsets[0], _createdAt);
-  writer.writeLong(offsets[1], _sessionId);
-  writer.writeLong(offsets[2], _speedRange);
-  writer.writeLong(offsets[3], _vehicleType);
-  writer.writeBytes(offsets[4], _volunteerName);
+  writer.writeDateTime(offsets[1], _deletedAt);
+  writer.writeLong(offsets[2], _sessionId);
+  writer.writeLong(offsets[3], _speedRange);
+  writer.writeLong(offsets[4], _vehicleType);
+  writer.writeBytes(offsets[5], _volunteerName);
 }
 
 RecordCollection _recordCollectionDeserializeNative(
@@ -108,13 +115,14 @@ RecordCollection _recordCollectionDeserializeNative(
     List<int> offsets) {
   final object = RecordCollection();
   object.createdAt = reader.readDateTime(offsets[0]);
+  object.deletedAt = reader.readDateTimeOrNull(offsets[1]);
   object.id = id;
-  object.sessionId = reader.readLong(offsets[1]);
+  object.sessionId = reader.readLong(offsets[2]);
   object.speedRange = _recordCollectionSpeedRangeConverter
-      .fromIsar(reader.readLong(offsets[2]));
-  object.vehicleType = _recordCollectionVehicleTypeConverter
       .fromIsar(reader.readLong(offsets[3]));
-  object.volunteerName = reader.readString(offsets[4]);
+  object.vehicleType = _recordCollectionVehicleTypeConverter
+      .fromIsar(reader.readLong(offsets[4]));
+  object.volunteerName = reader.readString(offsets[5]);
   return object;
 }
 
@@ -126,14 +134,16 @@ P _recordCollectionDeserializePropNative<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
       return (_recordCollectionSpeedRangeConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 3:
+    case 4:
       return (_recordCollectionVehicleTypeConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 4:
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw 'Illegal propertyIndex';
@@ -145,6 +155,8 @@ dynamic _recordCollectionSerializeWeb(
   final jsObj = IsarNative.newJsObject();
   IsarNative.jsObjectSet(
       jsObj, 'createdAt', object.createdAt.toUtc().millisecondsSinceEpoch);
+  IsarNative.jsObjectSet(
+      jsObj, 'deletedAt', object.deletedAt?.toUtc().millisecondsSinceEpoch);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
   IsarNative.jsObjectSet(jsObj, 'sessionId', object.sessionId);
   IsarNative.jsObjectSet(jsObj, 'speedRange',
@@ -164,6 +176,12 @@ RecordCollection _recordCollectionDeserializeWeb(
               isUtc: true)
           .toLocal()
       : DateTime.fromMillisecondsSinceEpoch(0);
+  object.deletedAt = IsarNative.jsObjectGet(jsObj, 'deletedAt') != null
+      ? DateTime.fromMillisecondsSinceEpoch(
+              IsarNative.jsObjectGet(jsObj, 'deletedAt'),
+              isUtc: true)
+          .toLocal()
+      : null;
   object.id = IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity;
   object.sessionId =
       IsarNative.jsObjectGet(jsObj, 'sessionId') ?? double.negativeInfinity;
@@ -184,6 +202,13 @@ P _recordCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
                   isUtc: true)
               .toLocal()
           : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+    case 'deletedAt':
+      return (IsarNative.jsObjectGet(jsObj, 'deletedAt') != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+                  IsarNative.jsObjectGet(jsObj, 'deletedAt'),
+                  isUtc: true)
+              .toLocal()
+          : null) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity)
           as P;
@@ -217,6 +242,11 @@ extension RecordCollectionQueryWhereSort
   QueryBuilder<RecordCollection, RecordCollection, QAfterWhere> anyCreatedAt() {
     return addWhereClauseInternal(
         const IndexWhereClause.any(indexName: 'createdAt'));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhere> anyDeletedAt() {
+    return addWhereClauseInternal(
+        const IndexWhereClause.any(indexName: 'deletedAt'));
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterWhere> anySessionId() {
@@ -356,6 +386,96 @@ extension RecordCollectionQueryWhere
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtEqualTo(DateTime? deletedAt) {
+    return addWhereClauseInternal(IndexWhereClause.equalTo(
+      indexName: 'deletedAt',
+      value: [deletedAt],
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtNotEqualTo(DateTime? deletedAt) {
+    if (whereSortInternal == Sort.asc) {
+      return addWhereClauseInternal(IndexWhereClause.lessThan(
+        indexName: 'deletedAt',
+        upper: [deletedAt],
+        includeUpper: false,
+      )).addWhereClauseInternal(IndexWhereClause.greaterThan(
+        indexName: 'deletedAt',
+        lower: [deletedAt],
+        includeLower: false,
+      ));
+    } else {
+      return addWhereClauseInternal(IndexWhereClause.greaterThan(
+        indexName: 'deletedAt',
+        lower: [deletedAt],
+        includeLower: false,
+      )).addWhereClauseInternal(IndexWhereClause.lessThan(
+        indexName: 'deletedAt',
+        upper: [deletedAt],
+        includeUpper: false,
+      ));
+    }
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtIsNull() {
+    return addWhereClauseInternal(const IndexWhereClause.equalTo(
+      indexName: 'deletedAt',
+      value: [null],
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtIsNotNull() {
+    return addWhereClauseInternal(const IndexWhereClause.greaterThan(
+      indexName: 'deletedAt',
+      lower: [null],
+      includeLower: false,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtGreaterThan(
+    DateTime? deletedAt, {
+    bool include = false,
+  }) {
+    return addWhereClauseInternal(IndexWhereClause.greaterThan(
+      indexName: 'deletedAt',
+      lower: [deletedAt],
+      includeLower: include,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtLessThan(
+    DateTime? deletedAt, {
+    bool include = false,
+  }) {
+    return addWhereClauseInternal(IndexWhereClause.lessThan(
+      indexName: 'deletedAt',
+      upper: [deletedAt],
+      includeUpper: include,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
+      deletedAtBetween(
+    DateTime? lowerDeletedAt,
+    DateTime? upperDeletedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addWhereClauseInternal(IndexWhereClause.between(
+      indexName: 'deletedAt',
+      lower: [lowerDeletedAt],
+      includeLower: includeLower,
+      upper: [upperDeletedAt],
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterWhereClause>
       sessionIdEqualTo(int sessionId) {
     return addWhereClauseInternal(IndexWhereClause.equalTo(
       indexName: 'sessionId',
@@ -475,6 +595,66 @@ extension RecordCollectionQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'createdAt',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      deletedAtIsNull() {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.isNull,
+      property: 'deletedAt',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      deletedAtEqualTo(DateTime? value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'deletedAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      deletedAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'deletedAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      deletedAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'deletedAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      deletedAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'deletedAt',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -809,6 +989,16 @@ extension RecordCollectionQueryWhereSortBy
     return addSortByInternal('createdAt', Sort.desc);
   }
 
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortByDeletedAt() {
+    return addSortByInternal('deletedAt', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortByDeletedAtDesc() {
+    return addSortByInternal('deletedAt', Sort.desc);
+  }
+
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy> sortById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -871,6 +1061,16 @@ extension RecordCollectionQueryWhereSortThenBy
     return addSortByInternal('createdAt', Sort.desc);
   }
 
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenByDeletedAt() {
+    return addSortByInternal('deletedAt', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenByDeletedAtDesc() {
+    return addSortByInternal('deletedAt', Sort.desc);
+  }
+
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy> thenById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -928,6 +1128,11 @@ extension RecordCollectionQueryWhereDistinct
     return addDistinctByInternal('createdAt');
   }
 
+  QueryBuilder<RecordCollection, RecordCollection, QDistinct>
+      distinctByDeletedAt() {
+    return addDistinctByInternal('deletedAt');
+  }
+
   QueryBuilder<RecordCollection, RecordCollection, QDistinct> distinctById() {
     return addDistinctByInternal('id');
   }
@@ -958,6 +1163,11 @@ extension RecordCollectionQueryProperty
   QueryBuilder<RecordCollection, DateTime, QQueryOperations>
       createdAtProperty() {
     return addPropertyNameInternal('createdAt');
+  }
+
+  QueryBuilder<RecordCollection, DateTime?, QQueryOperations>
+      deletedAtProperty() {
+    return addPropertyNameInternal('deletedAt');
   }
 
   QueryBuilder<RecordCollection, int, QQueryOperations> idProperty() {
