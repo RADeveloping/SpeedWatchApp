@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 import 'package:speedwatch/collections/record_collection.dart';
 import 'package:speedwatch/services/db_service.dart';
 
@@ -28,13 +29,44 @@ class SessionDetail extends GetView<SessionDetail> {
                 onValueChanged: (newValue) {
                   _sliding.value = newValue as int;
                 })) : Text(s.currentSession.value.volunteerNames[0], style: TextStyle(color: Colors.white)),
-        trailing: CupertinoButton(
-            onPressed: () {
-              DbService dbService = Get.find();
-              List<RecordCollection> records = s.records.value;
-              RecordCollection latestRecord = records[0];
-              dbService.deleteLatestRecord(latestRecord);
-            }, child: Text('Undo'), padding: EdgeInsets.zero),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CupertinoButton( // Undo
+              onPressed: () {
+              },
+              child: PositionedTapDetector2(
+                child: Icon(
+                  CupertinoIcons.arrow_uturn_left_circle,
+                  color: kColourLight,
+                ),
+                onTap: (position) {
+                  DbService dbService = Get.find();
+                  List<RecordCollection> records = s.records.value;
+                  records.length == 0
+                      ? null
+                      : dbService.deleteLatestRecord(records[0]);
+                },
+              ),
+              padding: EdgeInsets.zero,
+            ),
+            CupertinoButton( // Redo
+              onPressed: () {},
+              child: PositionedTapDetector2(
+                child: Icon(
+                  CupertinoIcons.arrow_uturn_right_circle,
+                  color: kColourLight,
+                ),
+                onTap: (position) {
+                  DbService dbService = Get.find();
+                  List<RecordCollection> deletedRecords = s.deletedRecords.value;
+                  deletedRecords.length == 0
+                    ? null
+                    : dbService.restoreLatestDeletedRecord(deletedRecords[0]);
+                },
+            ), padding: EdgeInsets.zero),
+          ],
+        ),
         backgroundColor: kColourRightPaneBackground,
         brightness: Brightness.dark,
       ),

@@ -106,7 +106,7 @@ class DbService extends GetxService {
     }));
   }
 
-  void restoreDeletedRecord(RecordCollection deletedRecord) async {
+  void restoreLatestDeletedRecord(RecordCollection deletedRecord) async {
     Isar db = Get.find();
     await db.writeTxn(((isar) async {
       deletedRecord.deletedAt = null;
