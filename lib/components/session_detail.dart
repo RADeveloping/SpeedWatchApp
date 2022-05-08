@@ -36,10 +36,10 @@ class SessionDetail extends GetView<SessionDetail> {
               onPressed: () {
               },
               child: PositionedTapDetector2(
-                child: Icon(
+                child: Obx(()=>Icon(
                   CupertinoIcons.arrow_uturn_left_circle,
-                  color: kColourLight,
-                ),
+                  color: s.records.length > 0 ? kColourLight : kColourDisabledButton,
+                )),
                 onTap: (position) {
                   DbService dbService = Get.find();
                   List<RecordCollection> records = s.records.value;
@@ -53,10 +53,10 @@ class SessionDetail extends GetView<SessionDetail> {
             CupertinoButton( // Redo
               onPressed: () {},
               child: PositionedTapDetector2(
-                child: Icon(
+                child: Obx(()=>Icon(
                   CupertinoIcons.arrow_uturn_right_circle,
-                  color: kColourLight,
-                ),
+                  color: s.deletedRecords.length > 0 ? kColourLight : kColourDisabledButton,
+                )),
                 onTap: (position) {
                   DbService dbService = Get.find();
                   List<RecordCollection> deletedRecords = s.deletedRecords.value;
