@@ -40,13 +40,17 @@ class Session extends GetView<SessionController> {
   Widget build(BuildContext context) {
     controller.setVolunteerOptions();
     startDatePicker = DatePickerChoice(
-        dateTime: DateTime.now(),
+        dateTime: Get.arguments == null ? DateTime.now() : controller.startEditDate.value,
         onChange: (dateTime) {
-          endDatePicker.date.value = dateTime.add(Duration(hours: 2));
-        });
+          if (Get.arguments == null) {
+            endDatePicker.date.value = dateTime.add(Duration(hours: 2));
+          }
+        },
+        minDate:  Get.arguments == null ? null : controller.startEditDate.value
+    );
     endDatePicker = DatePickerChoice(
-        dateTime: DateTime.now().add(Duration(hours: 2)),
-        minDate: startDatePicker.date.value);
+        dateTime: Get.arguments == null ? DateTime.now().add(Duration(hours: 2)) : controller.endEditDate.value,
+        minDate:  Get.arguments == null ? startDatePicker.date.value : controller.startEditDate.value);
     return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
       leading: DiscardSessionChangesButton(),
@@ -257,7 +261,18 @@ class Session extends GetView<SessionController> {
   }
 
   void updateSessionClick() async {
-    // TODO UPDATE EXISTING RECORD WITH NEW DATA..
+    DbService dbService = Get.find();
+    SidebarController s = Get.find();
+    SessionCollection updatedSessionCollection = controller.updateSession(
+        startDatePicker.date.value, endDatePicker.date.value, s.currentSession.value);
+    SettingsCollection newSettingsCollection = SettingsCollection()
+      ..id = 0
+      ..value = await controller.getNewVolunteerNamesValue()
+      ..key = 'names';
+
+    await dbService.writeSessionToDB(
+        updatedSessionCollection, newSettingsCollection);
+    s.currentSession.value = updatedSessionCollection;
 
     controller.address_textController().clear();
     controller.volunteer_textController().clear();
