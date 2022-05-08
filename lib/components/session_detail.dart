@@ -9,9 +9,11 @@ import '../collections/record_collection.dart';
 import '../controllers/sidebar_controller.dart';
 import 'springboard.dart';
 
-class SessionDetail extends GetView<SessionDetail> {
+class SessionDetailDetailController extends GetxController {
   RxInt _sliding = 0.obs;
+}
 
+class SessionDetail extends GetView<SessionDetailDetailController> {
   @override
   Widget build(BuildContext context) {
     SidebarController s = Get.find();
@@ -22,7 +24,7 @@ class SessionDetail extends GetView<SessionDetail> {
           child: Text('Edit'),
           padding: EdgeInsets.zero,
         ),
-        middle: SwitchUser(controller: s, sliding: _sliding),
+        middle: SwitchUser(),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -87,7 +89,8 @@ class SessionDetail extends GetView<SessionDetail> {
                     speedRange,
                     vehicleType,
                     currentSessionId,
-                    s.currentSession.value.volunteerNames[_sliding.value]);
+                    s.currentSession.value
+                        .volunteerNames[controller._sliding.value]);
               },
             )),
       ),
@@ -95,33 +98,26 @@ class SessionDetail extends GetView<SessionDetail> {
   }
 }
 
-class SwitchUser extends StatelessWidget {
-  RxInt sliding;
-
-  SwitchUser({
-    Key? key,
-    required this.controller,
-    required this.sliding,
-  }) : super(key: key);
-
-  final SidebarController controller;
+class SwitchUser extends GetView<SessionDetailDetailController> {
+  final SidebarController sidebarController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return controller.currentSession.value.volunteerNames.length > 1
+    return sidebarController.currentSession.value.volunteerNames.length > 1
         ? GestureDetector(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Obx(() => Text(
-                    controller
-                        .currentSession.value.volunteerNames[sliding.value],
-                    style: TextStyle(color: Colors.white))),
+                    sidebarController.currentSession.value
+                        .volunteerNames[controller._sliding.value],
+                    style: TextStyle(color: kColourLight))),
                 Container(
                   width: 5,
                 ),
-                Icon(
-                  CupertinoIcons.arrow_swap,
+                Text(
+                  '▾',
+                  style: TextStyle(fontSize: 20, color: kColourLight),
                 )
               ],
             ),
@@ -131,21 +127,22 @@ class SwitchUser extends StatelessWidget {
                 transitionDuration: const Duration(milliseconds: 150),
                 bodyBuilder: (context) => CupertinoPicker(
                   onSelectedItemChanged: (int value) {
-                    sliding.value = value;
+                    controller._sliding.value = value;
                   },
-                  scrollController:
-                      FixedExtentScrollController(initialItem: sliding.value),
+                  scrollController: FixedExtentScrollController(
+                      initialItem: controller._sliding.value),
                   itemExtent: 36.0,
                   squeeze: 1,
-                  children: controller.currentSession.value.volunteerNames
-                      .map((name) => Text(
-                            name,
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ))
-                      .toList(),
+                  children:
+                      sidebarController.currentSession.value.volunteerNames
+                          .map((name) => Text(
+                                name,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ))
+                          .toList(),
                 ),
                 direction: PopoverDirection.top,
                 barrierColor: Colors.black.withOpacity(0.8),
@@ -161,7 +158,8 @@ class SwitchUser extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Obx(() => Text(
-                  controller.currentSession.value.volunteerNames[sliding.value],
+                  sidebarController.currentSession.value
+                      .volunteerNames[controller._sliding.value],
                   style: TextStyle(color: Colors.white))),
             ],
           );

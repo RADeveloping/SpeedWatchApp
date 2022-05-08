@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
     Get.put<SessionController>(SessionController());
     Get.put<HomeController>(HomeController());
     Get.put<SidebarController>(SidebarController());
+    Get.put<SessionDetailDetailController>(SessionDetailDetailController());
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
