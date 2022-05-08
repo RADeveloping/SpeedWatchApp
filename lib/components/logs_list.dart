@@ -34,29 +34,58 @@ class LogsList extends GetView<SidebarController> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Obx(() => Text(
-                          'Total: ${controller.records.value.length}',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                  )),
-              Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Obx(() => Text(
-                        'Infractions: ${getInfractionCount()}',
-                        style: TextStyle(color: Colors.white))),
-                  )),
+              Expanded(
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.transparent),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'RECORDS',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                          Obx(() => Text(
+                                '${controller.records.value.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
+                              )),
+                        ],
+                      ),
+                    )),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.transparent),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'INFRACTIONS',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                          Obx(() => Text('${getInfractionCount()}',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold))),
+                        ],
+                      ),
+                    )),
+              ),
             ],
           ),
         ),
@@ -80,12 +109,12 @@ class LogsList extends GetView<SidebarController> {
                       controller.currentSession.value.streetAddress
                           .toUpperCase(),
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w100),
+                          color: Colors.white, fontWeight: FontWeight.w500),
                     ),
                     Text(
                       '${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.startTime).toUpperCase()} - ${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.endTime).toUpperCase()}',
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w100),
+                          color: Colors.white, fontWeight: FontWeight.w200),
                     ),
                   ],
                 ),
