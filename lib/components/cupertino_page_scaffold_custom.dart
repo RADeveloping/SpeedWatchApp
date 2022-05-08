@@ -76,7 +76,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                           : GestureDetector(
                               onTapDown: (positioned) async {
                                 Get.showOverlay(asyncFunction: () async {
-                                  await ShowSingleExportShareSheet(positioned);
+                                  await ShowSelectedExportShareSheet(
+                                      positioned);
                                 });
                               },
                               child: Text(
@@ -116,7 +117,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     }
   }
 
-  Future<void> ShowSingleExportShareSheet(TapDownDetails positioned) async {
+  Future<void> ShowSelectedExportShareSheet(TapDownDetails positioned) async {
     final result = await Share.shareWithResult(
       'check out my website https://example.com',
       sharePositionOrigin: Rect.fromLTWH(
