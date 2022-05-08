@@ -65,7 +65,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                           ? GestureDetector(
                               onTapDown: (positioned) async {
                                 Get.showOverlay(asyncFunction: () async {
-                                  await ShowExportAllShareSheet(positioned);
+                                  await ShowExportAllShareSheet(
+                                      positioned, context);
                                 });
                               },
                               child: Text(
@@ -77,7 +78,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                               onTapDown: (positioned) async {
                                 Get.showOverlay(asyncFunction: () async {
                                   await ShowSelectedExportShareSheet(
-                                      positioned);
+                                      positioned, context);
                                 });
                               },
                               child: Text(
@@ -92,7 +93,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     );
   }
 
-  Future<void> ShowExportAllShareSheet(TapDownDetails positioned) async {
+  Future<void> ShowExportAllShareSheet(
+      TapDownDetails positioned, BuildContext context) async {
     sidebarController.selectedSessions.value
         .addAll(sidebarController.sessions.value.toList());
     sidebarController.selectedSessions.refresh();
@@ -105,19 +107,44 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
-      // TODO MOVE TO ARCHIVE!!!
-      Get.showSnackbar(GetSnackBar(
-        message:
-            'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW.... ASK USER IF MOVE TO EXPORTED OR NOT ? ',
-        duration: Duration(seconds: 3),
-      ));
-      // sidebarController.sessions.value.clear();
-      // sidebarController.sessions.refresh();
+      showMoveExportedAlertDialog(context);
       sidebarController.isEditMode.value = false;
     }
   }
 
-  Future<void> ShowSelectedExportShareSheet(TapDownDetails positioned) async {
+  void showMoveExportedAlertDialog(BuildContext context) {
+    showCupertinoDialog<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoTheme(
+            data: CupertinoThemeData(brightness: Brightness.dark),
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+              child: CupertinoAlertDialog(
+                  title: const Text('Move Sessions to "Exported sessions"'),
+                  actions: <CupertinoDialogAction>[
+                    CupertinoDialogAction(
+                        child: const Text(
+                          'Don\'t Move',
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                    CupertinoDialogAction(
+                        child: const Text(
+                          'Move',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          sidebarController.sessions.value.clear();
+                          sidebarController.sessions.refresh();
+                          Navigator.pop(context);
+                        })
+                  ]),
+            )));
+  }
+
+  Future<void> ShowSelectedExportShareSheet(
+      TapDownDetails positioned, BuildContext context) async {
     final result = await Share.shareWithResult(
       'check out my website https://example.com',
       sharePositionOrigin: Rect.fromLTWH(
@@ -128,12 +155,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
       // TODO MOVE TO ARCHIVE!!!
-      Get.showSnackbar(GetSnackBar(
-        message:
-            'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW.... ASK USER IF MOVE TO EXPORTED OR NOT ? ',
-        duration: Duration(seconds: 3),
-      ));
-
+      showMoveExportedAlertDialog(context);
       // sidebarController.sessions.value.removeWhere(
       //     (element) => sidebarController.selectedSessions.contains(element));
       // sidebarController.sessions.refresh();
