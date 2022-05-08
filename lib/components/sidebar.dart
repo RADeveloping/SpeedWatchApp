@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
@@ -13,9 +11,7 @@ class Sidebar extends GetView<SidebarController> {
   final Widget child;
   final String largeTitle;
   final Widget? leading;
-  String? previousPageTitle;
-  Rx<TapPosition> position =
-      TapPosition(Offset(0.0, 0.0), Offset(0.0, 0.0)).obs;
+  final String? previousPageTitle;
 
   Sidebar(
       {required this.child,
@@ -30,24 +26,26 @@ class Sidebar extends GetView<SidebarController> {
       backgroundColor: kColourSidebarBackground,
       largeTitle: largeTitle,
       previousPageTitle: previousPageTitle,
-      trailing: CupertinoButton(
-        padding: EdgeInsets.zero,
-        child: PositionedTapDetector2(
-          child: Icon(
-            CupertinoIcons.share_up,
-            color: kColourLight,
-          ),
-          onTap: (positioned) {
-            // controller.isEditMode.value = !controller.isEditMode.value;
-            Share.share(
-              'LOG NAME WOULD GO HERE',
-              sharePositionOrigin: Rect.fromLTWH(
-                  positioned.global.dx, positioned.global.dy, 0.5, 20),
-            );
-          },
-        ),
-        onPressed: () {},
-      ),
+      trailing: Obx(() => CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: controller.isEditMode.value
+                ? Text(
+                    'Done',
+                    style: TextStyle(color: kColourLight),
+                  )
+                : Icon(
+                    CupertinoIcons.ellipsis_circle,
+                    color: kColourLight,
+                  ),
+            onPressed: () {
+              if (controller.isEditMode.value) {
+                controller.isEditMode.value = false;
+              } else {
+                controller.isEditMode.value = true;
+                controller.selectedSessions().clear();
+              }
+            },
+          )),
       heroTag: 0,
       child: child,
     );

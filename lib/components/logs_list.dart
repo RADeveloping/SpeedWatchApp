@@ -7,33 +7,87 @@ import 'package:intl/intl.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
-import 'package:speedwatch/enums/vehicle_type.dart';
 import '../collections/record_collection.dart';
 import '../constants.dart';
 import 'package:collection/collection.dart';
-import 'package:share_plus/share_plus.dart';
-
 import '../enums/speed_range.dart';
 
 class LogsList extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
           child: Obx(() => SettingsList(
-            applicationType: ApplicationType.both,
-            brightness: Brightness.light,
-            lightTheme: SettingsThemeData(
-              settingsListBackground: kColourSidebarBackground,
-              settingsSectionBackground: Colors.transparent,
-              settingsTileTextColor: kColourSidebarTileText,
-              tileHighlightColor: kColourLight,
-              dividerColor: kColourTileDivider,
-            ),
-            sections: [buildSection(context)],
-          )),
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: Colors.transparent,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
+                ),
+                sections: [buildSection(context)],
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.transparent),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'RECORDS',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                          Obx(() => Text(
+                                '${controller.records.value.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
+                              )),
+                        ],
+                      ),
+                    )),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.transparent),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'INFRACTIONS',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                          Obx(() => Text('${getInfractionCount()}',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold))),
+                        ],
+                      ),
+                    )),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -41,15 +95,63 @@ class LogsList extends GetView<SidebarController> {
 
   AbstractSettingsSection buildSection(BuildContext context) {
     return SettingsSection(
-      title: Text(controller.currentSession.value.streetAddress
-          + '\n' + DateFormat('EEEEEE, MMMM dd, y h:mm a')
-              .format(controller.currentSession.value.startTime).toUpperCase()
-          +  '\nTotal: ${controller.records.value.length} '
-          'Infractions: ${getInfractionCount()} \n'
-          ),
       margin: EdgeInsetsDirectional.zero,
-      tiles: controller.records.isNotEmpty ? controller.records.map((record) => recordItem(record)).toList() 
-      : [SettingsTile(title: Text(''),)],
+      title: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      controller.currentSession.value.streetAddress
+                          .toUpperCase(),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      '${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.startTime).toUpperCase()} - ${DateFormat('M/d/y h:mm aa').format(controller.currentSession.value.endTime).toUpperCase()}',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w200),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+      tiles: controller.records.isNotEmpty
+          ? (controller.records
+                  .take(controller.limitRecords.value)
+                  .map((record) => recordItem(record))
+                  .toList() +
+              [moreItems()])
+          : [
+              SettingsTile(
+                title: Text(''),
+              )
+            ],
+    );
+  }
+
+  SettingsTile moreItems() {
+    if (controller.records.length > controller.limitRecords.value) {
+      return SettingsTile(
+        title: Center(
+            child: Text(
+          'Load more',
+          style: TextStyle(color: kColourLight),
+        )),
+        onPressed: (c) {
+          controller.limitRecords.value += 20;
+        },
+      );
+    }
+    return SettingsTile(
+      title: Text(''),
     );
   }
 
@@ -89,9 +191,8 @@ class LogsList extends GetView<SidebarController> {
 
   int getInfractionCount() {
     List<RecordCollection> infractionRecords = [];
-    var groupByInfractionRecords = groupBy(
-        controller.records.value,
-            (obj) => (obj as RecordCollection).speedRange);
+    var groupByInfractionRecords = groupBy(controller.records.value,
+        (obj) => (obj as RecordCollection).speedRange);
 
     groupByInfractionRecords.forEach((speedRange, groupedList) {
       if (speedRange != SpeedRange.green) {
@@ -101,7 +202,6 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords.length;
   }
 }
-
 
 class LogsTileMoreButton extends StatelessWidget {
   const LogsTileMoreButton({
@@ -128,7 +228,6 @@ class LogsTileMoreButton extends StatelessWidget {
                                 cameraSide: CameraSide.front,
                                 onFile: (file) {
                                   print(file);
-                                  //When take foto you should close camera
                                   Navigator.pop(context);
                                 },
                               )));

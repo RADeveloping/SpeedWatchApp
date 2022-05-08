@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 
@@ -25,9 +24,15 @@ class HomeView extends GetView<HomeController> {
         child: MultiSplitViewTheme(
           data: MultiSplitViewThemeData(dividerThickness: 1),
           child: MultiSplitView(
-              resizable: false,
-              initialWeights: [0.3, 0.7],
-              children: controller.children.value),
+              controller: MultiSplitViewController(
+                  weights:
+                      context.isPortrait ? [0.417, 0.583] : [0.347, 0.653]),
+              resizable: true,
+              initialWeights:
+                  context.isPortrait ? [0.417, 0.583] : [0.347, 0.653],
+              children: leftChild == null && context.isPortrait
+                  ? [controller.children.value[1]]
+                  : controller.children.value),
         )));
   }
 }

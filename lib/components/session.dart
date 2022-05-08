@@ -238,6 +238,12 @@ class Session extends GetView<SessionController> {
         newSessionCollection, newSettingsCollection);
     s.records.value = [];
     s.currentSession.value = newSessionCollection;
+    controller.address_textController().clear();
+    controller.volunteer_textController().clear();
+    if (controller.volunteerTags.value.length > 0) {
+      controller.volunteerTags.value = [];
+    }
+
     Get.offAndToNamed('/session/${id}');
   }
 }
@@ -277,7 +283,8 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                 onTap: () {
                   controller.address_textController().clear();
                   controller.volunteerTags().clear();
-                  Get.offAndToNamed('/');
+                  controller.volunteer_textController().clear();
+                  Get.offAllNamed('/');
                 },
                 child: Container(
                   alignment: Alignment.center,
