@@ -51,6 +51,7 @@ dependencies:
   camera_camera: ^2.0.2
   google_ml_kit: ^0.3.0
   share_plus: ^4.0.4
+  positioned_tap_detector_2: ^1.0.4
 
 dev_dependencies:
   flutter_test:
