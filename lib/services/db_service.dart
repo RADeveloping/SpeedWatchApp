@@ -77,6 +77,17 @@ class DbService extends GetxService {
     });
   }
 
+  Future<List<RecordCollection>> getRecordsWithIdOnly(int sessionId) {
+    Isar db = Get.find();
+    return db.recordCollections
+        .where()
+        .deletedAtIsNull()
+        .filter()
+        .sessionIdEqualTo(sessionId)
+        .sortByCreatedAtDesc()
+        .findAll();
+  }
+
   void getDeletedRecords(Function handleDeletedRecords, Isar db) async {
     int currentSessionId =
         int.parse(await Get.parameters['sessionID'] as String);
