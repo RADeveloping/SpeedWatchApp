@@ -13,6 +13,7 @@ class ExportService {
 
 
   void exportSessionToExcel(int sessionId) async {
+    Excel excel = await getExcelTemplate();
     DbService dbService = Get.find();
     List<RecordCollection> records = await dbService.getRecordsWithIdOnly(sessionId);
     List<RecordCollection> infractionRecords = getInfractionRecords(records);
@@ -52,9 +53,26 @@ class ExportService {
     largeTruckCounts = getTypeCounts(largeTruckRecords);
     transitCounts = getTypeCounts(transitRecords);
     motorBikeCounts = getTypeCounts(motorBikeRecords);
+    
+    excel = setExcelTableRow(['B4', 'C4', 'D4', 'E4'], passengerCounts, excel);
 
-    print(passengerCounts);
 
+
+  }
+
+  void printExcel(Excel excel) {
+    for (var table in excel.tables.keys) {
+      print(table); //sheet Name
+      print(excel.tables[table]?.maxCols);
+      print(excel.tables[table]?.maxRows);
+
+      if (excel.tables[table]?.rows != null) {
+        for (var row in excel.tables[table]!.rows) {
+          print('$row');
+        }
+      }
+
+    }
   }
 
   List<int> getTypeCounts(List<RecordCollection> records) {
@@ -66,7 +84,6 @@ class ExportService {
             (obj) => (obj as RecordCollection).speedRange);
     groupBySpeedRangeRecords.forEach((speedRange, groupedList) {
       switch (speedRange) {
-
         case SpeedRange.green:
           greenRecords = groupedList;
           break;
@@ -101,6 +118,14 @@ class ExportService {
     ByteData data = await rootBundle.load('lib/assets/templates/template.xlsx');
     var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     var excel = Excel.decodeBytes(bytes);
+    return excel;
+  }
+
+  Excel setExcelTableRow(List<String> indexes, List<int> values, Excel excel) {
+    Sheet sheetObject = excel['Sheet1'];
+    for (int i = 0; i < indexes.length; i++) {
+      sheetObject.cell(CellIndex.indexByString(indexes[i])).value = values[i];
+    }
     return excel;
   }
 }
