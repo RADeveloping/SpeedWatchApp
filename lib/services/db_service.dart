@@ -51,8 +51,7 @@ class DbService extends GetxService {
   void getRecordsWithId(Function handleNewRecords, int currentSessionId, Function callBack) async {
     Isar db = Get.find();
 
-    db.recordCollections.where().deletedAtIsNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) => handleNewRecords(newRecords));
-    db.recordCollections.where().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) {
+    db.recordCollections.where().deletedAtIsNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((newRecords) {
       handleNewRecords(newRecords);
       callBack();
     });
@@ -63,9 +62,12 @@ class DbService extends GetxService {
     db.recordCollections.where().deletedAtIsNotNull().filter().sessionIdEqualTo(currentSessionId).sortByDeletedAtDesc().findAll().then((recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
   }
 
-  void getDeletedRecordsWithId(Function handleDeletedRecords, int currentSessionId) async {
+  void getDeletedRecordsWithId(Function handleDeletedRecords, int currentSessionId, Function callBack) async {
     Isar db = Get.find();
-    db.recordCollections.where().sessionIdEqualTo(currentSessionId).sortByDeletedAtDesc().findAll().then((recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
+    db.recordCollections.where().deletedAtIsNotNull().filter().sessionIdEqualTo(currentSessionId).sortByCreatedAtDesc().findAll().then((deletedRecords) {
+      handleDeletedRecords(deletedRecords);
+      callBack();
+    });
   }
 
   void getSessions(Function handleNewSession, Isar db) async {
