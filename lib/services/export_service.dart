@@ -5,7 +5,7 @@ import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 class ExportService {
   Future<Excel> getExcelTemplate() async {
-    ByteData data = await rootBundle.load("assets/existing_excel_file.xlsx");
+    ByteData data = await rootBundle.load('lib/assets/templates/template.xlsx');
     var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     var excel = Excel.decodeBytes(bytes);
 
@@ -13,7 +13,7 @@ class ExportService {
       print(table); //sheet Name
       if (excel.tables[table]?.rows != null) {
         for (var row in excel.tables[table]!.rows) {
-          print("$row");
+          print('$row');
         }
       }
     }
