@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:path_provider/path_provider.dart';
 import 'package:speedwatch/collections/record_collection.dart';
 import 'package:collection/collection.dart';
 import '../enums/speed_range.dart';
@@ -54,10 +55,21 @@ class ExportService {
     transitCounts = getTypeCounts(transitRecords);
     motorBikeCounts = getTypeCounts(motorBikeRecords);
     
-    excel = setExcelTableRow(['B4', 'C4', 'D4', 'E4'], passengerCounts, excel);
+    excel = setExcelTableRow(['B4', 'C4', 'D4', 'E4', 'F4'], passengerCounts, excel);
+    excel = setExcelTableRow(['B5', 'C5', 'D5', 'E5', 'F5'], largeTruckCounts, excel);
+    excel = setExcelTableRow(['B6', 'C6', 'D6', 'E6', 'F6'], transitCounts, excel);
+    excel = setExcelTableRow(['B7', 'C7', 'D7', 'E7', 'F7'], motorBikeCounts, excel);
+    await saveExcel('ass', excel);
 
+  }
 
+  Future<void> saveExcel(String fileName, Excel excel) async {
+    var fileBytes = excel.save();
+    var directory = await getApplicationDocumentsDirectory();
 
+    File(join('${directory}/${fileName}.xlsx'))
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(fileBytes!);
   }
 
   void printExcel(Excel excel) {
@@ -98,7 +110,8 @@ class ExportService {
           break;
       }
     });
-    return [greenRecords.length, yellowRecords.length, orangeRecords.length, redRecords.length];
+    int total = greenRecords.length + yellowRecords.length + orangeRecords.length + redRecords.length;
+    return [greenRecords.length, yellowRecords.length, orangeRecords.length, redRecords.length, total];
   }
 
 
