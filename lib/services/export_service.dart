@@ -14,7 +14,13 @@ import '../enums/vehicle_type.dart';
 import 'db_service.dart';
 
 class ExportService {
-
+  Future<List<String>> exportSessionsToExcel(List<SessionCollection> sessions) async {
+    List<String> directories = [];
+    for(var session in sessions) {
+      directories.add(await exportSessionToExcel(session));
+    }
+    return directories;
+  }
 
   Future<String> exportSessionToExcel(SessionCollection session) async {
     Excel excel = await getExcelTemplate();
