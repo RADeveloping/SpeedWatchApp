@@ -10,7 +10,7 @@ import '../controllers/sidebar_controller.dart';
 import 'springboard.dart';
 
 class SessionDetailDetailController extends GetxController {
-  RxInt _sliding = 0.obs;
+  RxInt sliding = 0.obs;
 }
 
 class SessionDetail extends GetView<SessionDetailDetailController> {
@@ -92,7 +92,7 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                     vehicleType,
                     currentSessionId,
                     s.currentSession.value
-                        .volunteerNames[controller._sliding.value]);
+                        .volunteerNames[controller.sliding.value]);
               },
             )),
       ),
@@ -112,7 +112,7 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
               children: [
                 Obx(() => Text(
                     sidebarController.currentSession.value
-                        .volunteerNames[controller._sliding.value],
+                        .volunteerNames[controller.sliding.value],
                     style: TextStyle(color: kColourLight))),
                 Container(
                   width: 5,
@@ -129,10 +129,10 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
                 transitionDuration: const Duration(milliseconds: 150),
                 bodyBuilder: (context) => CupertinoPicker(
                   onSelectedItemChanged: (int value) {
-                    controller._sliding.value = value;
+                    controller.sliding.value = value;
                   },
                   scrollController: FixedExtentScrollController(
-                      initialItem: controller._sliding.value),
+                      initialItem: controller.sliding.value),
                   itemExtent: 36.0,
                   squeeze: 1,
                   children:
@@ -161,7 +161,7 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
             children: [
               Obx(() => Text(
                   sidebarController.currentSession.value
-                      .volunteerNames[controller._sliding.value],
+                      .volunteerNames[controller.sliding.value],
                   style: TextStyle(color: Colors.white))),
             ],
           );
