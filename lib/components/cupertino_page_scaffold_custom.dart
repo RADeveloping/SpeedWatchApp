@@ -97,11 +97,10 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     sidebarController.selectedSessions.value
         .addAll(sidebarController.sessions.value.toList());
     sidebarController.selectedSessions.refresh();
-    final result = await Share.shareWithResult(
-      'check out my website https://example.com',
-      sharePositionOrigin: Rect.fromLTWH(
-          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
-    );
+
+    List<String> directories =  await ExportService().exportSessionsToExcel(sidebarController.selectedSessions);
+    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
+        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
 
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
@@ -109,7 +108,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
       // TODO MOVE TO ARCHIVE!!!
       Get.showSnackbar(GetSnackBar(
         message:
-            'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW.... ASK USER IF MOVE TO EXPORTED OR NOT ? ',
+            '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
         duration: Duration(seconds: 3),
       ));
       // sidebarController.sessions.value.clear();
@@ -131,7 +130,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
       // TODO MOVE TO ARCHIVE!!!
       Get.showSnackbar(GetSnackBar(
         message:
-            'SUCCESSFULLY EXPORTED. THIS WILL BE REMOVED. WE NEED TO MOVE THE EXPORTED SESSIONS TO EXPORTED SECTION NOW.... ASK USER IF MOVE TO EXPORTED OR NOT ? ',
+            '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
         duration: Duration(seconds: 3),
       ));
 
