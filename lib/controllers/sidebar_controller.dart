@@ -21,6 +21,8 @@ class SidebarController extends GetxController {
 
   final deletedRecords = <RecordCollection>[].obs;
 
+  final infractionRecords = <RecordCollection>[].obs;
+
   RxInt limitRecords = 20.obs;
 
   RxInt limitSessionsMain = 20.obs;
@@ -39,6 +41,12 @@ class SidebarController extends GetxController {
   void handleDeletedRecords(List<RecordCollection> recordsToBeRestored) async {
     deletedRecords.value = recordsToBeRestored;
   }
+
+  void handleInfractionRecords(List<RecordCollection> recordsFilteredByInfraction) async {
+    infractionRecords.value = recordsFilteredByInfraction;
+  }
+
+  RxBool filterByInfraction = false.obs;
 
   IconData getIcon(VehicleType type) {
     switch (type) {
