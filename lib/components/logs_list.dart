@@ -197,6 +197,8 @@ class LogsList extends GetView<SidebarController> {
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
+      description:
+          record.imagePath != null ? Image.file(File(record.imagePath!)) : null,
     );
   }
 
@@ -244,23 +246,24 @@ class LogsTileMoreButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CupertinoButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context_) => CameraCamera(
-                            key: Key('cam'),
-                            resolutionPreset: ResolutionPreset.veryHigh,
-                            cameraSide: CameraSide.front,
-                            onFile: (file) {
-                              DbService db = Get.find();
-                              db.addImageToRecord(recordCollection, file.path);
-                              showImage(context, File(file.path), true);
-                            },
-                          )));
-            },
+            onPressed: recordCollection.imagePath != null
+                ? null
+                : () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context_) => CameraCamera(
+                                  key: Key('cam'),
+                                  resolutionPreset: ResolutionPreset.veryHigh,
+                                  cameraSide: CameraSide.front,
+                                  onFile: (file) {
+                                    DbService db = Get.find();
+                                    db.addImageToRecord(
+                                        recordCollection, file.path);
+                                  },
+                                )));
+                  },
             padding: EdgeInsets.symmetric(horizontal: 30),
-            color: Colors.transparent,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -268,12 +271,14 @@ class LogsTileMoreButton extends StatelessWidget {
                 FaIcon(
                   CupertinoIcons.camera,
                   size: 32,
-                  color: kColourLight,
                 ),
                 SizedBox(
                   width: 12,
                 ),
-                Text('Take Photo')
+                Text('Take Photo',
+                    style: recordCollection.imagePath != null
+                        ? null
+                        : TextStyle(color: Colors.white))
               ],
             ),
           ),
@@ -285,8 +290,8 @@ class LogsTileMoreButton extends StatelessWidget {
             onPressed: recordCollection.imagePath == null
                 ? null
                 : () {
-                    showImage(
-                        context, File(recordCollection.imagePath!), false);
+                    DbService db = Get.find();
+                    db.addImageToRecord(recordCollection, '');
                   },
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
@@ -294,13 +299,13 @@ class LogsTileMoreButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 FaIcon(
-                  CupertinoIcons.photo,
+                  CupertinoIcons.trash,
                   size: 32,
                 ),
                 SizedBox(
                   width: 12,
                 ),
-                Text('View Photo',
+                Text('Delete Photo',
                     style: recordCollection.imagePath == null
                         ? null
                         : TextStyle(color: Colors.white)),
