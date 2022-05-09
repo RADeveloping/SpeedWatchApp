@@ -8,6 +8,7 @@ import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/components/rightpane.dart';
+import 'package:speedwatch/components/session_detail.dart';
 import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/session_controller.dart';
@@ -263,6 +264,8 @@ class Session extends GetView<SessionController> {
   void updateSessionClick() async {
     DbService dbService = Get.find();
     SidebarController s = Get.find();
+    SessionDetailDetailController sessionDetailController = Get.find();
+    sessionDetailController.sliding.value = 0;
     SessionCollection updatedSessionCollection = controller.updateSession(
         startDatePicker.date.value, endDatePicker.date.value, s.currentSession.value);
     SettingsCollection newSettingsCollection = SettingsCollection()

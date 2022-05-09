@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
+import 'package:speedwatch/components/session_detail.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:speedwatch/services/db_service.dart';
@@ -207,6 +208,8 @@ class SessionsList extends GetView<SidebarController> {
             ),
       onPressed: (BuildContext context) {
         if (!controller.isEditMode.value) {
+          SessionDetailDetailController sessionDetailController = Get.find();
+          sessionDetailController.sliding.value = 0;
           DbService dbService = Get.find();
           controller.records.value = [];
           controller.limitRecords.value = 20;
