@@ -47,7 +47,7 @@ class LogsList extends GetView<SidebarController> {
                         borderRadius: BorderRadius.circular(15),
                         color: controller.filterByInfraction.value
                                 ? kColourRightPaneBackground
-                                : kColourLight),
+                                : kTextStyleTilePlaceholder.color),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
                       child: Column(
@@ -79,7 +79,7 @@ class LogsList extends GetView<SidebarController> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: controller.filterByInfraction.value
-                              ? kColourLight
+                              ? kTextStyleTilePlaceholder.color
                               : kColourRightPaneBackground),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
