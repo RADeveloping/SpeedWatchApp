@@ -233,19 +233,18 @@ class LogsList extends GetView<SidebarController> {
   }
 
   List<AbstractSettingsTile> populateLogListTiles() {
-    if (controller.records.isNotEmpty) {
-      return (controller.records
-                .take(controller.limitRecords.value)
-                .map((record) => recordItem(record))
-                .toList() +
-                [moreItems()]);
-    }
-    if (controller.infractionRecords.isNotEmpty && controller.filterByInfraction.isTrue) {
+    if (controller.infractionRecords.isNotEmpty && controller.filterByInfraction == true) {
       return (controller.infractionRecords
                 .take(controller.limitRecords.value)
                 .map((record) => recordItem(record))
                 .toList() +
               [moreInfractionItems()]);
+    } else if (controller.records.isNotEmpty) {
+      return (controller.records
+          .take(controller.limitRecords.value)
+          .map((record) => recordItem(record))
+          .toList() +
+          [moreItems()]);
     }
     return [
               SettingsTile(
