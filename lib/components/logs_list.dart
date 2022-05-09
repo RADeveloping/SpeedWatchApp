@@ -78,20 +78,31 @@ class LogsList extends GetView<SidebarController> {
                         color: kColourRightPaneBackground),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
-                      child: Column(
-                        children: [
-                          Obx(() => Text('${getInfractionCount()}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold))),
-                          Text(
-                            'Infractions',
-                            style: TextStyle(
-                                color: Colors.white54,
-                                fontWeight: FontWeight.bold),
+                      child: CupertinoButton(
+                        onPressed: () {},
+                        child: GestureDetector(
+                          child: Column(
+                            children: [
+                              Obx(() => Text('${getInfractionCount()}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold))),
+                              Text(
+                                'Infractions',
+                                style: TextStyle(
+                                    color: Colors.white54,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                        ],
+                          onTap: () {
+                            print('changing boolean');
+                            controller.filterByInfraction.toggle();
+                            print('setting to ${controller.filterByInfraction.value}');
+                            print('current infraction count: ${controller.infractionRecords.length}');
+                          },
+                        ),
                       ),
                     )),
               ),
@@ -132,17 +143,7 @@ class LogsList extends GetView<SidebarController> {
           ),
         ],
       ),
-      tiles: controller.records.isNotEmpty
-          ? (controller.records
-                  .take(controller.limitRecords.value)
-                  .map((record) => recordItem(record))
-                  .toList() +
-              [moreItems()])
-          : [
-              SettingsTile(
-                title: Text(''),
-              )
-            ],
+      tiles: populateLogListTiles(),
     );
   }
 
@@ -154,6 +155,24 @@ class LogsList extends GetView<SidebarController> {
           'Load more',
           style: TextStyle(color: kColourLight),
         )),
+        onPressed: (c) {
+          controller.limitRecords.value += 20;
+        },
+      );
+    }
+    return SettingsTile(
+      title: Text(''),
+    );
+  }
+
+  SettingsTile moreInfractionItems() {
+    if (controller.infractionRecords.length > controller.limitRecords.value) {
+      return SettingsTile(
+        title: Center(
+            child: Text(
+              'Load more',
+              style: TextStyle(color: kColourLight),
+            )),
         onPressed: (c) {
           controller.limitRecords.value += 20;
         },
@@ -211,6 +230,28 @@ class LogsList extends GetView<SidebarController> {
       }
     });
     return infractionRecords.length;
+  }
+
+  List<AbstractSettingsTile> populateLogListTiles() {
+    if (controller.records.isNotEmpty) {
+      return (controller.records
+                .take(controller.limitRecords.value)
+                .map((record) => recordItem(record))
+                .toList() +
+                [moreItems()]);
+    }
+    if (controller.infractionRecords.isNotEmpty && controller.filterByInfraction.isTrue) {
+      return (controller.infractionRecords
+                .take(controller.limitRecords.value)
+                .map((record) => recordItem(record))
+                .toList() +
+              [moreInfractionItems()]);
+    }
+    return [
+              SettingsTile(
+                title: Text(''),
+              )
+            ];
   }
 }
 
