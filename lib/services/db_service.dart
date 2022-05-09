@@ -183,6 +183,26 @@ class DbService extends GetxService {
     }));
   }
 
+  void setHasMultipleExportedSession(
+      RxList<SessionCollection> sessionsToBeUpdated) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      for (var session in sessionsToBeUpdated) {
+        session.hasExportedSession = true;
+        await db.sessionCollections.put(session);
+      }
+    }));
+  }
+
+  void setHasSingleExportedSession(
+      SessionCollection sessionsToBeUpdated) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      sessionsToBeUpdated.hasExportedSession = true;
+      await db.sessionCollections.put(sessionsToBeUpdated);
+    }));
+  }
+
   Future<List<String>> getCurrentSettingValue(int id) async {
     Isar db = Get.find();
     SettingsCollection? currentSettings = await db.settingsCollections.get(id);

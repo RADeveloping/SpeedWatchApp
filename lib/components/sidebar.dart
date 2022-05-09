@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
+import 'package:speedwatch/services/db_service.dart';
 
 import '../services/export_service.dart';
 import 'cupertino_page_scaffold_custom.dart';
@@ -15,11 +16,10 @@ class Sidebar extends GetView<SidebarController> {
   final Widget? leading;
   final String? previousPageTitle;
 
-  Sidebar(
-      {required this.child,
-      required this.largeTitle,
-      this.leading,
-      this.previousPageTitle});
+  Sidebar({required this.child,
+    required this.largeTitle,
+    this.leading,
+    this.previousPageTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -30,61 +30,102 @@ class Sidebar extends GetView<SidebarController> {
       previousPageTitle: previousPageTitle,
       trailing: largeTitle == 'Log'
           ? GestureDetector(
-              onTapDown: (positioned) async {
-                Get.showOverlay(asyncFunction: () async {
-                  await ShowExportShareSheet(positioned);
-                });
-              },
-              child: CupertinoButton(
-                child: Icon(
-                  CupertinoIcons.share_up,
-                  color: kColourLight,
-                ),
-                onPressed: () {},
-              ),
+        onTapDown: (positioned) async {
+          await ShowShareSheet(positioned, context);
+        },
+        child: CupertinoButton(
+          child: Icon(
+            CupertinoIcons.share_up,
+            color: kColourLight,
+          ),
+          onPressed: () {},
+        ),
+      )
+          : Obx(() =>
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: controller.isEditMode.value
+                ? Text(
+              'Done',
+              style: TextStyle(color: kColourLight),
             )
-          : Obx(() => CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: controller.isEditMode.value
-                    ? Text(
-                        'Done',
-                        style: TextStyle(color: kColourLight),
-                      )
-                    : Icon(
-                        CupertinoIcons.ellipsis_circle,
-                        color: kColourLight,
-                      ),
-                onPressed: () {
-                  if (controller.isEditMode.value) {
-                    controller.isEditMode.value = false;
-                  } else {
-                    controller.isEditMode.value = true;
-                    controller.selectedSessions().clear();
-                  }
-                },
-              )),
+                : Icon(
+              CupertinoIcons.ellipsis_circle,
+              color: kColourLight,
+            ),
+            onPressed: () {
+              if (controller.isEditMode.value) {
+                controller.isEditMode.value = false;
+              } else {
+                controller.isEditMode.value = true;
+                controller.selectedSessions().clear();
+              }
+            },
+          )),
       heroTag: 0,
       child: child,
     );
   }
 
-  Future<void> ShowExportShareSheet(TapDownDetails positioned) async {
+  Future<void> ShowExportShareSheet(TapDownDetails positioned,
+      BuildContext context) async {
+    List<String> directories = [
+      await ExportService().exportSessionToExcel(
+          controller.currentSession.value)
+    ];
 
-    List<String> directories =  [await ExportService().exportSessionToExcel(controller.currentSession.value)];
-
-    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
-        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
+    final result = await Share.shareFilesWithResult(
+      directories, subject: 'Export to Excel',
+      sharePositionOrigin: Rect.fromLTWH(
+          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
 
     if (result.status == ShareResultStatus.dismissed) {
 
     } else if (result.status == ShareResultStatus.success) {
-      // TODO MOVE TO ARCHIVE!!!
+      ShowConfirmMoveDialog(context);
       Get.showSnackbar(GetSnackBar(
         message:
-        '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
+        '${directories.length} session${directories.length == 1
+            ? ''
+            : 's'} exported successfully',
         duration: Duration(seconds: 3),
       ));
     }
+  }
+}
+
+  void ShowConfirmMoveDialog(BuildContext context) {
+    showCupertinoDialog<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoTheme(
+            data: CupertinoThemeData(brightness: Brightness.dark),
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+              child: CupertinoAlertDialog(
+                  title: const Text('Move Sessions to "Exported sessions"'),
+                  actions: <CupertinoDialogAction>[
+                    CupertinoDialogAction(
+                        child: const Text(
+                          'Don\'t Move',
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                    CupertinoDialogAction(
+                        child: const Text(
+                          'Move',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          DbService dbService = Get.find();
+                          dbService.setHasSingleExportedSession(
+                              controller.currentSession.value);
+                          controller.sessions.value.clear();
+                          controller.sessions.refresh();
+                          Navigator.pop(context);
+                        })
+                  ]),
+            )));
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
 
 import '../collections/session_collection.dart';
 import '../collections/settings_collection.dart';
@@ -105,7 +104,8 @@ class SessionController extends GetxController {
       ..hasExportedSession = false;
   }
 
-  SessionCollection updateSession(DateTime startDate, DateTime endDate, SessionCollection currentSelection) {
+  SessionCollection updateSession(DateTime startDate, DateTime endDate,
+      SessionCollection currentSelection) {
     return currentSelection
       ..startTime = startDate
       ..endTime = endDate
