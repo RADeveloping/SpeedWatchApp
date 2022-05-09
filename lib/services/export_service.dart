@@ -94,7 +94,7 @@ class ExportService {
   }
 
   String getFileName(SessionCollection session) {
-    return 'Session ${session.streetAddress} ${DateFormat('y-MM-dd h.mm aa').format(session.startTime)}';
+    return '${session.streetAddress} ${DateFormat('y-MM-dd h.mm aa').format(session.startTime)}';
   }
 
   List<String> getSpeedRangeTitles(int speedLimit) {
