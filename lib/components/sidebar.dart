@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import '../services/export_service.dart';
 import 'cupertino_page_scaffold_custom.dart';
 
 class Sidebar extends GetView<SidebarController> {
@@ -66,14 +67,24 @@ class Sidebar extends GetView<SidebarController> {
       child: child,
     );
   }
+
+  Future<void> ShowExportShareSheet(TapDownDetails positioned) async {
+
+    List<String> directories =  [await ExportService().exportSessionToExcel(controller.currentSession.value)];
+
+    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
+        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
+
+    if (result.status == ShareResultStatus.dismissed) {
+
+    } else if (result.status == ShareResultStatus.success) {
+      // TODO MOVE TO ARCHIVE!!!
+      Get.showSnackbar(GetSnackBar(
+        message:
+        '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
+        duration: Duration(seconds: 3),
+      ));
+    }
+  }
 }
 
-Future<void> ShowExportShareSheet(TapDownDetails positioned) async {
-  final result = await Share.shareWithResult(
-    'check out my website https://example.com',
-    sharePositionOrigin: Rect.fromLTWH(
-        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
-  );
-
-  // TODO MOVE TO ARCHIVE
-}
