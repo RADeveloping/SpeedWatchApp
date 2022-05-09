@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
+import 'package:speedwatch/services/db_service.dart';
 
 import 'cupertino_page_scaffold_custom.dart';
 
@@ -112,6 +113,9 @@ class Sidebar extends GetView<SidebarController> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
+                          DbService dbService = Get.find();
+                          dbService.setHasSingleExportedSession(
+                              controller.currentSession.value);
                           controller.sessions.value.clear();
                           controller.sessions.refresh();
                           Navigator.pop(context);

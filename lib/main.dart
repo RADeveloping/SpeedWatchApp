@@ -10,7 +10,6 @@ import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/screens/home_view.dart';
 import 'package:speedwatch/services/db_service.dart';
-import 'package:speedwatch/services/export_service.dart';
 
 import 'components/logs_list.dart';
 import 'components/session_detail.dart';
@@ -24,7 +23,6 @@ Future<void> main() async {
   // Fetch the available cameras before initializing the app
   runApp(MyApp());
   await initServices();
-
 }
 
 Future<void> initServices() async {

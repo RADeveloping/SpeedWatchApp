@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import '../services/db_service.dart';
 import '../services/export_service.dart';
 
 class CupertinoPageScaffoldCustom extends StatelessWidget {
@@ -110,12 +111,6 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
-      // TODO MOVE TO ARCHIVE!!!
-      Get.showSnackbar(GetSnackBar(
-        message:
-            '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
-        duration: Duration(seconds: 3),
-      ));
       // sidebarController.sessions.value.clear();
       // sidebarController.sessions.refresh();
       showMoveExportedAlertDialog(context);
@@ -138,18 +133,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
-      // TODO MOVE TO ARCHIVE!!!
-      Get.showSnackbar(GetSnackBar(
-        message:
-            '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
-        duration: Duration(seconds: 3),
-      ));
-
       showMoveExportedAlertDialog(context);
-
-      // sidebarController.sessions.value.removeWhere(
-      //     (element) => sidebarController.selectedSessions.contains(element));
-      // sidebarController.sessions.refresh();
       sidebarController.isEditMode.value = false;
     }
   }
@@ -177,6 +161,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
+                          DbService dbService = Get.find();
+                          dbService.setHasMultipleExportedSession(
+                              sidebarController.selectedSessions);
                           sidebarController.sessions.value.clear();
                           sidebarController.sessions.refresh();
                           Navigator.pop(context);
