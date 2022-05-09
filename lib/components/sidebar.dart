@@ -30,9 +30,7 @@ class Sidebar extends GetView<SidebarController> {
       trailing: largeTitle == 'Log'
           ? GestureDetector(
               onTapDown: (positioned) async {
-                Get.showOverlay(asyncFunction: () async {
-                  await ShowExportShareSheet(positioned);
-                });
+                await ShowShareSheet(positioned, context);
               },
               child: CupertinoButton(
                 child: Icon(
@@ -66,14 +64,59 @@ class Sidebar extends GetView<SidebarController> {
       child: child,
     );
   }
-}
 
-Future<void> ShowExportShareSheet(TapDownDetails positioned) async {
-  final result = await Share.shareWithResult(
-    'check out my website https://example.com',
-    sharePositionOrigin: Rect.fromLTWH(
-        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
-  );
+  Future<void> ShowShareSheet(
+      TapDownDetails positioned, BuildContext context) async {
+    Get.showOverlay(
+        asyncFunction: () async {
+          controller.selectedSessions.value
+              .addAll(controller.sessions.value.toList());
+          controller.selectedSessions.refresh();
+          final result = await Share.shareWithResult(
+            'check out my website https://example.com',
+            sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
+                positioned.globalPosition.dy + 20, 1, 1),
+          );
 
-  // TODO MOVE TO ARCHIVE
+          if (result.status == ShareResultStatus.dismissed) {
+            controller.isEditMode.value = false;
+          } else if (result.status == ShareResultStatus.success) {
+            ShowConfirmMoveDialog(context);
+
+            controller.isEditMode.value = false;
+          }
+        },
+        loadingWidget: Text('LOADING'));
+  }
+
+  void ShowConfirmMoveDialog(BuildContext context) {
+    showCupertinoDialog<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoTheme(
+            data: CupertinoThemeData(brightness: Brightness.dark),
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+              child: CupertinoAlertDialog(
+                  title: const Text('Move Sessions to "Exported sessions"'),
+                  actions: <CupertinoDialogAction>[
+                    CupertinoDialogAction(
+                        child: const Text(
+                          'Don\'t Move',
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                    CupertinoDialogAction(
+                        child: const Text(
+                          'Move',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          controller.sessions.value.clear();
+                          controller.sessions.refresh();
+                          Navigator.pop(context);
+                        })
+                  ]),
+            )));
+  }
 }

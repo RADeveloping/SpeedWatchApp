@@ -1,9 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
@@ -100,8 +97,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     sidebarController.selectedSessions.refresh();
     final result = await Share.shareWithResult(
       'check out my website https://example.com',
-      sharePositionOrigin: Rect.fromLTWH(
-          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
+      sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
+          positioned.globalPosition.dy - 20, 1, 1),
     );
 
     if (result.status == ShareResultStatus.dismissed) {
@@ -147,8 +144,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
       TapDownDetails positioned, BuildContext context) async {
     final result = await Share.shareWithResult(
       'check out my website https://example.com',
-      sharePositionOrigin: Rect.fromLTWH(
-          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
+      sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
+          positioned.globalPosition.dy - 20, 1, 1),
     );
 
     if (result.status == ShareResultStatus.dismissed) {
