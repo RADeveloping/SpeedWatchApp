@@ -81,19 +81,21 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
         child: Container(
             padding: EdgeInsets.all(20.0),
             color: kColourRightPaneBackground,
-            child: SpringBoard(
-              onPressed: (speedRange, vehicleType) async {
-                DbService dbService = Get.find();
-                String currentSessionIDInString =
-                    await Get.parameters['sessionID'] as String;
-                int currentSessionId = int.parse(currentSessionIDInString);
-                dbService.writeRecordToDB(
-                    speedRange,
-                    vehicleType,
-                    currentSessionId,
-                    s.currentSession.value
-                        .volunteerNames[controller.sliding.value]);
-              },
+            child: Center(
+              child: SpringBoard(
+                onPressed: (speedRange, vehicleType) async {
+                  DbService dbService = Get.find();
+                  String currentSessionIDInString =
+                      await Get.parameters['sessionID'] as String;
+                  int currentSessionId = int.parse(currentSessionIDInString);
+                  dbService.writeRecordToDB(
+                      speedRange,
+                      vehicleType,
+                      currentSessionId,
+                      s.currentSession.value
+                          .volunteerNames[controller.sliding.value]);
+                },
+              ),
             )),
       ),
     );
