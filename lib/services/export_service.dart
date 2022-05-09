@@ -69,12 +69,12 @@ class ExportService {
     speedRangeTotals = getSpeedRangeTotals(passengerCounts, largeTruckCounts, transitCounts, motorBikeCounts);
     speedRangeTitles = getSpeedRangeTitles(session.speedLimit);
 
-    excel = setExcelTableRowString(['B3', 'C3', 'D3', 'E3'], speedRangeTitles, excel);
-    excel = setExcelTableRow(['B4', 'C4', 'D4', 'E4', 'F4'], passengerCounts, excel);
-    excel = setExcelTableRow(['B5', 'C5', 'D5', 'E5', 'F5'], largeTruckCounts, excel);
-    excel = setExcelTableRow(['B6', 'C6', 'D6', 'E6', 'F6'], transitCounts, excel);
-    excel = setExcelTableRow(['B7', 'C7', 'D7', 'E7', 'F7'], motorBikeCounts, excel);
-    excel = setExcelTableRow(['B8', 'C8', 'D8', 'E8', 'F8'], speedRangeTotals, excel);
+    excel = setExcelTableRowString(['E2', 'F2', 'G2', 'H2'], speedRangeTitles, excel);
+    excel = setExcelTableRow(['E3', 'F3', 'G3', 'H3', 'I3'], passengerCounts, excel);
+    excel = setExcelTableRow(['E4', 'F4', 'G4', 'H4', 'I4'], largeTruckCounts, excel);
+    excel = setExcelTableRow(['E5', 'F5', 'G5', 'H5', 'I5'], transitCounts, excel);
+    excel = setExcelTableRow(['E6', 'F6', 'G6', 'H6', 'I6'], motorBikeCounts, excel);
+    excel = setExcelTableRow(['E7', 'F7', 'G7', 'H7', 'I7'], speedRangeTotals, excel);
     return await saveExcel(getFileName(session), excel);
 
   }
