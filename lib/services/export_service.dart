@@ -41,6 +41,7 @@ class ExportService {
     List<int> motorBikeCounts = [];
     List<int> speedRangeTotals = [];
     List<String> speedRangeTitles = [];
+    List<String> sessionDetails = [];
 
 
     var groupByType = groupBy(records,
@@ -68,19 +69,32 @@ class ExportService {
     motorBikeCounts = getTypeCounts(motorBikeRecords);
     speedRangeTotals = getSpeedRangeTotals(passengerCounts, largeTruckCounts, transitCounts, motorBikeCounts);
     speedRangeTitles = getSpeedRangeTitles(session.speedLimit);
+    sessionDetails = getSessionList(session);
 
-    excel = setExcelTableRowString(['B3', 'C3', 'D3', 'E3'], speedRangeTitles, excel);
-    excel = setExcelTableRow(['B4', 'C4', 'D4', 'E4', 'F4'], passengerCounts, excel);
-    excel = setExcelTableRow(['B5', 'C5', 'D5', 'E5', 'F5'], largeTruckCounts, excel);
-    excel = setExcelTableRow(['B6', 'C6', 'D6', 'E6', 'F6'], transitCounts, excel);
-    excel = setExcelTableRow(['B7', 'C7', 'D7', 'E7', 'F7'], motorBikeCounts, excel);
-    excel = setExcelTableRow(['B8', 'C8', 'D8', 'E8', 'F8'], speedRangeTotals, excel);
+    excel = setExcelTableRowString(['B2', 'B3', 'B4', 'B5', 'B6','B7','B8','B9','B10','B11','B12','B13','B14','B15',], sessionDetails, excel);
+    excel = setExcelTableRowString(['E2', 'F2', 'G2', 'H2'], speedRangeTitles, excel);
+    excel = setExcelTableRow(['E3', 'F3', 'G3', 'H3', 'I3'], passengerCounts, excel);
+    excel = setExcelTableRow(['E4', 'F4', 'G4', 'H4', 'I4'], largeTruckCounts, excel);
+    excel = setExcelTableRow(['E5', 'F5', 'G5', 'H5', 'I5'], transitCounts, excel);
+    excel = setExcelTableRow(['E6', 'F6', 'G6', 'H6', 'I6'], motorBikeCounts, excel);
+    excel = setExcelTableRow(['E7', 'F7', 'G7', 'H7', 'I7'], speedRangeTotals, excel);
+
+    excel = addRecordRows(18, getRecordStrings(records, speedRangeTitles), excel);
+
     return await saveExcel(getFileName(session), excel);
 
   }
 
+  List<String> getSessionList(SessionCollection session) {
+    double duration = (session.endTime.difference(session.startTime)).inMinutes / 60;
+    return [session.streetAddress, session.startTime.toString(), session.endTime.toString(), duration.toStringAsFixed(1),
+      session.speedLimit.toString(), session.direction.name, session.roadConditionOptions.name, session.roadZoneOptions.name,
+      session.weatherOptions.name, session.roadLightingOptions.name, session.volunteerNames.length.toString(),
+      session.volunteerNames.join(', '), (duration * session.volunteerNames.length).toString(), ''];
+  }
+
   String getFileName(SessionCollection session) {
-    return 'SpeedWatch ${session.streetAddress} ${DateFormat('M-d-y h.mm aa').format(session.startTime)}';
+    return '${session.streetAddress} ${DateFormat('y-MM-dd h.mm aa').format(session.startTime)}';
   }
 
   List<String> getSpeedRangeTitles(int speedLimit) {
@@ -212,6 +226,32 @@ class ExportService {
     for (int i = 0; i < indexes.length; i++) {
       sheetObject.cell(CellIndex.indexByString(indexes[i])).value = values[i];
     }
+    return excel;
+  }
+
+  List<List<String>> getRecordStrings(List<RecordCollection> records, List<String> speedRangeTitles) {
+
+    List<List<String>> output = [];
+    for (var record in records) {
+      List<String> inside = [];
+      inside.add(DateFormat('HH:mm:ss.SS').format(record.createdAt).toString());
+      inside.add(record.volunteerName);
+      inside.add(record.vehicleType.name.toUpperCase());
+      inside.add(speedRangeTitles[record.speedRange.index]);
+      output.add(inside);
+    }
+    return output;
+  }
+
+  Excel addRecordRows(int startIndex, List<List<String>> recordStrings, Excel excel) {
+    Sheet sheetObject = excel['Sheet1'];
+    for (int i = 0; i < recordStrings.length; i++) {
+      sheetObject.cell(CellIndex.indexByString('A' + (i + startIndex).toString())).value = recordStrings[i][0];
+      sheetObject.cell(CellIndex.indexByString('B' + (i + startIndex).toString())).value = recordStrings[i][1];
+      sheetObject.cell(CellIndex.indexByString('C' + (i + startIndex).toString())).value = recordStrings[i][2];
+      sheetObject.cell(CellIndex.indexByString('D' + (i + startIndex).toString())).value = recordStrings[i][3];
+    }
+
     return excel;
   }
 }
