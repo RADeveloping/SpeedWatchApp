@@ -98,9 +98,14 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
         .addAll(sidebarController.sessions.value.toList());
     sidebarController.selectedSessions.refresh();
 
-    List<String> directories =  await ExportService().exportSessionsToExcel(sidebarController.selectedSessions);
-    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
-        positioned.globalPosition.dx, positioned.globalPosition.dy - 20, 1, 1),);
+    List<String> directories = await ExportService()
+        .exportSessionsToExcel(sidebarController.selectedSessions);
+    final result = await Share.shareFilesWithResult(
+      directories,
+      subject: 'Export to Excel',
+      sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
+          positioned.globalPosition.dy - 20, 1, 1),
+    );
 
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
@@ -118,12 +123,17 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     }
   }
 
-  Future<void> ShowSelectedExportShareSheet(TapDownDetails positioned) async {
+  Future<void> ShowSelectedExportShareSheet(
+      TapDownDetails positioned, BuildContext context) async {
+    List<String> directories = await ExportService()
+        .exportSessionsToExcel(sidebarController.selectedSessions);
 
-    List<String> directories =  await ExportService().exportSessionsToExcel(sidebarController.selectedSessions);
-
-    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
-        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
+    final result = await Share.shareFilesWithResult(
+      directories,
+      subject: 'Export to Excel',
+      sharePositionOrigin: Rect.fromLTWH(
+          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
+    );
 
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
@@ -143,6 +153,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
       sidebarController.isEditMode.value = false;
     }
   }
+
   void showMoveExportedAlertDialog(BuildContext context) {
     showCupertinoDialog<void>(
         context: context,
@@ -172,4 +183,5 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                         })
                   ]),
             )));
+  }
 }
