@@ -118,7 +118,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     }
   }
 
-  Future<void> ShowSingleExportShareSheet(TapDownDetails positioned) async {
+  Future<void> ShowSelectedExportShareSheet(TapDownDetails positioned) async {
 
     List<String> directories =  await ExportService().exportSessionsToExcel(sidebarController.selectedSessions);
 
