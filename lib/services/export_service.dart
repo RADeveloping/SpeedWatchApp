@@ -87,14 +87,14 @@ class ExportService {
 
   List<String> getSessionList(SessionCollection session) {
     double duration = (session.endTime.difference(session.startTime)).inMinutes / 60;
-    return [session.streetAddress, session.startTime.toString(), session.endTime.toString(), duration.toStringAsFixed(2),
+    return [session.streetAddress, session.startTime.toString(), session.endTime.toString(), duration.toStringAsFixed(1),
       session.speedLimit.toString(), session.direction.name, session.roadConditionOptions.name, session.roadZoneOptions.name,
       session.weatherOptions.name, session.roadLightingOptions.name, session.volunteerNames.length.toString(),
       session.volunteerNames.join(', '), (duration * session.volunteerNames.length).toString(), ''];
   }
 
   String getFileName(SessionCollection session) {
-    return 'SpeedWatch ${session.streetAddress} ${DateFormat('M-d-y h.mm aa').format(session.startTime)}';
+    return 'Session ${session.streetAddress} ${DateFormat('y-MM-dd h.mm aa').format(session.startTime)}';
   }
 
   List<String> getSpeedRangeTitles(int speedLimit) {
@@ -234,7 +234,7 @@ class ExportService {
     List<List<String>> output = [];
     for (var record in records) {
       List<String> inside = [];
-      inside.add(DateFormat('h:mm:ss').format(record.createdAt).toString());
+      inside.add(DateFormat('HH:mm:ss.SS').format(record.createdAt).toString());
       inside.add(record.volunteerName);
       inside.add(record.vehicleType.name.toUpperCase());
       inside.add(speedRangeTitles[record.speedRange.index]);
