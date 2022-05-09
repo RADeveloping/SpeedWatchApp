@@ -24,8 +24,7 @@ class DbService extends GetxService {
       SidebarController s = Get.find();
       getSessions(s.handleNewSessions, db);
       setSessionsListener(s.handleNewSessions, db);
-      setRecordsListener(s.handleNewRecords, s.handleDeletedRecords,
-          s.handleInfractionRecords, db);
+      setRecordsListener(s.handleNewRecords, s.handleDeletedRecords, db);
       return db;
     });
     Get.put(isar, permanent: true);
@@ -40,13 +39,11 @@ class DbService extends GetxService {
   }
 
   void setRecordsListener(
-      Function handleNewRecords, Function handleDeletedRecords,
-      Function handleInfractionRecords, Isar db) async {
+      Function handleNewRecords, Function handleDeletedRecords, Isar db) async {
     Stream<void> recordsChanged = db.recordCollections.watchLazy();
     recordsChanged.listen((s) {
       getRecords(handleNewRecords, db);
       getDeletedRecords(handleDeletedRecords, db);
-      getInfractionRecords(handleInfractionRecords, db);
     });
   }
 
@@ -117,40 +114,6 @@ class DbService extends GetxService {
         .findAll()
         .then((deletedRecords) {
       handleDeletedRecords(deletedRecords);
-      callBack();
-    });
-  }
-
-  void getInfractionRecords(Function handleInfractionRecords, Isar db) async {
-    int currentSessionId =
-        int.parse(await Get.parameters['sessionID'] as String);
-    db.recordCollections
-        .where()
-        .deletedAtIsNotNull()
-        .filter()
-        .sessionIdEqualTo(currentSessionId)
-        .not()
-        .speedRangeEqualTo(SpeedRange.green)
-        .sortByCreatedAtDesc()
-        .findAll()
-        .then(
-            (recordsFilteredByInfraction) => handleInfractionRecords(recordsFilteredByInfraction));
-  }
-
-  void getInfractionRecordsWithId(Function handleInfractionRecords,
-      int currentSessionId, Function callBack) async {
-    Isar db = Get.find();
-    db.recordCollections
-        .where()
-        .deletedAtIsNotNull()
-        .filter()
-        .sessionIdEqualTo(currentSessionId)
-        .not()
-        .speedRangeEqualTo(SpeedRange.green)
-        .sortByCreatedAtDesc()
-        .findAll()
-        .then((recordsFilteredByInfraction) {
-      handleInfractionRecords(recordsFilteredByInfraction);
       callBack();
     });
   }
