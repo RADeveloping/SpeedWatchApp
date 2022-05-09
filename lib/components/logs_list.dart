@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:camera_camera/camera_camera.dart';
+import 'package:collection/collection.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,9 +11,10 @@ import 'package:intl/intl.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
+import 'package:speedwatch/services/db_service.dart';
+
 import '../collections/record_collection.dart';
 import '../constants.dart';
-import 'package:collection/collection.dart';
 import '../enums/speed_range.dart';
 
 class LogsList extends GetView<SidebarController> {
@@ -55,7 +60,9 @@ class LogsList extends GetView<SidebarController> {
                               )),
                           Text(
                             'Records',
-                            style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.white54,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -80,7 +87,9 @@ class LogsList extends GetView<SidebarController> {
                                   fontWeight: FontWeight.bold))),
                           Text(
                             'Infractions',
-                            style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.white54,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -166,7 +175,9 @@ class LogsList extends GetView<SidebarController> {
               style: TextStyle(color: kColourPlaceHolderText),
             ),
           ),
-          LogsTileMoreButton(),
+          LogsTileMoreButton(
+            recordCollection: record,
+          ),
         ],
       ),
       leading: Icon(
@@ -204,7 +215,10 @@ class LogsList extends GetView<SidebarController> {
 }
 
 class LogsTileMoreButton extends StatelessWidget {
-  const LogsTileMoreButton({
+  RecordCollection recordCollection;
+
+  LogsTileMoreButton({
+    required this.recordCollection,
     Key? key,
   }) : super(key: key);
 
@@ -212,80 +226,106 @@ class LogsTileMoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showPopover(
-          context: context,
-          backgroundColor: kColourRightPaneBackground,
-          transitionDuration: const Duration(milliseconds: 150),
-          bodyBuilder: (context) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CupertinoButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => CameraCamera(
-                                cameraSide: CameraSide.front,
-                                onFile: (file) {
-                                  print(file);
-                                  Navigator.pop(context);
-                                },
-                              )));
-                },
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                color: Colors.transparent,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FaIcon(
-                      CupertinoIcons.camera,
-                      size: 32,
-                      color: kColourLight,
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text('Take Photo')
-                  ],
-                ),
-              ),
-              Container(
-                width: 1,
-                color: kColourTileDivider,
-              ),
-              CupertinoButton(
-                onPressed: null,
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FaIcon(
-                      CupertinoIcons.photo,
-                      size: 32,
-                      // TODO UPDATE DISABLED COLOUR
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text('View Photo')
-                  ],
-                ),
-              ),
-            ],
-          ),
-          direction: PopoverDirection.right,
-          width: 400,
-          height: 50,
-          arrowHeight: 15,
-          arrowWidth: 30,
-        );
+        showCameraPopOver(context);
       },
       child: Icon(
         CupertinoIcons.ellipsis,
         color: kColourLight,
       ),
     );
+  }
+
+  void showCameraPopOver(BuildContext context) {
+    showPopover(
+      context: context,
+      backgroundColor: kColourRightPaneBackground,
+      transitionDuration: const Duration(milliseconds: 150),
+      bodyBuilder: (context) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CupertinoButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context_) => CameraCamera(
+                            key: Key('cam'),
+                            resolutionPreset: ResolutionPreset.veryHigh,
+                            cameraSide: CameraSide.front,
+                            onFile: (file) {
+                              DbService db = Get.find();
+                              db.addImageToRecord(recordCollection, file.path);
+                              showImage(context, File(file.path), true);
+                            },
+                          )));
+            },
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            color: Colors.transparent,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                FaIcon(
+                  CupertinoIcons.camera,
+                  size: 32,
+                  color: kColourLight,
+                ),
+                SizedBox(
+                  width: 12,
+                ),
+                Text('Take Photo')
+              ],
+            ),
+          ),
+          Container(
+            width: 1,
+            color: kColourTileDivider,
+          ),
+          CupertinoButton(
+            onPressed: recordCollection.imagePath == null
+                ? null
+                : () {
+                    showImage(
+                        context, File(recordCollection.imagePath!), false);
+                  },
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                FaIcon(
+                  CupertinoIcons.photo,
+                  size: 32,
+                ),
+                SizedBox(
+                  width: 12,
+                ),
+                Text('View Photo',
+                    style: recordCollection.imagePath == null
+                        ? null
+                        : TextStyle(color: Colors.white)),
+              ],
+            ),
+          ),
+        ],
+      ),
+      direction: PopoverDirection.right,
+      width: 400,
+      height: 50,
+      arrowHeight: 15,
+      arrowWidth: 30,
+    );
+  }
+
+  void showImage(BuildContext context, File file, bool isFirstPhoto) {
+    final imageProvider = Image.file(file).image;
+    showImageViewer(context, imageProvider, onViewerDismissed: () {
+      if (isFirstPhoto) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
+      }
+    });
   }
 }

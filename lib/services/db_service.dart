@@ -152,6 +152,7 @@ class DbService extends GetxService {
     return RecordCollection()
       ..createdAt = DateTime.now()
       ..deletedAt = null
+      ..imagePath = null
       ..speedRange = speedRange
       ..vehicleType = vehicleType
       ..sessionId = sessionId
@@ -200,6 +201,15 @@ class DbService extends GetxService {
     await db.writeTxn(((isar) async {
       sessionsToBeUpdated.hasExportedSession = true;
       await db.sessionCollections.put(sessionsToBeUpdated);
+    }));
+  }
+
+  void addImageToRecord(
+      RecordCollection recordCollection, String imagePath) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      recordCollection.imagePath = imagePath;
+      await db.recordCollections.put(recordCollection);
     }));
   }
 
