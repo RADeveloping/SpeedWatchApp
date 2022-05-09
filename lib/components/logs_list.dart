@@ -84,26 +84,23 @@ class LogsList extends GetView<SidebarController> {
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
                       child: CupertinoButton(
-                        onPressed: () {},
-                        child: GestureDetector(
-                          child: Column(
-                            children: [
-                              Obx(() => Text('${getInfractionCount()}',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold))),
-                              Text(
-                                'Infractions',
+                        onPressed: () {
+                          controller.filterByInfraction.toggle();
+                        },
+                        child: Column(
+                          children: [
+                            Obx(() => Text('${getInfractionCount()}',
                                 style: TextStyle(
-                                    color: Colors.white54,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            controller.filterByInfraction.toggle();
-                          },
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold))),
+                            Text(
+                              'Infractions',
+                              style: TextStyle(
+                                  color: Colors.white54,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ),
                     )),
