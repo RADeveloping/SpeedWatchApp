@@ -39,6 +39,7 @@ class Session extends GetView<SessionController> {
 
   @override
   Widget build(BuildContext context) {
+    SidebarController s = Get.find();
     controller.setVolunteerOptions();
     startDatePicker = DatePickerChoice(
         dateTime: Get.arguments == null ? DateTime.now() : controller.startEditDate.value,
@@ -176,11 +177,11 @@ class Session extends GetView<SessionController> {
                       tileOptions: controller.roadZoneOptions,
                     )),
                     CustomSettingsTile(
-                        child: CustomTileWithChoices(
+                        child: Get.arguments == null || s.records.length == 0 ? CustomTileWithChoices(
                       leadingText: 'Speed Limit (km/h)',
                       tileTag: controller.speedLimitTag,
                       tileOptions: controller.speedLimitOptions,
-                    )),
+                    ): Container()),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
                       leadingText: 'Weather Conditions',
