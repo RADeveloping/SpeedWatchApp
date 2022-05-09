@@ -164,8 +164,6 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                           DbService dbService = Get.find();
                           dbService.setHasMultipleExportedSession(
                               sidebarController.selectedSessions);
-                          sidebarController.sessions.value.clear();
-                          sidebarController.sessions.refresh();
                           Navigator.pop(context);
                         })
                   ]),
