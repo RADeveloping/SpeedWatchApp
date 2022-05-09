@@ -219,8 +219,6 @@ class SessionsList extends GetView<SidebarController> {
               controller.handleNewRecords, session.id, callBack);
           dbService.getDeletedRecordsWithId(
               controller.handleDeletedRecords, session.id, callBack);
-          dbService.getInfractionRecordsWithId(
-              controller.handleInfractionRecords, session.id, callBack);
         }
 
         if (controller.isEditMode.value) {
