@@ -42,10 +42,12 @@ class LogsList extends GetView<SidebarController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Container(
+                child: Obx(() => Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: kColourRightPaneBackground),
+                        color: controller.filterByInfraction.value
+                                ? kColourRightPaneBackground
+                                : kColourLight),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
                       child: Column(
@@ -67,15 +69,18 @@ class LogsList extends GetView<SidebarController> {
                         ],
                       ),
                     )),
+                )
               ),
               SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Container(
+                child: Obx(()=> Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: kColourRightPaneBackground),
+                        color: controller.filterByInfraction.value
+                              ? kColourLight
+                              : kColourRightPaneBackground),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
                       child: CupertinoButton(
@@ -97,14 +102,12 @@ class LogsList extends GetView<SidebarController> {
                             ],
                           ),
                           onTap: () {
-                            print('changing boolean');
                             controller.filterByInfraction.toggle();
-                            print('setting to ${controller.filterByInfraction.value}');
-                            print('current infraction count: ${controller.infractionRecords.length}');
                           },
                         ),
                       ),
                     )),
+              ),
               ),
             ],
           ),
@@ -166,7 +169,7 @@ class LogsList extends GetView<SidebarController> {
   }
 
   SettingsTile moreInfractionItems() {
-    if (controller.infractionRecords.length > controller.limitRecords.value) {
+    if (getInfractionRecords().length > controller.limitRecords.value) {
       return SettingsTile(
         title: Center(
             child: Text(
@@ -232,9 +235,22 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords.length;
   }
 
+  List<RecordCollection> getInfractionRecords() {
+    List<RecordCollection> infractionRecords = [];
+    var groupByInfractionRecords = groupBy(controller.records.value,
+            (obj) => (obj as RecordCollection).speedRange);
+
+    groupByInfractionRecords.forEach((speedRange, groupedList) {
+      if (speedRange != SpeedRange.green) {
+        infractionRecords += groupedList;
+      }
+    });
+    return infractionRecords;
+  }
+
   List<AbstractSettingsTile> populateLogListTiles() {
-    if (controller.infractionRecords.isNotEmpty && controller.filterByInfraction == true) {
-      return (controller.infractionRecords
+    if (getInfractionRecords().isNotEmpty && controller.filterByInfraction == true) {
+      return (getInfractionRecords()
                 .take(controller.limitRecords.value)
                 .map((record) => recordItem(record))
                 .toList() +
