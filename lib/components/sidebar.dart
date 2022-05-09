@@ -112,8 +112,6 @@ class Sidebar extends GetView<SidebarController> {
                           DbService dbService = Get.find();
                           dbService.setHasSingleExportedSession(
                               controller.currentSession.value);
-                          controller.sessions.value.clear();
-                          controller.sessions.refresh();
                           Navigator.pop(context);
                         })
                   ]),
