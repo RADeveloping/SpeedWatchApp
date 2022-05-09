@@ -5,6 +5,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import '../services/export_service.dart';
+
 class CupertinoPageScaffoldCustom extends StatelessWidget {
   final Widget child;
   final Widget? leading;
@@ -95,20 +97,52 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     sidebarController.selectedSessions.value
         .addAll(sidebarController.sessions.value.toList());
     sidebarController.selectedSessions.refresh();
-    final result = await Share.shareWithResult(
-      'check out my website https://example.com',
-      sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
-          positioned.globalPosition.dy - 20, 1, 1),
-    );
+
+    List<String> directories =  await ExportService().exportSessionsToExcel(sidebarController.selectedSessions);
+    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
+        positioned.globalPosition.dx, positioned.globalPosition.dy - 20, 1, 1),);
 
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
+      // TODO MOVE TO ARCHIVE!!!
+      Get.showSnackbar(GetSnackBar(
+        message:
+            '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
+        duration: Duration(seconds: 3),
+      ));
+      // sidebarController.sessions.value.clear();
+      // sidebarController.sessions.refresh();
       showMoveExportedAlertDialog(context);
       sidebarController.isEditMode.value = false;
     }
   }
 
+  Future<void> ShowSelectedExportShareSheet(TapDownDetails positioned) async {
+
+    List<String> directories =  await ExportService().exportSessionsToExcel(sidebarController.selectedSessions);
+
+    final result = await Share.shareFilesWithResult(directories, subject: 'Export to Excel', sharePositionOrigin: Rect.fromLTWH(
+        positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
+
+    if (result.status == ShareResultStatus.dismissed) {
+      sidebarController.isEditMode.value = false;
+    } else if (result.status == ShareResultStatus.success) {
+      // TODO MOVE TO ARCHIVE!!!
+      Get.showSnackbar(GetSnackBar(
+        message:
+            '${directories.length} session${directories.length == 1 ? '' : 's'} exported successfully',
+        duration: Duration(seconds: 3),
+      ));
+
+      showMoveExportedAlertDialog(context);
+
+      // sidebarController.sessions.value.removeWhere(
+      //     (element) => sidebarController.selectedSessions.contains(element));
+      // sidebarController.sessions.refresh();
+      sidebarController.isEditMode.value = false;
+    }
+  }
   void showMoveExportedAlertDialog(BuildContext context) {
     showCupertinoDialog<void>(
         context: context,
@@ -138,25 +172,4 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                         })
                   ]),
             )));
-  }
-
-  Future<void> ShowSelectedExportShareSheet(
-      TapDownDetails positioned, BuildContext context) async {
-    final result = await Share.shareWithResult(
-      'check out my website https://example.com',
-      sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
-          positioned.globalPosition.dy - 20, 1, 1),
-    );
-
-    if (result.status == ShareResultStatus.dismissed) {
-      sidebarController.isEditMode.value = false;
-    } else if (result.status == ShareResultStatus.success) {
-      // TODO MOVE TO ARCHIVE!!!
-      showMoveExportedAlertDialog(context);
-      // sidebarController.sessions.value.removeWhere(
-      //     (element) => sidebarController.selectedSessions.contains(element));
-      // sidebarController.sessions.refresh();
-      sidebarController.isEditMode.value = false;
-    }
-  }
 }
