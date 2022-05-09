@@ -78,7 +78,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                           : GestureDetector(
                               onTapDown: (positioned) async {
                                 Get.showOverlay(asyncFunction: () async {
-                                  await ShowSingleExportShareSheet(positioned);
+                                  await ShowSelectedExportShareSheet(
+                                      positioned);
                                 });
                               },
                               child: Text(
