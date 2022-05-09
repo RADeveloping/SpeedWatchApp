@@ -86,11 +86,11 @@ class ExportService {
   }
 
   List<String> getSessionList(SessionCollection session) {
-    int duration = (session.endTime.difference(session.endTime)).inHours;
-    return [session.streetAddress, session.startTime.toString(), session.endTime.toString(), duration.toString(),
+    double duration = (session.endTime.difference(session.startTime)).inMinutes / 60;
+    return [session.streetAddress, session.startTime.toString(), session.endTime.toString(), duration.toStringAsFixed(2),
       session.speedLimit.toString(), session.direction.name, session.roadConditionOptions.name, session.roadZoneOptions.name,
       session.weatherOptions.name, session.roadLightingOptions.name, session.volunteerNames.length.toString(),
-      session.volunteerNames.join(' ,'), (duration * session.volunteerNames.length).toString(), ''];
+      session.volunteerNames.join(', '), (duration * session.volunteerNames.length).toString(), ''];
   }
 
   String getFileName(SessionCollection session) {
@@ -229,19 +229,27 @@ class ExportService {
     return excel;
   }
 
-  List<String> getRecordStrings(List<RecordCollection> records, List<String> speedRangeTitles) {
-    List<String> output = [];
+  List<List<String>> getRecordStrings(List<RecordCollection> records, List<String> speedRangeTitles) {
+
+    List<List<String>> output = [];
     for (var record in records) {
-      output.add(DateFormat('h:mm:ss').format(record.createdAt).toString() + '     ' + record.volunteerName +
-          '    ' + record.vehicleType.name.toUpperCase() + '     ' + speedRangeTitles[record.speedRange.index]);
+      List<String> inside = [];
+      inside.add(DateFormat('h:mm:ss').format(record.createdAt).toString());
+      inside.add(record.volunteerName);
+      inside.add(record.vehicleType.name.toUpperCase());
+      inside.add(speedRangeTitles[record.speedRange.index]);
+      output.add(inside);
     }
     return output;
   }
 
-  Excel addRecordRows(int startIndex, List<String> recordStrings, Excel excel) {
+  Excel addRecordRows(int startIndex, List<List<String>> recordStrings, Excel excel) {
     Sheet sheetObject = excel['Sheet1'];
     for (int i = 0; i < recordStrings.length; i++) {
-      sheetObject.cell(CellIndex.indexByString('A' + (i + startIndex).toString())).value = recordStrings[i];
+      sheetObject.cell(CellIndex.indexByString('A' + (i + startIndex).toString())).value = recordStrings[i][0];
+      sheetObject.cell(CellIndex.indexByString('B' + (i + startIndex).toString())).value = recordStrings[i][1];
+      sheetObject.cell(CellIndex.indexByString('C' + (i + startIndex).toString())).value = recordStrings[i][2];
+      sheetObject.cell(CellIndex.indexByString('D' + (i + startIndex).toString())).value = recordStrings[i][3];
     }
 
     return excel;
