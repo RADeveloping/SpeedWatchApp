@@ -15,15 +15,16 @@ extension GetRecordCollectionCollection on Isar {
 const RecordCollectionSchema = CollectionSchema(
   name: 'RecordCollection',
   schema:
-      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"deletedAt","type":"Long"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"},{"name":"volunteerName","type":"String"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"deletedAt","unique":false,"properties":[{"name":"deletedAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
+      '{"name":"RecordCollection","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"deletedAt","type":"Long"},{"name":"imagePath","type":"String"},{"name":"sessionId","type":"Long"},{"name":"speedRange","type":"Long"},{"name":"vehicleType","type":"Long"},{"name":"volunteerName","type":"String"}],"indexes":[{"name":"createdAt","unique":false,"properties":[{"name":"createdAt","type":"Value","caseSensitive":false}]},{"name":"deletedAt","unique":false,"properties":[{"name":"deletedAt","type":"Value","caseSensitive":false}]},{"name":"sessionId","unique":false,"properties":[{"name":"sessionId","type":"Value","caseSensitive":false}]}],"links":[]}',
   idName: 'id',
   propertyIds: {
     'createdAt': 0,
     'deletedAt': 1,
-    'sessionId': 2,
-    'speedRange': 3,
-    'vehicleType': 4,
-    'volunteerName': 5
+    'imagePath': 2,
+    'sessionId': 3,
+    'speedRange': 4,
+    'vehicleType': 5,
+    'volunteerName': 6
   },
   listProperties: {},
   indexIds: {'createdAt': 0, 'deletedAt': 1, 'sessionId': 2},
@@ -84,15 +85,21 @@ void _recordCollectionSerializeNative(
   final _createdAt = value0;
   final value1 = object.deletedAt;
   final _deletedAt = value1;
-  final value2 = object.sessionId;
-  final _sessionId = value2;
-  final value3 = _recordCollectionSpeedRangeConverter.toIsar(object.speedRange);
-  final _speedRange = value3;
-  final value4 =
+  final value2 = object.imagePath;
+  IsarUint8List? _imagePath;
+  if (value2 != null) {
+    _imagePath = IsarBinaryWriter.utf8Encoder.convert(value2);
+  }
+  dynamicSize += (_imagePath?.length ?? 0) as int;
+  final value3 = object.sessionId;
+  final _sessionId = value3;
+  final value4 = _recordCollectionSpeedRangeConverter.toIsar(object.speedRange);
+  final _speedRange = value4;
+  final value5 =
       _recordCollectionVehicleTypeConverter.toIsar(object.vehicleType);
-  final _vehicleType = value4;
-  final value5 = object.volunteerName;
-  final _volunteerName = IsarBinaryWriter.utf8Encoder.convert(value5);
+  final _vehicleType = value5;
+  final value6 = object.volunteerName;
+  final _volunteerName = IsarBinaryWriter.utf8Encoder.convert(value6);
   dynamicSize += (_volunteerName.length) as int;
   final size = staticSize + dynamicSize;
 
@@ -102,10 +109,11 @@ void _recordCollectionSerializeNative(
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeDateTime(offsets[0], _createdAt);
   writer.writeDateTime(offsets[1], _deletedAt);
-  writer.writeLong(offsets[2], _sessionId);
-  writer.writeLong(offsets[3], _speedRange);
-  writer.writeLong(offsets[4], _vehicleType);
-  writer.writeBytes(offsets[5], _volunteerName);
+  writer.writeBytes(offsets[2], _imagePath);
+  writer.writeLong(offsets[3], _sessionId);
+  writer.writeLong(offsets[4], _speedRange);
+  writer.writeLong(offsets[5], _vehicleType);
+  writer.writeBytes(offsets[6], _volunteerName);
 }
 
 RecordCollection _recordCollectionDeserializeNative(
@@ -117,12 +125,13 @@ RecordCollection _recordCollectionDeserializeNative(
   object.createdAt = reader.readDateTime(offsets[0]);
   object.deletedAt = reader.readDateTimeOrNull(offsets[1]);
   object.id = id;
-  object.sessionId = reader.readLong(offsets[2]);
+  object.imagePath = reader.readStringOrNull(offsets[2]);
+  object.sessionId = reader.readLong(offsets[3]);
   object.speedRange = _recordCollectionSpeedRangeConverter
-      .fromIsar(reader.readLong(offsets[3]));
-  object.vehicleType = _recordCollectionVehicleTypeConverter
       .fromIsar(reader.readLong(offsets[4]));
-  object.volunteerName = reader.readString(offsets[5]);
+  object.vehicleType = _recordCollectionVehicleTypeConverter
+      .fromIsar(reader.readLong(offsets[5]));
+  object.volunteerName = reader.readString(offsets[6]);
   return object;
 }
 
@@ -136,14 +145,16 @@ P _recordCollectionDeserializePropNative<P>(
     case 1:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readLong(offset)) as P;
+    case 4:
       return (_recordCollectionSpeedRangeConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 4:
+    case 5:
       return (_recordCollectionVehicleTypeConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 5:
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw 'Illegal propertyIndex';
@@ -158,6 +169,7 @@ dynamic _recordCollectionSerializeWeb(
   IsarNative.jsObjectSet(
       jsObj, 'deletedAt', object.deletedAt?.toUtc().millisecondsSinceEpoch);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'imagePath', object.imagePath);
   IsarNative.jsObjectSet(jsObj, 'sessionId', object.sessionId);
   IsarNative.jsObjectSet(jsObj, 'speedRange',
       _recordCollectionSpeedRangeConverter.toIsar(object.speedRange));
@@ -183,6 +195,7 @@ RecordCollection _recordCollectionDeserializeWeb(
           .toLocal()
       : null;
   object.id = IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity;
+  object.imagePath = IsarNative.jsObjectGet(jsObj, 'imagePath');
   object.sessionId =
       IsarNative.jsObjectGet(jsObj, 'sessionId') ?? double.negativeInfinity;
   object.speedRange = _recordCollectionSpeedRangeConverter.fromIsar(
@@ -212,6 +225,8 @@ P _recordCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity)
           as P;
+    case 'imagePath':
+      return (IsarNative.jsObjectGet(jsObj, 'imagePath')) as P;
     case 'sessionId':
       return (IsarNative.jsObjectGet(jsObj, 'sessionId') ??
           double.negativeInfinity) as P;
@@ -714,6 +729,122 @@ extension RecordCollectionQueryFilter
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathIsNull() {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.isNull,
+      property: 'imagePath',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'imagePath',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathGreaterThan(
+    String? value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'imagePath',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathLessThan(
+    String? value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'imagePath',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathBetween(
+    String? lower,
+    String? upper, {
+    bool caseSensitive = true,
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'imagePath',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.startsWith,
+      property: 'imagePath',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.endsWith,
+      property: 'imagePath',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathContains(String value, {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.contains,
+      property: 'imagePath',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
+      imagePathMatches(String pattern, {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.matches,
+      property: 'imagePath',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterFilterCondition>
       sessionIdEqualTo(int value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
@@ -1009,6 +1140,16 @@ extension RecordCollectionQueryWhereSortBy
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortByImagePath() {
+    return addSortByInternal('imagePath', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      sortByImagePathDesc() {
+    return addSortByInternal('imagePath', Sort.desc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
       sortBySessionId() {
     return addSortByInternal('sessionId', Sort.asc);
   }
@@ -1081,6 +1222,16 @@ extension RecordCollectionQueryWhereSortThenBy
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenByImagePath() {
+    return addSortByInternal('imagePath', Sort.asc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
+      thenByImagePathDesc() {
+    return addSortByInternal('imagePath', Sort.desc);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QAfterSortBy>
       thenBySessionId() {
     return addSortByInternal('sessionId', Sort.asc);
   }
@@ -1138,6 +1289,11 @@ extension RecordCollectionQueryWhereDistinct
   }
 
   QueryBuilder<RecordCollection, RecordCollection, QDistinct>
+      distinctByImagePath({bool caseSensitive = true}) {
+    return addDistinctByInternal('imagePath', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<RecordCollection, RecordCollection, QDistinct>
       distinctBySessionId() {
     return addDistinctByInternal('sessionId');
   }
@@ -1172,6 +1328,11 @@ extension RecordCollectionQueryProperty
 
   QueryBuilder<RecordCollection, int, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<RecordCollection, String?, QQueryOperations>
+      imagePathProperty() {
+    return addPropertyNameInternal('imagePath');
   }
 
   QueryBuilder<RecordCollection, int, QQueryOperations> sessionIdProperty() {

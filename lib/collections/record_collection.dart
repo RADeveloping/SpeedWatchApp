@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+
 import '../converters/speed_range_converter.dart';
 import '../converters/vehicle_type_converter.dart';
 import '../enums/speed_range.dart';
@@ -24,4 +25,6 @@ class RecordCollection {
   @Index()
   late int sessionId;
   late String volunteerName;
+
+  late String? imagePath;
 }

@@ -12,12 +12,9 @@ class SidebarController extends GetxController {
 
   Rx<TextEditingController> textController =
       TextEditingController(text: '').obs;
-
   RxBool archiveExpanded = false.obs;
   RxBool isEditMode = false.obs;
   RxList<SessionCollection> selectedSessions = <SessionCollection>[].obs;
-
-  void selectAll() {}
 
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
@@ -45,35 +42,43 @@ class SidebarController extends GetxController {
 
   IconData getIcon(VehicleType type) {
     switch (type) {
-      case VehicleType.largeTruck: {
-        return Icons.local_shipping;
-      }
-      case VehicleType.motorBike: {
-        return Icons.motorcycle;
-      }
-      case VehicleType.passenger: {
-        return Icons.directions_car;
-      }
-      case VehicleType.transit: {
-        return Icons.directions_bus;
-      }
+      case VehicleType.largeTruck:
+        {
+          return Icons.local_shipping;
+        }
+      case VehicleType.motorBike:
+        {
+          return Icons.motorcycle;
+        }
+      case VehicleType.passenger:
+        {
+          return Icons.directions_car;
+        }
+      case VehicleType.transit:
+        {
+          return Icons.directions_bus;
+        }
     }
   }
 
   String getType(VehicleType type) {
     switch (type) {
-      case VehicleType.largeTruck: {
-        return 'Truck';
-      }
-      case VehicleType.motorBike: {
-        return 'Motor Bike';
-      }
-      case VehicleType.passenger: {
-        return 'Passenger';
-      }
-      case VehicleType.transit: {
-        return 'Transit';
-      }
+      case VehicleType.largeTruck:
+        {
+          return 'Truck';
+        }
+      case VehicleType.motorBike:
+        {
+          return 'Motor Bike';
+        }
+      case VehicleType.passenger:
+        {
+          return 'Passenger';
+        }
+      case VehicleType.transit:
+        {
+          return 'Transit';
+        }
     }
   }
 
@@ -82,26 +87,29 @@ class SidebarController extends GetxController {
     int lowerLimit;
     int upperLimit;
     switch (range) {
-      case SpeedRange.green: {
-        lowerLimit = 0;
-        upperLimit = speedLimit;
-      }
-      break;
-      case SpeedRange.yellow: {
-        lowerLimit = speedLimit + 1;
-        upperLimit = speedLimit + 10;
-      }
-      break;
-      case SpeedRange.orange: {
-        lowerLimit = speedLimit + 11;
-        upperLimit = speedLimit + 20;
-      }
-      break;
+      case SpeedRange.green:
+        {
+          lowerLimit = 0;
+          upperLimit = speedLimit;
+        }
+        break;
+      case SpeedRange.yellow:
+        {
+          lowerLimit = speedLimit + 1;
+          upperLimit = speedLimit + 10;
+        }
+        break;
+      case SpeedRange.orange:
+        {
+          lowerLimit = speedLimit + 11;
+          upperLimit = speedLimit + 20;
+        }
+        break;
 
-      case SpeedRange.red: {
-        return 'Over ${speedLimit + 20}';
-      }
-
+      case SpeedRange.red:
+        {
+          return 'Over ${speedLimit + 20}';
+        }
     }
     return '${lowerLimit} to ${upperLimit}';
   }
