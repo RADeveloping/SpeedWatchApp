@@ -31,7 +31,7 @@ class Sidebar extends GetView<SidebarController> {
       trailing: largeTitle == 'Log'
           ? GestureDetector(
         onTapDown: (positioned) async {
-          await ShowShareSheet(positioned, context);
+          await ShowExportShareSheet(positioned, context);
         },
         child: CupertinoButton(
           child: Icon(
@@ -83,16 +83,8 @@ class Sidebar extends GetView<SidebarController> {
 
     } else if (result.status == ShareResultStatus.success) {
       ShowConfirmMoveDialog(context);
-      Get.showSnackbar(GetSnackBar(
-        message:
-        '${directories.length} session${directories.length == 1
-            ? ''
-            : 's'} exported successfully',
-        duration: Duration(seconds: 3),
-      ));
     }
   }
-}
 
   void ShowConfirmMoveDialog(BuildContext context) {
     showCupertinoDialog<void>(
