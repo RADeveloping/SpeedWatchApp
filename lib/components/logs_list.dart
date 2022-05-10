@@ -42,53 +42,41 @@ class LogsList extends GetView<SidebarController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                  child: Obx(
-                () => Container(
+                  child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: controller.filterByInfraction.value
-                            ? kColourRightPaneBackground
-                            : kColourTileDivider),
+                        color: kColourRightPaneBackground),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
-                      child: CupertinoButton(
-                        padding: const EdgeInsets.only(),
-                        onPressed: () {
-                          controller.filterByInfraction.toggle();
-                        },
-                        child: Column(
-                          children: [
-                            Obx(() => Text(
-                                  '${controller.records.value.length}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                  ),
-                                )),
-                            Text(
-                              'Records',
-                              style: TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          Obx(() => Text(
+                                '${controller.records.value.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
+                              )),
+                          Text(
+                            'Records',
+                            style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     )),
-              )),
+              ),
               SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Obx(
-                  () => Container(
+                child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: controller.filterByInfraction.value
-                              ? kColourTileDivider
-                              : kColourRightPaneBackground),
+                          color: kColourRightPaneBackground),
                       child: CupertinoButton(
                         padding: const EdgeInsets.only(),
                         onPressed: () {
@@ -98,35 +86,38 @@ class LogsList extends GetView<SidebarController> {
                           padding: const EdgeInsets.all(7.0),
                           child: Column(
                             children: [
-                              Text('${getInfractionCount()}',
+                              Obx(() => Text('${getInfractionCount()}',
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: controller.filterByInfraction.value
+                                          ? kColourLight
+                                          : Colors.white,
                                       fontSize: 30,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
+                                      fontWeight: FontWeight.bold))
+                              ),
+                              Obx(() => Text(
                                 'Infractions',
                                 style: TextStyle(
-                                    color: Colors.white54,
+                                    color: controller.filterByInfraction.value
+                                        ? kColourLight
+                                        : Colors.white54,
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold),
+                                )
                               ),
                             ],
                           ),
                         ),
-                      )),
+                      ),
                 ),
               ),
               SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Obx(
-                      () => Container(
+                child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: controller.filterByImagePath.value
-                              ? kColourTileDivider
-                              : kColourRightPaneBackground),
+                          color: kColourRightPaneBackground),
                       child: CupertinoButton(
                         padding: const EdgeInsets.only(),
                         onPressed: () {
@@ -139,22 +130,28 @@ class LogsList extends GetView<SidebarController> {
                           padding: const EdgeInsets.all(7.0),
                           child: Column(
                             children: [
-                              Text('${getImageCount()}',
+                              Obx(() => Text('${getImageCount()}',
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: controller.filterByImagePath.value
+                                          ? kColourLight
+                                          : Colors.white,
                                       fontSize: 30,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
+                                      fontWeight: FontWeight.bold))
+                              ),
+                              Obx(() => Text(
                                 'Photos',
                                 style: TextStyle(
-                                    color: Colors.white54,
+                                    color: controller.filterByImagePath.value
+                                        ? kColourLight
+                                        : Colors.white54,
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold),
+                                )
                               ),
                             ],
                           ),
                         ),
-                      )),
+                      ),
                 ),
               ),
             ],
