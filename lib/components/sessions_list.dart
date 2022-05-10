@@ -54,31 +54,47 @@ class SessionsList extends GetView<SidebarController> {
 
     List<AbstractSettingsSection> list = [searchBar()];
 
-    groupBy(
-            mainList.take(controller.limitSessionsMain.value),
-            (obj) => DateFormat('EEEEEE, MMMM dd, y')
-                .format((obj as SessionCollection).startTime))
-        .forEach((date, groupedList) {
-      list.add(sessionListSection(groupedList, date.toUpperCase(), false));
-    });
 
-    if (mainList.length > controller.limitSessionsMain.value) {
-      list.add(moreItems(false));
+    if (controller.isSearching == true) {
+      List<SessionCollection> searchSessions = controller.sessions
+          .where((element) => element.streetAddress
+          .isCaseInsensitiveContains(controller.textController.value.value.text))
+          .toList();
+      groupBy(
+          searchSessions.take(controller.limitSessionsMain.value),
+              (obj) => DateFormat('EEEEEE, MMMM dd, y')
+              .format((obj as SessionCollection).startTime))
+          .forEach((date, groupedList) {
+        list.add(sessionListSection(groupedList, date.toUpperCase(), false));
+      });
+      if (searchSessions.length > controller.limitSessionsMain.value) {
+        list.add(moreItems(false));
+      }
+
+    } else {
+      groupBy(
+          mainList.take(controller.limitSessionsMain.value),
+              (obj) => DateFormat('EEEEEE, MMMM dd, y')
+              .format((obj as SessionCollection).startTime))
+          .forEach((date, groupedList) {
+        list.add(sessionListSection(groupedList, date.toUpperCase(), false));
+      });
+      if (mainList.length > controller.limitSessionsMain.value) {
+        list.add(moreItems(false));
+      }
+      archivedList.length > 0 ? list.add(archivedTab(context)) : null;
+      groupBy(
+          archivedList.take(controller.limitSessionsArchived.value),
+              (obj) => DateFormat('EEEEEE, MMMM dd, y')
+              .format((obj as SessionCollection).startTime))
+          .forEach((date, groupedList) {
+        list.add(sessionListSection(groupedList, date.toUpperCase(), true));
+      });
+      if (archivedList.length > controller.limitSessionsArchived.value) {
+        list.add(moreItems(true));
+      }
     }
 
-    archivedList.length > 0 ? list.add(archivedTab(context)) : null;
-
-    groupBy(
-            archivedList.take(controller.limitSessionsArchived.value),
-            (obj) => DateFormat('EEEEEE, MMMM dd, y')
-                .format((obj as SessionCollection).startTime))
-        .forEach((date, groupedList) {
-      list.add(sessionListSection(groupedList, date.toUpperCase(), true));
-    });
-
-    if (archivedList.length > controller.limitSessionsArchived.value) {
-      list.add(moreItems(true));
-    }
 
     return list;
   }
@@ -103,16 +119,19 @@ class SessionsList extends GetView<SidebarController> {
                   ),
                   prefixInsets: EdgeInsets.all(10),
                   onChanged: (String value) {
-                    controller.sessions.value = sessionsCopy
-                        .where((element) => element.streetAddress
-                            .isCaseInsensitiveContains(value))
-                        .toList();
+                    if (controller.textController.value.value.text != '') {
+                      controller.isSearching.value = true;
+                    } else {
+                      controller.isSearching.value = false;
+                    }
+                    controller.sessions.refresh();
                   },
                   onSubmitted: (String value) {
                     print('Submitted text: $value');
                   },
                   onSuffixTap: () {
                     controller.textController.value.clear();
+                    controller.isSearching.value = false;
                   },
                 ),
               ),
