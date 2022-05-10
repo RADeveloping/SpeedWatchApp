@@ -42,58 +42,76 @@ class LogsList extends GetView<SidebarController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Container(
+                child: Obx(() => Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: kColourRightPaneBackground),
+                        color: controller.filterByInfraction.value
+                                ? kColourRightPaneBackground
+                                : kColourTileDivider),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
-                      child: Column(
-                        children: [
-                          Obx(() => Text(
-                                '${controller.records.value.length}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
-                                ),
-                              )),
-                          Text(
-                            'Records',
-                            style: TextStyle(
-                                color: Colors.white54,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.only(),
+                        onPressed: () {
+                          controller.filterByInfraction.toggle();
+                        },
+                        child: Column(
+                          children: [
+                            Obx(() => Text(
+                                  '${controller.records.value.length}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                  ),
+                                )),
+                            Text(
+                              'Records',
+                              style: TextStyle(
+                                  color: Colors.white54,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     )),
+                )
               ),
               SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Container(
+                child: Obx(()=> Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: kColourRightPaneBackground),
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: Column(
-                        children: [
-                          Obx(() => Text('${getInfractionCount()}',
+                        color: controller.filterByInfraction.value
+                              ? kColourTileDivider
+                              : kColourRightPaneBackground),
+                    child: CupertinoButton(
+                      padding: const EdgeInsets.only(),
+                      onPressed: () {
+                        controller.filterByInfraction.toggle();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Column(
+                          children: [
+                            Text('${getInfractionCount()}',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              'Infractions',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold))),
-                          Text(
-                            'Infractions',
-                            style: TextStyle(
-                                color: Colors.white54,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                                  color: Colors.white54,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     )),
+              ),
               ),
             ],
           ),
@@ -132,17 +150,7 @@ class LogsList extends GetView<SidebarController> {
           ),
         ],
       ),
-      tiles: controller.records.isNotEmpty
-          ? (controller.records
-                  .take(controller.limitRecords.value)
-                  .map((record) => recordItem(record))
-                  .toList() +
-              [moreItems()])
-          : [
-              SettingsTile(
-                title: Text(''),
-              )
-            ],
+      tiles: populateLogListTiles(),
     );
   }
 
@@ -154,6 +162,24 @@ class LogsList extends GetView<SidebarController> {
           'Load more',
           style: TextStyle(color: kColourLight),
         )),
+        onPressed: (c) {
+          controller.limitRecords.value += 20;
+        },
+      );
+    }
+    return SettingsTile(
+      title: Text(''),
+    );
+  }
+
+  SettingsTile moreInfractionItems() {
+    if (getInfractionRecords().length > controller.limitRecords.value) {
+      return SettingsTile(
+        title: Center(
+            child: Text(
+              'Load more',
+              style: TextStyle(color: kColourLight),
+            )),
         onPressed: (c) {
           controller.limitRecords.value += 20;
         },
@@ -211,6 +237,40 @@ class LogsList extends GetView<SidebarController> {
       }
     });
     return infractionRecords.length;
+  }
+
+  List<RecordCollection> getInfractionRecords() {
+    List<RecordCollection> infractionRecords = [];
+    var groupByInfractionRecords = groupBy(controller.records.value,
+            (obj) => (obj as RecordCollection).speedRange);
+
+    groupByInfractionRecords.forEach((speedRange, groupedList) {
+      if (speedRange != SpeedRange.green) {
+        infractionRecords += groupedList;
+      }
+    });
+    return infractionRecords;
+  }
+
+  List<AbstractSettingsTile> populateLogListTiles() {
+    if (getInfractionRecords().isNotEmpty && controller.filterByInfraction.isTrue) {
+      return (getInfractionRecords()
+                .take(controller.limitRecords.value)
+                .map((record) => recordItem(record))
+                .toList() +
+              [moreInfractionItems()]);
+    } else if (controller.records.isNotEmpty) {
+      return (controller.records
+          .take(controller.limitRecords.value)
+          .map((record) => recordItem(record))
+          .toList() +
+          [moreItems()]);
+    }
+    return [
+              SettingsTile(
+                title: Text(''),
+              )
+            ];
   }
 }
 

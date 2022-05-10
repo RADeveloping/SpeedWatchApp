@@ -41,6 +41,8 @@ class SidebarController extends GetxController {
     deletedRecords.value = recordsToBeRestored;
   }
 
+  RxBool filterByInfraction = false.obs;
+
   IconData getIcon(VehicleType type) {
     switch (type) {
       case VehicleType.largeTruck:
