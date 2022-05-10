@@ -42,52 +42,41 @@ class LogsList extends GetView<SidebarController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                  child: Obx(
-                () => Container(
+                  child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: controller.filterByInfraction.value
-                            ? kColourRightPaneBackground
-                            : kColourTileDivider),
+                        color: kColourRightPaneBackground),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
-                      child: CupertinoButton(
-                        padding: const EdgeInsets.only(),
-                        onPressed: () {
-                          controller.filterByInfraction.toggle();
-                        },
-                        child: Column(
-                          children: [
-                            Obx(() => Text(
-                                  '${controller.records.value.length}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                  ),
-                                )),
-                            Text(
-                              'Records',
-                              style: TextStyle(
-                                  color: Colors.white54,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          Obx(() => Text(
+                                '${controller.records.value.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
+                              )),
+                          Text(
+                            'Records',
+                            style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     )),
-              )),
+              ),
               SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Obx(
-                  () => Container(
+                child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: controller.filterByInfraction.value
-                              ? kColourTileDivider
-                              : kColourRightPaneBackground),
+                          color: kColourRightPaneBackground),
                       child: CupertinoButton(
                         padding: const EdgeInsets.only(),
                         onPressed: () {
@@ -97,21 +86,72 @@ class LogsList extends GetView<SidebarController> {
                           padding: const EdgeInsets.all(7.0),
                           child: Column(
                             children: [
-                              Text('${getInfractionCount()}',
+                              Obx(() => Text('${getInfractionCount()}',
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: controller.filterByInfraction.value
+                                          ? kColourLight
+                                          : Colors.white,
                                       fontSize: 30,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
+                                      fontWeight: FontWeight.bold))
+                              ),
+                              Obx(() => Text(
                                 'Infractions',
                                 style: TextStyle(
-                                    color: Colors.white54,
+                                    color: controller.filterByInfraction.value
+                                        ? kColourLight
+                                        : Colors.white54,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.bold),
+                                )
                               ),
                             ],
                           ),
                         ),
-                      )),
+                      ),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: kColourRightPaneBackground),
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.only(),
+                        onPressed: () {
+                          if (getRecordsWithImage().isEmpty || getInfractionRecordsWithImage().isEmpty) {
+                            null;
+                          }
+                          controller.filterByImagePath.toggle();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: Column(
+                            children: [
+                              Obx(() => Text('${getImageCount()}',
+                                  style: TextStyle(
+                                      color: controller.filterByImagePath.value
+                                          ? kColourLight
+                                          : Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold))
+                              ),
+                              Obx(() => Text(
+                                'Photos',
+                                style: TextStyle(
+                                    color: controller.filterByImagePath.value
+                                        ? kColourLight
+                                        : Colors.white54,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold),
+                                )
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                 ),
               ),
             ],
@@ -155,8 +195,8 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
-  SettingsTile moreItems() {
-    if (controller.records.length > controller.limitRecords.value) {
+  SettingsTile moreItems(List<RecordCollection> records) {
+    if (records.length > controller.limitRecords.value) {
       return SettingsTile(
         title: Center(
             child: Text(
@@ -248,6 +288,16 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords.length;
   }
 
+  int getImageCount() {
+    List<RecordCollection> recordsWithImagePath = [];
+    for (var record in controller.records) {
+      if (record.imagePath != null) {
+        recordsWithImagePath.add(record);
+      }
+    }
+    return recordsWithImagePath.length;
+  }
+
   void showImage(BuildContext context, File file) {
     final imageProvider = Image.file(file).image;
     showImageViewer(context, imageProvider);
@@ -263,20 +313,59 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords;
   }
 
+  List<RecordCollection> getRecordsWithImage() {
+    List<RecordCollection> recordsWithImagePath = [];
+    for (var record in controller.records) {
+      if (record.imagePath != null) {
+        recordsWithImagePath.add(record);
+      }
+    }
+    return recordsWithImagePath;
+  }
+
+  List<RecordCollection> getInfractionRecordsWithImage() {
+    List<RecordCollection> infractionRecordsWithImagePath = [];
+    for (var record in getInfractionRecords()) {
+      if (record.imagePath != null) {
+        infractionRecordsWithImagePath.add(record);
+      }
+    }
+    return infractionRecordsWithImagePath;
+  }
+
   List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
-    if (controller.filterByInfraction.isTrue) {
-      List<RecordCollection> list = getInfractionRecords();
-      return (list
+    if (getInfractionRecords().isNotEmpty &&
+        controller.filterByInfraction.isTrue &&
+        controller.filterByImagePath.isFalse) {
+      return (getInfractionRecords()
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
-          [moreInfractionItems(list)]);
-    } else if (controller.records.isNotEmpty) {
+          [moreItems(getInfractionRecords())]);
+    } else if (getRecordsWithImage().isNotEmpty &&
+        controller.filterByImagePath.isTrue &&
+        controller.filterByInfraction.isFalse) {
+      return (getRecordsWithImage()
+              .take(controller.limitRecords.value)
+              .map((record) => recordItem(record, context))
+              .toList() +
+          [moreItems(getRecordsWithImage())]);
+    } else if (getInfractionRecordsWithImage().isNotEmpty &&
+        controller.filterByInfraction.isTrue &&
+        controller.filterByImagePath.isTrue) {
+      return (getInfractionRecordsWithImage()
+              .take(controller.limitRecords.value)
+              .map((record) => recordItem(record, context))
+              .toList() +
+          [moreItems(getInfractionRecordsWithImage())]);
+    } else if (controller.records.isNotEmpty &&
+        controller.filterByInfraction.isFalse &&
+        controller.filterByImagePath.isFalse) {
       return (controller.records
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
-          [moreItems()]);
+          [moreItems(controller.records.value)]);
     }
     return [
       SettingsTile(
