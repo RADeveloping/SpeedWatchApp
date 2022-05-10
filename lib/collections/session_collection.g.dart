@@ -15,20 +15,21 @@ extension GetSessionCollectionCollection on Isar {
 const SessionCollectionSchema = CollectionSchema(
   name: 'SessionCollection',
   schema:
-      '{"name":"SessionCollection","idName":"id","properties":[{"name":"direction","type":"Long"},{"name":"endTime","type":"Long"},{"name":"hasExportedSession","type":"Bool"},{"name":"roadConditionOptions","type":"Long"},{"name":"roadLightingOptions","type":"Long"},{"name":"roadZoneOptions","type":"Long"},{"name":"speedLimit","type":"Long"},{"name":"startTime","type":"Long"},{"name":"streetAddress","type":"String"},{"name":"volunteerNames","type":"StringList"},{"name":"weatherOptions","type":"Long"}],"indexes":[{"name":"startTime","unique":false,"properties":[{"name":"startTime","type":"Value","caseSensitive":false}]}],"links":[]}',
+      '{"name":"SessionCollection","idName":"id","properties":[{"name":"direction","type":"Long"},{"name":"endTime","type":"Long"},{"name":"hasExportedSession","type":"Bool"},{"name":"notes","type":"String"},{"name":"roadConditionOptions","type":"Long"},{"name":"roadLightingOptions","type":"Long"},{"name":"roadZoneOptions","type":"Long"},{"name":"speedLimit","type":"Long"},{"name":"startTime","type":"Long"},{"name":"streetAddress","type":"String"},{"name":"volunteerNames","type":"StringList"},{"name":"weatherOptions","type":"Long"}],"indexes":[{"name":"startTime","unique":false,"properties":[{"name":"startTime","type":"Value","caseSensitive":false}]}],"links":[]}',
   idName: 'id',
   propertyIds: {
     'direction': 0,
     'endTime': 1,
     'hasExportedSession': 2,
-    'roadConditionOptions': 3,
-    'roadLightingOptions': 4,
-    'roadZoneOptions': 5,
-    'speedLimit': 6,
-    'startTime': 7,
-    'streetAddress': 8,
-    'volunteerNames': 9,
-    'weatherOptions': 10
+    'notes': 3,
+    'roadConditionOptions': 4,
+    'roadLightingOptions': 5,
+    'roadZoneOptions': 6,
+    'speedLimit': 7,
+    'startTime': 8,
+    'streetAddress': 9,
+    'volunteerNames': 10,
+    'weatherOptions': 11
   },
   listProperties: {'volunteerNames'},
   indexIds: {'startTime': 0},
@@ -88,34 +89,37 @@ void _sessionCollectionSerializeNative(
   final _endTime = value1;
   final value2 = object.hasExportedSession;
   final _hasExportedSession = value2;
-  final value3 = _sessionCollectionRoadConditionConverter
+  final value3 = object.notes;
+  final _notes = IsarBinaryWriter.utf8Encoder.convert(value3);
+  dynamicSize += (_notes.length) as int;
+  final value4 = _sessionCollectionRoadConditionConverter
       .toIsar(object.roadConditionOptions);
-  final _roadConditionOptions = value3;
-  final value4 =
-      _sessionCollectionLightingConverter.toIsar(object.roadLightingOptions);
-  final _roadLightingOptions = value4;
+  final _roadConditionOptions = value4;
   final value5 =
+      _sessionCollectionLightingConverter.toIsar(object.roadLightingOptions);
+  final _roadLightingOptions = value5;
+  final value6 =
       _sessionCollectionRoadZoneConverter.toIsar(object.roadZoneOptions);
-  final _roadZoneOptions = value5;
-  final value6 = object.speedLimit;
-  final _speedLimit = value6;
-  final value7 = object.startTime;
-  final _startTime = value7;
-  final value8 = object.streetAddress;
-  final _streetAddress = IsarBinaryWriter.utf8Encoder.convert(value8);
+  final _roadZoneOptions = value6;
+  final value7 = object.speedLimit;
+  final _speedLimit = value7;
+  final value8 = object.startTime;
+  final _startTime = value8;
+  final value9 = object.streetAddress;
+  final _streetAddress = IsarBinaryWriter.utf8Encoder.convert(value9);
   dynamicSize += (_streetAddress.length) as int;
-  final value9 = object.volunteerNames;
-  dynamicSize += (value9.length) * 8;
-  final bytesList9 = <IsarUint8List>[];
-  for (var str in value9) {
+  final value10 = object.volunteerNames;
+  dynamicSize += (value10.length) * 8;
+  final bytesList10 = <IsarUint8List>[];
+  for (var str in value10) {
     final bytes = IsarBinaryWriter.utf8Encoder.convert(str);
-    bytesList9.add(bytes);
+    bytesList10.add(bytes);
     dynamicSize += bytes.length as int;
   }
-  final _volunteerNames = bytesList9;
-  final value10 =
+  final _volunteerNames = bytesList10;
+  final value11 =
       _sessionCollectionWeatherConverter.toIsar(object.weatherOptions);
-  final _weatherOptions = value10;
+  final _weatherOptions = value11;
   final size = staticSize + dynamicSize;
 
   rawObj.buffer = alloc(size);
@@ -125,14 +129,15 @@ void _sessionCollectionSerializeNative(
   writer.writeLong(offsets[0], _direction);
   writer.writeDateTime(offsets[1], _endTime);
   writer.writeBool(offsets[2], _hasExportedSession);
-  writer.writeLong(offsets[3], _roadConditionOptions);
-  writer.writeLong(offsets[4], _roadLightingOptions);
-  writer.writeLong(offsets[5], _roadZoneOptions);
-  writer.writeLong(offsets[6], _speedLimit);
-  writer.writeDateTime(offsets[7], _startTime);
-  writer.writeBytes(offsets[8], _streetAddress);
-  writer.writeStringList(offsets[9], _volunteerNames);
-  writer.writeLong(offsets[10], _weatherOptions);
+  writer.writeBytes(offsets[3], _notes);
+  writer.writeLong(offsets[4], _roadConditionOptions);
+  writer.writeLong(offsets[5], _roadLightingOptions);
+  writer.writeLong(offsets[6], _roadZoneOptions);
+  writer.writeLong(offsets[7], _speedLimit);
+  writer.writeDateTime(offsets[8], _startTime);
+  writer.writeBytes(offsets[9], _streetAddress);
+  writer.writeStringList(offsets[10], _volunteerNames);
+  writer.writeLong(offsets[11], _weatherOptions);
 }
 
 SessionCollection _sessionCollectionDeserializeNative(
@@ -146,18 +151,19 @@ SessionCollection _sessionCollectionDeserializeNative(
   object.endTime = reader.readDateTime(offsets[1]);
   object.hasExportedSession = reader.readBool(offsets[2]);
   object.id = id;
+  object.notes = reader.readString(offsets[3]);
   object.roadConditionOptions = _sessionCollectionRoadConditionConverter
-      .fromIsar(reader.readLong(offsets[3]));
+      .fromIsar(reader.readLong(offsets[4]));
   object.roadLightingOptions =
-      _sessionCollectionLightingConverter.fromIsar(reader.readLong(offsets[4]));
+      _sessionCollectionLightingConverter.fromIsar(reader.readLong(offsets[5]));
   object.roadZoneOptions =
-      _sessionCollectionRoadZoneConverter.fromIsar(reader.readLong(offsets[5]));
-  object.speedLimit = reader.readLong(offsets[6]);
-  object.startTime = reader.readDateTime(offsets[7]);
-  object.streetAddress = reader.readString(offsets[8]);
-  object.volunteerNames = reader.readStringList(offsets[9]) ?? [];
+      _sessionCollectionRoadZoneConverter.fromIsar(reader.readLong(offsets[6]));
+  object.speedLimit = reader.readLong(offsets[7]);
+  object.startTime = reader.readDateTime(offsets[8]);
+  object.streetAddress = reader.readString(offsets[9]);
+  object.volunteerNames = reader.readStringList(offsets[10]) ?? [];
   object.weatherOptions =
-      _sessionCollectionWeatherConverter.fromIsar(reader.readLong(offsets[10]));
+      _sessionCollectionWeatherConverter.fromIsar(reader.readLong(offsets[11]));
   return object;
 }
 
@@ -174,23 +180,25 @@ P _sessionCollectionDeserializePropNative<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (_sessionCollectionRoadConditionConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 4:
+    case 5:
       return (_sessionCollectionLightingConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 5:
+    case 6:
       return (_sessionCollectionRoadZoneConverter
           .fromIsar(reader.readLong(offset))) as P;
-    case 6:
-      return (reader.readLong(offset)) as P;
     case 7:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 9:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readString(offset)) as P;
     case 10:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 11:
       return (_sessionCollectionWeatherConverter
           .fromIsar(reader.readLong(offset))) as P;
     default:
@@ -208,6 +216,7 @@ dynamic _sessionCollectionSerializeWeb(
   IsarNative.jsObjectSet(
       jsObj, 'hasExportedSession', object.hasExportedSession);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'notes', object.notes);
   IsarNative.jsObjectSet(
       jsObj,
       'roadConditionOptions',
@@ -241,6 +250,7 @@ SessionCollection _sessionCollectionDeserializeWeb(
   object.hasExportedSession =
       IsarNative.jsObjectGet(jsObj, 'hasExportedSession') ?? false;
   object.id = IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity;
+  object.notes = IsarNative.jsObjectGet(jsObj, 'notes') ?? '';
   object.roadConditionOptions = _sessionCollectionRoadConditionConverter
       .fromIsar(IsarNative.jsObjectGet(jsObj, 'roadConditionOptions') ??
           double.negativeInfinity);
@@ -290,6 +300,8 @@ P _sessionCollectionDeserializePropWeb<P>(Object jsObj, String propertyName) {
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id') ?? double.negativeInfinity)
           as P;
+    case 'notes':
+      return (IsarNative.jsObjectGet(jsObj, 'notes') ?? '') as P;
     case 'roadConditionOptions':
       return (_sessionCollectionRoadConditionConverter.fromIsar(
           IsarNative.jsObjectGet(jsObj, 'roadConditionOptions') ??
@@ -638,6 +650,113 @@ extension SessionCollectionQueryFilter
       includeLower: includeLower,
       upper: upper,
       includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'notes',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesGreaterThan(
+    String value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'notes',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesLessThan(
+    String value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'notes',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesBetween(
+    String lower,
+    String upper, {
+    bool caseSensitive = true,
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'notes',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.startsWith,
+      property: 'notes',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.endsWith,
+      property: 'notes',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesContains(String value, {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.contains,
+      property: 'notes',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterFilterCondition>
+      notesMatches(String pattern, {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.matches,
+      property: 'notes',
+      value: pattern,
+      caseSensitive: caseSensitive,
     ));
   }
 
@@ -1207,6 +1326,16 @@ extension SessionCollectionQueryWhereSortBy
   }
 
   QueryBuilder<SessionCollection, SessionCollection, QAfterSortBy>
+      sortByNotes() {
+    return addSortByInternal('notes', Sort.asc);
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterSortBy>
+      sortByNotesDesc() {
+    return addSortByInternal('notes', Sort.desc);
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterSortBy>
       sortByRoadConditionOptions() {
     return addSortByInternal('roadConditionOptions', Sort.asc);
   }
@@ -1319,6 +1448,16 @@ extension SessionCollectionQueryWhereSortThenBy
   }
 
   QueryBuilder<SessionCollection, SessionCollection, QAfterSortBy>
+      thenByNotes() {
+    return addSortByInternal('notes', Sort.asc);
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterSortBy>
+      thenByNotesDesc() {
+    return addSortByInternal('notes', Sort.desc);
+  }
+
+  QueryBuilder<SessionCollection, SessionCollection, QAfterSortBy>
       thenByRoadConditionOptions() {
     return addSortByInternal('roadConditionOptions', Sort.asc);
   }
@@ -1410,6 +1549,11 @@ extension SessionCollectionQueryWhereDistinct
     return addDistinctByInternal('id');
   }
 
+  QueryBuilder<SessionCollection, SessionCollection, QDistinct> distinctByNotes(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('notes', caseSensitive: caseSensitive);
+  }
+
   QueryBuilder<SessionCollection, SessionCollection, QDistinct>
       distinctByRoadConditionOptions() {
     return addDistinctByInternal('roadConditionOptions');
@@ -1465,6 +1609,10 @@ extension SessionCollectionQueryProperty
 
   QueryBuilder<SessionCollection, int, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<SessionCollection, String, QQueryOperations> notesProperty() {
+    return addPropertyNameInternal('notes');
   }
 
   QueryBuilder<SessionCollection, RoadCondition, QQueryOperations>
