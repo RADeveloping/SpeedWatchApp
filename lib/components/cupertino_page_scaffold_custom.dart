@@ -85,7 +85,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                                 });
                               },
                               child: Text(
-                                'Export ${sidebarController.selectedSessions.length} items',
+                                sidebarController.selectedSessions.length > 1
+                                    ? 'Export ${sidebarController.selectedSessions.length} items'
+                                    : 'Export ${sidebarController.selectedSessions.length} item',
                                 style: TextStyle(color: kColourLight),
                               ),
                             )),
