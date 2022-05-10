@@ -155,50 +155,14 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
-  SettingsTile moreItems() {
-    if (controller.records.length > controller.limitRecords.value) {
+  SettingsTile moreItems(List<RecordCollection> records) {
+    if (records.length > controller.limitRecords.value) {
       return SettingsTile(
         title: Center(
             child: Text(
           'Load more',
           style: TextStyle(color: kColourLight),
         )),
-        onPressed: (c) {
-          controller.limitRecords.value += 20;
-        },
-      );
-    }
-    return SettingsTile(
-      title: Text(''),
-    );
-  }
-
-  SettingsTile moreInfractionItems() {
-    if (getInfractionRecords().length > controller.limitRecords.value) {
-      return SettingsTile(
-        title: Center(
-            child: Text(
-          'Load more',
-          style: TextStyle(color: kColourLight),
-        )),
-        onPressed: (c) {
-          controller.limitRecords.value += 20;
-        },
-      );
-    }
-    return SettingsTile(
-      title: Text(''),
-    );
-  }
-
-  SettingsTile moreRecordsWithImageItems() {
-    if (getRecordsWithImage().length > controller.limitRecords.value) {
-      return SettingsTile(
-        title: Center(
-            child: Text(
-              'Load more',
-              style: TextStyle(color: kColourLight),
-            )),
         onPressed: (c) {
           controller.limitRecords.value += 20;
         },
@@ -266,6 +230,19 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords.length;
   }
 
+  int getImageCount() {
+    List<RecordCollection> recordsWithImagePath = [];
+    var groupByImagePath = groupBy(controller.records.value,
+            (obj) => (obj as RecordCollection).imagePath);
+
+    groupByImagePath.forEach((imagePath, groupedList) {
+      if (imagePath != null) {
+        recordsWithImagePath += groupedList;
+      }
+    });
+    return recordsWithImagePath.length;
+  }
+
   void showImage(BuildContext context, File file) {
     final imageProvider = Image.file(file).image;
     showImageViewer(context, imageProvider);
@@ -297,26 +274,49 @@ class LogsList extends GetView<SidebarController> {
     return recordsWithImagePath;
   }
 
+  List<RecordCollection> getInfractionRecordsWithImage() {
+    List<RecordCollection> infractionRecordsWithImagePath = [];
+    var groupByInfractionAndImagePath = groupBy(getInfractionRecords(),
+        (obj) => (obj as RecordCollection).imagePath);
+    groupByInfractionAndImagePath.forEach((imagePath, groupedList) {
+      if (imagePath != null) {
+        infractionRecordsWithImagePath += groupedList;
+      }
+    });
+    return infractionRecordsWithImagePath;
+  }
+
   List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
     if (getInfractionRecords().isNotEmpty &&
-        controller.filterByInfraction.isTrue) {
+        controller.filterByInfraction.isTrue &&
+        controller.filterByImagePath.isFalse) {
       return (getInfractionRecords()
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
-          [moreInfractionItems()]);
-    } else if (getRecordsWithImage().isNotEmpty && controller.filterByImagePath.isTrue) {
+          [moreItems(getInfractionRecords())]);
+    } else if (getRecordsWithImage().isNotEmpty &&
+        controller.filterByImagePath.isTrue &&
+        controller.filterByInfraction.isFalse) {
       return (getRecordsWithImage()
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
-          [moreRecordsWithImageItems()]);
+          [moreItems(getRecordsWithImage())]);
+    } else if (getInfractionRecordsWithImage().isNotEmpty &&
+        controller.filterByInfraction.isTrue &&
+        controller.filterByImagePath.isTrue) {
+      return (getInfractionRecordsWithImage()
+              .take(controller.limitRecords.value)
+              .map((record) => recordItem(record, context))
+              .toList() +
+          [moreItems(getInfractionRecordsWithImage())]);
     } else if (controller.records.isNotEmpty) {
       return (controller.records
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
-          [moreItems()]);
+          [moreItems(controller.records.value)]);
     }
     return [
       SettingsTile(
