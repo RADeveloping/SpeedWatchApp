@@ -52,14 +52,14 @@ class LogsList extends GetView<SidebarController> {
                       padding: const EdgeInsets.all(7.0),
                       child: Column(
                         children: [
-                          Obx(() => Text(
+                          Text(
                                 '${controller.records.value.length}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 30,
                                 ),
-                              )),
+                              ),
                           Text(
                             'Records',
                             style: TextStyle(
@@ -81,19 +81,20 @@ class LogsList extends GetView<SidebarController> {
                         color: controller.filterByInfraction.value
                               ? kTextStyleTilePlaceholder.color
                               : kColourRightPaneBackground),
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: CupertinoButton(
-                        onPressed: () {
-                          controller.filterByInfraction.toggle();
-                        },
+                    child: CupertinoButton(
+                      padding: const EdgeInsets.only(),
+                      onPressed: () {
+                        controller.filterByInfraction.toggle();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
                         child: Column(
                           children: [
-                            Obx(() => Text('${getInfractionCount()}',
+                            Text('${getInfractionCount()}',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
-                                    fontWeight: FontWeight.bold))),
+                                    fontWeight: FontWeight.bold)),
                             Text(
                               'Infractions',
                               style: TextStyle(
