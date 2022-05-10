@@ -34,4 +34,6 @@ class SessionCollection {
   @LightingConverter()
   late RoadLighting roadLightingOptions;
   late bool hasExportedSession;
+
+  late String notes;
 }

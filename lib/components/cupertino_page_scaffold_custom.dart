@@ -36,7 +36,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
         Expanded(
           child: NestedScrollView(
               body: CupertinoPageScaffold(
-                  resizeToAvoidBottomInset: false, child: child),
+                  resizeToAvoidBottomInset: true, child: child),
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[

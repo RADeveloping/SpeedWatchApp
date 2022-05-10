@@ -1,13 +1,10 @@
 import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
-import 'package:speedwatch/components/rightpane.dart';
 import 'package:speedwatch/components/session_detail.dart';
 import 'package:speedwatch/components/text_field_input.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
@@ -42,17 +39,22 @@ class Session extends GetView<SessionController> {
     SidebarController s = Get.find();
     controller.setVolunteerOptions();
     startDatePicker = DatePickerChoice(
-        dateTime: Get.arguments == null ? DateTime.now() : controller.startEditDate.value,
+        dateTime: Get.arguments == null
+            ? DateTime.now()
+            : controller.startEditDate.value,
         onChange: (dateTime) {
           if (Get.arguments == null) {
             endDatePicker.date.value = dateTime.add(Duration(hours: 2));
           }
         },
-        minDate:  Get.arguments == null ? null : controller.startEditDate.value
-    );
+        minDate: Get.arguments == null ? null : controller.startEditDate.value);
     endDatePicker = DatePickerChoice(
-        dateTime: Get.arguments == null ? DateTime.now().add(Duration(hours: 2)) : controller.endEditDate.value,
-        minDate:  Get.arguments == null ? startDatePicker.date.value : controller.startEditDate.value);
+        dateTime: Get.arguments == null
+            ? DateTime.now().add(Duration(hours: 2))
+            : controller.endEditDate.value,
+        minDate: Get.arguments == null
+            ? startDatePicker.date.value
+            : controller.startEditDate.value);
     return CupertinoPageScaffoldCustom(
       backgroundColor: kColourRightPaneBackground,
       leading: DiscardSessionChangesButton(),
@@ -177,11 +179,13 @@ class Session extends GetView<SessionController> {
                       tileOptions: controller.roadZoneOptions,
                     )),
                     CustomSettingsTile(
-                        child: Get.arguments == null || s.records.length == 0 ? CustomTileWithChoices(
-                      leadingText: 'Speed Limit (km/h)',
-                      tileTag: controller.speedLimitTag,
-                      tileOptions: controller.speedLimitOptions,
-                    ): Container()),
+                        child: Get.arguments == null || s.records.length == 0
+                            ? CustomTileWithChoices(
+                                leadingText: 'Speed Limit (km/h)',
+                                tileTag: controller.speedLimitTag,
+                                tileOptions: controller.speedLimitOptions,
+                              )
+                            : Container()),
                     CustomSettingsTile(
                         child: CustomTileWithChoices(
                       leadingText: 'Weather Conditions',
@@ -200,6 +204,21 @@ class Session extends GetView<SessionController> {
                       tileTag: controller.roadLightingTag,
                       tileOptions: controller.roadLightingOptions,
                     )),
+                  ]),
+                  SettingsSection(tiles: [
+                    SettingsTile(
+                      title: Obx(
+                        () => CupertinoTheme(
+                            data:
+                                CupertinoThemeData(brightness: Brightness.dark),
+                            child: SessionTextFieldEntry(
+                              keyboardType: TextInputType.multiline,
+                              textEditingController:
+                                  controller.notes_textController.value,
+                              placeholder: 'Session Notes',
+                            )),
+                      ),
+                    ),
                   ]),
                   SettingsSection(tiles: [
                     CustomSettingsTile(
@@ -268,7 +287,9 @@ class Session extends GetView<SessionController> {
     SessionDetailDetailController sessionDetailController = Get.find();
     sessionDetailController.sliding.value = 0;
     SessionCollection updatedSessionCollection = controller.updateSession(
-        startDatePicker.date.value, endDatePicker.date.value, s.currentSession.value);
+        startDatePicker.date.value,
+        endDatePicker.date.value,
+        s.currentSession.value);
     SettingsCollection newSettingsCollection = SettingsCollection()
       ..id = 0
       ..value = await controller.getNewVolunteerNamesValue()
