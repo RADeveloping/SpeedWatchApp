@@ -52,7 +52,8 @@ class SessionsList extends GetView<SidebarController> {
       }
     });
 
-    List<AbstractSettingsSection> list = [searchBar()];
+    List<AbstractSettingsSection> list =
+        controller.sessions.isEmpty ? [] : [searchBar()];
 
     if (controller.isSearching == true) {
       List<SessionCollection> searchSessions = controller.sessions
@@ -97,8 +98,6 @@ class SessionsList extends GetView<SidebarController> {
   }
 
   CustomSettingsSection searchBar() {
-    List<SessionCollection> sessionsCopy = [...controller.sessions];
-
     return CustomSettingsSection(
       child: Container(
         margin: EdgeInsetsDirectional.only(bottom: 10),

@@ -41,88 +41,101 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   CupertinoSliverNavigationBar(
-                      heroTag: heroTag,
-                      leading: leading,
-                      brightness: Brightness.dark,
-                      backgroundColor: backgroundColor,
-                      previousPageTitle: previousPageTitle,
-                      trailing: trailing,
-                      largeTitle: Obx(() => Text(
-                            sidebarController.isEditMode.value &&
-                                    sidebarController
-                                        .selectedSessions.isNotEmpty
-                                ? '${sidebarController.selectedSessions.length} Selected'
-                                : largeTitle,
-                            style: TextStyle(color: Colors.white),
-                          )))
+                    heroTag: heroTag,
+                    leading: leading,
+                    brightness: Brightness.dark,
+                    backgroundColor: backgroundColor,
+                    previousPageTitle: previousPageTitle,
+                    largeTitle: Obx(() => Text(
+                          sidebarController.isEditMode.value &&
+                                  sidebarController.selectedSessions.isNotEmpty
+                              ? '${sidebarController.selectedSessions.length} Selected'
+                              : largeTitle,
+                          style: TextStyle(color: Colors.white),
+                        )),
+                    trailing: trailing,
+                  )
                 ];
               }),
         ),
-        Obx(() => sidebarController.isEditMode.value
-            ? Container(
-                height: 50,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: sidebarController.selectedSessions.isEmpty
-                          ? GestureDetector(
-                              onTapDown: (positioned) async {
-                                Get.showOverlay(asyncFunction: () async {
-                                  await ShowExportAllShareSheet(
-                                      positioned, context);
-                                });
-                              },
-                              child: sidebarController.selectedSessions.isEmpty
-                                  ? null
-                                  : Text(
-                                      'Export All',
-                                      style: TextStyle(color: kColourLight),
-                                    ),
-                            )
-                          : GestureDetector(
-                              onTapDown: (positioned) async {
-                                Get.showOverlay(asyncFunction: () async {
-                                  await ShowSelectedExportShareSheet(
-                                      positioned, context);
-                                });
-                              },
-                              child: Text(
-                                'Export',
-                                style: TextStyle(color: kColourLight),
-                              ),
-                            )),
-                ),
-              )
-            : Container())
+        Obx(() => HandleSelect(context))
       ],
     );
   }
 
-  Future<void> ShowExportAllShareSheet(
-      TapDownDetails positioned, BuildContext context) async {
-    sidebarController.selectedSessions.value.addAll(sidebarController
-        .sessions.value
-        .where((element) => element.hasExportedSession == false));
-    sidebarController.selectedSessions.refresh();
-
-    List<String> directories = await ExportService()
-        .exportSessionsToExcel(sidebarController.selectedSessions);
-    final result = await Share.shareFilesWithResult(
-      directories,
-      subject: 'Export to Excel',
-      sharePositionOrigin: Rect.fromLTWH(positioned.globalPosition.dx,
-          positioned.globalPosition.dy - 20, 1, 1),
-    );
-
-    if (result.status == ShareResultStatus.dismissed) {
-      sidebarController.isEditMode.value = false;
-    } else if (result.status == ShareResultStatus.success) {
-      if (isMoveNeeded(sidebarController.selectedSessions.value)) {
-        showMoveExportedAlertDialog(context);
+  Container HandleSelect(BuildContext context) {
+    if (sidebarController.isEditMode.value == true) {
+      if (sidebarController.sessions.firstWhereOrNull(
+              (element) => element.hasExportedSession == false) ==
+          null) {
+        // Has No New Session
+        return Container(
+          height: 50,
+          color: Colors.transparent,
+          child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: sidebarController.selectedSessions.isEmpty
+                      ? Container()
+                      : GestureDetector(
+                          onTapDown: (positioned) async {
+                            await ShowSelectedExportShareSheet(
+                                positioned, context);
+                          },
+                          child: Text(
+                            'Export',
+                            style: TextStyle(color: kColourLight),
+                          ),
+                        ))),
+        );
+      } else {
+        // Has New Session
+        return Container(
+          height: 50,
+          color: Colors.transparent,
+          child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: sidebarController.selectedSessions.isEmpty
+                      ? GestureDetector(
+                          onTap: () {
+                            if (sidebarController.selectedSessions
+                                    .firstWhereOrNull((element) =>
+                                        element.hasExportedSession == false) !=
+                                null) {
+                              sidebarController.selectedSessions.removeWhere(
+                                  (session) =>
+                                      session.hasExportedSession == false);
+                              sidebarController.selectedSessions.refresh();
+                            } else {
+                              sidebarController.selectedSessions.addAll(
+                                  sidebarController.sessions
+                                      .where((session) =>
+                                          session.hasExportedSession == false)
+                                      .toList());
+                              sidebarController.selectedSessions.refresh();
+                            }
+                          },
+                          child: Text(
+                            'Select All',
+                            style: TextStyle(color: kColourLight),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTapDown: (positioned) {
+                            ShowSelectedExportShareSheet(positioned, context);
+                          },
+                          child: Text(
+                            'Export',
+                            style: TextStyle(color: kColourLight),
+                          ),
+                        ))),
+        );
       }
-      sidebarController.isEditMode.value = false;
+    } else {
+      return Container();
     }
   }
 

@@ -15,6 +15,10 @@ class SidebarController extends GetxController {
   RxBool archiveExpanded = false.obs;
   RxBool isEditMode = false.obs;
   RxList<SessionCollection> selectedSessions = <SessionCollection>[].obs;
+  RxList<SessionCollection> selectedSessionsArchived =
+      <SessionCollection>[].obs;
+  RxList<SessionCollection> selectedSessionsNonArchived =
+      <SessionCollection>[].obs;
 
   RxBool isSearching = false.obs;
   final sessions = <SessionCollection>[].obs;
