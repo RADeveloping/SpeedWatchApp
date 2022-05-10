@@ -79,8 +79,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                   child: sidebarController.selectedSessions.isEmpty
                       ? Container()
                       : GestureDetector(
-                          onTapDown: (positioned) {
-                            ShowSelectedExportShareSheet(positioned, context);
+                          onTapDown: (positioned) async {
+                            await ShowSelectedExportShareSheet(
+                                positioned, context);
                           },
                           child: Text(
                             'Export',
