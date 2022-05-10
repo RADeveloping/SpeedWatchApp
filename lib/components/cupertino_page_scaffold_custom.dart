@@ -70,10 +70,12 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                                       positioned, context);
                                 });
                               },
-                              child: Text(
-                                'Export All',
-                                style: TextStyle(color: kColourLight),
-                              ),
+                              child: sidebarController.selectedSessions.isEmpty
+                                  ? null
+                                  : Text(
+                                      'Export All',
+                                      style: TextStyle(color: kColourLight),
+                                    ),
                             )
                           : GestureDetector(
                               onTapDown: (positioned) async {
@@ -83,7 +85,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                                 });
                               },
                               child: Text(
-                                'Export ${sidebarController.selectedSessions.length} items',
+                                sidebarController.selectedSessions.length > 1
+                                    ? 'Export ${sidebarController.selectedSessions.length} items'
+                                    : 'Export ${sidebarController.selectedSessions.length} item',
                                 style: TextStyle(color: kColourLight),
                               ),
                             )),
