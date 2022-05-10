@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -213,6 +215,15 @@ class DbService extends GetxService {
     }));
   }
 
+  void removeImageFromRecord(RecordCollection recordCollection) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      _deleteFile(File(recordCollection.imagePath!));
+      recordCollection.imagePath = null;
+      await db.recordCollections.put(recordCollection);
+    }));
+  }
+
   Future<List<String>> getCurrentSettingValue(int id) async {
     Isar db = Get.find();
     SettingsCollection? currentSettings = await db.settingsCollections.get(id);
@@ -221,5 +232,15 @@ class DbService extends GetxService {
       output = currentSettings.value;
     }
     return output;
+  }
+
+  Future<Object> _deleteFile(File fileToDelete) async {
+    try {
+      final file = await fileToDelete;
+
+      return await file.delete();
+    } catch (e) {
+      return 0;
+    }
   }
 }

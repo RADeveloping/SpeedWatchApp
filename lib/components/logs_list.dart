@@ -42,12 +42,13 @@ class LogsList extends GetView<SidebarController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Obx(() => Container(
+                  child: Obx(
+                () => Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: controller.filterByInfraction.value
-                                ? kColourRightPaneBackground
-                                : kColourTileDivider),
+                            ? kColourRightPaneBackground
+                            : kColourTileDivider),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
                       child: CupertinoButton(
@@ -75,43 +76,43 @@ class LogsList extends GetView<SidebarController> {
                         ),
                       ),
                     )),
-                )
-              ),
+              )),
               SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Obx(()=> Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: controller.filterByInfraction.value
+                child: Obx(
+                  () => Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: controller.filterByInfraction.value
                               ? kColourTileDivider
                               : kColourRightPaneBackground),
-                    child: CupertinoButton(
-                      padding: const EdgeInsets.only(),
-                      onPressed: () {
-                        controller.filterByInfraction.toggle();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(7.0),
-                        child: Column(
-                          children: [
-                            Text('${getInfractionCount()}',
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.only(),
+                        onPressed: () {
+                          controller.filterByInfraction.toggle();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: Column(
+                            children: [
+                              Text('${getInfractionCount()}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                'Infractions',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold)),
-                            Text(
-                              'Infractions',
-                              style: TextStyle(
-                                  color: Colors.white54,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                                    color: Colors.white54,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )),
-              ),
+                      )),
+                ),
               ),
             ],
           ),
@@ -150,7 +151,7 @@ class LogsList extends GetView<SidebarController> {
           ),
         ],
       ),
-      tiles: populateLogListTiles(),
+      tiles: populateLogListTiles(context),
     );
   }
 
@@ -177,9 +178,9 @@ class LogsList extends GetView<SidebarController> {
       return SettingsTile(
         title: Center(
             child: Text(
-              'Load more',
-              style: TextStyle(color: kColourLight),
-            )),
+          'Load more',
+          style: TextStyle(color: kColourLight),
+        )),
         onPressed: (c) {
           controller.limitRecords.value += 20;
         },
@@ -190,7 +191,7 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
-  SettingsTile recordItem(RecordCollection record) {
+  SettingsTile recordItem(RecordCollection record, BuildContext context) {
     return SettingsTile(
       trailing: Row(
         children: [
@@ -223,6 +224,14 @@ class LogsList extends GetView<SidebarController> {
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
+      description: record.imagePath != null
+          ? GestureDetector(
+              onTap: () {
+                showImage(context, File(record.imagePath!));
+              },
+              child: Image.file(File(record.imagePath!)),
+            )
+          : null,
     );
   }
 
@@ -239,10 +248,15 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords.length;
   }
 
+  void showImage(BuildContext context, File file) {
+    final imageProvider = Image.file(file).image;
+    showImageViewer(context, imageProvider);
+  }
+
   List<RecordCollection> getInfractionRecords() {
     List<RecordCollection> infractionRecords = [];
     var groupByInfractionRecords = groupBy(controller.records.value,
-            (obj) => (obj as RecordCollection).speedRange);
+        (obj) => (obj as RecordCollection).speedRange);
 
     groupByInfractionRecords.forEach((speedRange, groupedList) {
       if (speedRange != SpeedRange.green) {
@@ -252,25 +266,26 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords;
   }
 
-  List<AbstractSettingsTile> populateLogListTiles() {
-    if (getInfractionRecords().isNotEmpty && controller.filterByInfraction.isTrue) {
+  List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
+    if (getInfractionRecords().isNotEmpty &&
+        controller.filterByInfraction.isTrue) {
       return (getInfractionRecords()
-                .take(controller.limitRecords.value)
-                .map((record) => recordItem(record))
-                .toList() +
-              [moreInfractionItems()]);
+              .take(controller.limitRecords.value)
+              .map((record) => recordItem(record, context))
+              .toList() +
+          [moreInfractionItems()]);
     } else if (controller.records.isNotEmpty) {
       return (controller.records
-          .take(controller.limitRecords.value)
-          .map((record) => recordItem(record))
-          .toList() +
+              .take(controller.limitRecords.value)
+              .map((record) => recordItem(record, context))
+              .toList() +
           [moreItems()]);
     }
     return [
-              SettingsTile(
-                title: Text(''),
-              )
-            ];
+      SettingsTile(
+        title: Text(''),
+      )
+    ];
   }
 }
 
@@ -304,23 +319,26 @@ class LogsTileMoreButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CupertinoButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context_) => CameraCamera(
-                            key: Key('cam'),
-                            resolutionPreset: ResolutionPreset.veryHigh,
-                            cameraSide: CameraSide.front,
-                            onFile: (file) {
-                              DbService db = Get.find();
-                              db.addImageToRecord(recordCollection, file.path);
-                              showImage(context, File(file.path), true);
-                            },
-                          )));
-            },
+            onPressed: recordCollection.imagePath != null
+                ? null
+                : () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context_) => CameraCamera(
+                                  key: Key('cam'),
+                                  resolutionPreset: ResolutionPreset.veryHigh,
+                                  cameraSide: CameraSide.front,
+                                  onFile: (file) {
+                                    DbService db = Get.find();
+                                    db.addImageToRecord(
+                                        recordCollection, file.path);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                )));
+                  },
             padding: EdgeInsets.symmetric(horizontal: 30),
-            color: Colors.transparent,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -328,12 +346,14 @@ class LogsTileMoreButton extends StatelessWidget {
                 FaIcon(
                   CupertinoIcons.camera,
                   size: 32,
-                  color: kColourLight,
                 ),
                 SizedBox(
                   width: 12,
                 ),
-                Text('Take Photo')
+                Text('Take Photo',
+                    style: recordCollection.imagePath != null
+                        ? null
+                        : TextStyle(color: Colors.white))
               ],
             ),
           ),
@@ -345,8 +365,9 @@ class LogsTileMoreButton extends StatelessWidget {
             onPressed: recordCollection.imagePath == null
                 ? null
                 : () {
-                    showImage(
-                        context, File(recordCollection.imagePath!), false);
+                    DbService db = Get.find();
+                    db.removeImageFromRecord(recordCollection);
+                    Navigator.pop(context);
                   },
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
@@ -354,13 +375,13 @@ class LogsTileMoreButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 FaIcon(
-                  CupertinoIcons.photo,
+                  CupertinoIcons.trash,
                   size: 32,
                 ),
                 SizedBox(
                   width: 12,
                 ),
-                Text('View Photo',
+                Text('Delete Photo',
                     style: recordCollection.imagePath == null
                         ? null
                         : TextStyle(color: Colors.white)),
@@ -375,17 +396,5 @@ class LogsTileMoreButton extends StatelessWidget {
       arrowHeight: 15,
       arrowWidth: 30,
     );
-  }
-
-  void showImage(BuildContext context, File file, bool isFirstPhoto) {
-    final imageProvider = Image.file(file).image;
-    showImageViewer(context, imageProvider, onViewerDismissed: () {
-      if (isFirstPhoto) {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      } else {
-        Navigator.pop(context);
-      }
-    });
   }
 }
