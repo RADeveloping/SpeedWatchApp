@@ -223,9 +223,7 @@ class LogsList extends GetView<SidebarController> {
 
   void showImage(BuildContext context, File file) {
     final imageProvider = Image.file(file).image;
-    showImageViewer(context, imageProvider, onViewerDismissed: () {
-      Navigator.pop(context);
-    });
+    showImageViewer(context, imageProvider);
   }
 }
 
