@@ -173,6 +173,24 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
+  SettingsTile moreInfractionItems(List<RecordCollection> list) {
+    if (list.length > controller.limitRecords.value) {
+      return SettingsTile(
+        title: Center(
+            child: Text(
+          'Load more',
+          style: TextStyle(color: kColourLight),
+        )),
+        onPressed: (c) {
+          controller.limitRecords.value += 20;
+        },
+      );
+    }
+    return SettingsTile(
+      title: Text(''),
+    );
+  }
+
   SettingsTile recordItem(RecordCollection record, BuildContext context) {
     return SettingsTile(
       trailing: Row(
@@ -250,39 +268,31 @@ class LogsList extends GetView<SidebarController> {
 
   List<RecordCollection> getInfractionRecords() {
     List<RecordCollection> infractionRecords = [];
-    var groupByInfractionRecords = groupBy(controller.records.value,
-        (obj) => (obj as RecordCollection).speedRange);
-
-    groupByInfractionRecords.forEach((speedRange, groupedList) {
-      if (speedRange != SpeedRange.green) {
-        infractionRecords += groupedList;
+    for (var record in controller.records) {
+      if (record.speedRange != SpeedRange.green) {
+        infractionRecords.add(record);
       }
-    });
+    }
     return infractionRecords;
   }
 
   List<RecordCollection> getRecordsWithImage() {
     List<RecordCollection> recordsWithImagePath = [];
-    var groupByImagePath = groupBy(controller.records.value,
-        (obj) => (obj as RecordCollection).imagePath);
-
-    groupByImagePath.forEach((imagePath, groupedList) {
-      if (imagePath != null) {
-        recordsWithImagePath += groupedList;
+    for (var record in controller.records) {
+      if (record.imagePath != null) {
+        recordsWithImagePath.add(record);
       }
-    });
+    }
     return recordsWithImagePath;
   }
 
   List<RecordCollection> getInfractionRecordsWithImage() {
     List<RecordCollection> infractionRecordsWithImagePath = [];
-    var groupByInfractionAndImagePath = groupBy(getInfractionRecords(),
-        (obj) => (obj as RecordCollection).imagePath);
-    groupByInfractionAndImagePath.forEach((imagePath, groupedList) {
-      if (imagePath != null) {
-        infractionRecordsWithImagePath += groupedList;
+    for (var record in getInfractionRecords()) {
+      if (record.imagePath != null) {
+        infractionRecordsWithImagePath.add(record);
       }
-    });
+    }
     return infractionRecordsWithImagePath;
   }
 

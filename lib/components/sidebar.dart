@@ -16,10 +16,11 @@ class Sidebar extends GetView<SidebarController> {
   final Widget? leading;
   final String? previousPageTitle;
 
-  Sidebar({required this.child,
-    required this.largeTitle,
-    this.leading,
-    this.previousPageTitle});
+  Sidebar(
+      {required this.child,
+      required this.largeTitle,
+      this.leading,
+      this.previousPageTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -30,59 +31,62 @@ class Sidebar extends GetView<SidebarController> {
       previousPageTitle: previousPageTitle,
       trailing: largeTitle == 'Log'
           ? GestureDetector(
-        onTapDown: (positioned) async {
-          await ShowExportShareSheet(positioned, context);
-        },
-        child: CupertinoButton(
-          child: Icon(
-            CupertinoIcons.share_up,
-            color: kColourLight,
-          ),
-          onPressed: () {},
-        ),
-      )
-          : Obx(() =>
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: controller.isEditMode.value
-                ? Text(
-              'Done',
-              style: TextStyle(color: kColourLight),
+              onTapDown: (positioned) async {
+                await ShowExportShareSheet(positioned, context);
+              },
+              child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Icon(
+                  CupertinoIcons.share_up,
+                  color: kColourLight,
+                ),
+                onPressed: () {},
+              ),
             )
-                : Icon(
-              CupertinoIcons.ellipsis_circle,
-              color: kColourLight,
-            ),
-            onPressed: () {
-              if (controller.isEditMode.value) {
-                controller.isEditMode.value = false;
-              } else {
-                controller.isEditMode.value = true;
-                controller.selectedSessions().clear();
-              }
-            },
-          )),
+          : Obx(() => CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: controller.isEditMode.value
+                    ? Text(
+                        'Done',
+                        style: TextStyle(color: kColourLight),
+                      )
+                    : Icon(
+                        CupertinoIcons.ellipsis_circle,
+                        color: kColourLight,
+                      ),
+                onPressed: () {
+                  if (controller.isEditMode.value) {
+                    controller.isEditMode.value = false;
+                  } else {
+                    controller.isEditMode.value = true;
+                    controller.selectedSessions().clear();
+                  }
+                },
+              )),
       heroTag: 0,
       child: child,
     );
   }
 
-  Future<void> ShowExportShareSheet(TapDownDetails positioned,
-      BuildContext context) async {
+  Future<void> ShowExportShareSheet(
+      TapDownDetails positioned, BuildContext context) async {
     List<String> directories = [
-      await ExportService().exportSessionToExcel(
-          controller.currentSession.value)
+      await ExportService()
+          .exportSessionToExcel(controller.currentSession.value)
     ];
 
     final result = await Share.shareFilesWithResult(
-      directories, subject: 'Export to Excel',
+      directories,
+      subject: 'Export to Excel',
       sharePositionOrigin: Rect.fromLTWH(
-          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),);
+          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
+    );
 
     if (result.status == ShareResultStatus.dismissed) {
-
     } else if (result.status == ShareResultStatus.success) {
-      ShowConfirmMoveDialog(context);
+      if (!controller.currentSession.value.hasExportedSession) {
+        ShowConfirmMoveDialog(context);
+      }
     }
   }
 
@@ -94,7 +98,7 @@ class Sidebar extends GetView<SidebarController> {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: const Text('Move Sessions to "Exported sessions"'),
+                  title: const Text('Move Sessions to "Exported Sessions"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(
@@ -118,4 +122,3 @@ class Sidebar extends GetView<SidebarController> {
             )));
   }
 }
-

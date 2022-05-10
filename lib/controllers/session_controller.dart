@@ -26,6 +26,10 @@ class SessionController extends GetxController {
   List<String> directionOptions =
       Direction.values.map((val) => val.name).toList();
 
+  // Session Notes
+  Rx<TextEditingController> notes_textController =
+      TextEditingController(text: '').obs;
+
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
       TextEditingController(text: '').obs;
@@ -101,7 +105,8 @@ class SessionController extends GetxController {
       ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
       ..volunteerNames = volunteerTags.value
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
-      ..hasExportedSession = false;
+      ..hasExportedSession = false
+      ..notes = notes_textController.value.text;
   }
 
   SessionCollection updateSession(DateTime startDate, DateTime endDate,
@@ -117,7 +122,8 @@ class SessionController extends GetxController {
       ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
       ..volunteerNames = volunteerTags.value
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
-      ..hasExportedSession = false;
+      ..hasExportedSession = false
+      ..notes = notes_textController.value.text;
   }
 
   void setVolunteerOptions() async {
@@ -164,6 +170,9 @@ class SessionController extends GetxController {
 
     // Road Lighting
     roadLightingTag.value = session.roadLightingOptions.index;
+
+    // Notes
+    notes_textController.value.text = session.notes;
   }
 }
 

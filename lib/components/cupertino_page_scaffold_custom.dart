@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
+import '../collections/session_collection.dart';
 import '../services/db_service.dart';
 import '../services/export_service.dart';
 
@@ -35,7 +36,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
         Expanded(
           child: NestedScrollView(
               body: CupertinoPageScaffold(
-                  resizeToAvoidBottomInset: false, child: child),
+                  resizeToAvoidBottomInset: true, child: child),
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
@@ -111,9 +112,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
-      // sidebarController.sessions.value.clear();
-      // sidebarController.sessions.refresh();
-      showMoveExportedAlertDialog(context);
+      if (isMoveNeeded(sidebarController.selectedSessions.value)) {
+        showMoveExportedAlertDialog(context);
+      }
       sidebarController.isEditMode.value = false;
     }
   }
@@ -133,9 +134,20 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
     if (result.status == ShareResultStatus.dismissed) {
       sidebarController.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
-      showMoveExportedAlertDialog(context);
+      if (isMoveNeeded(sidebarController.selectedSessions.value)) {
+        showMoveExportedAlertDialog(context);
+      }
       sidebarController.isEditMode.value = false;
     }
+  }
+
+  bool isMoveNeeded(List<SessionCollection> sessions) {
+    for (var session in sessions) {
+      if (!session.hasExportedSession) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void showMoveExportedAlertDialog(BuildContext context) {
@@ -146,7 +158,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: const Text('Move Sessions to "Exported sessions"'),
+                  title: const Text('Move Sessions to "Exported Sessions"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(
