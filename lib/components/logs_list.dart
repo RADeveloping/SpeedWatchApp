@@ -246,7 +246,7 @@ class LogsList extends GetView<SidebarController> {
   }
 
   List<AbstractSettingsTile> populateLogListTiles() {
-    if (getInfractionRecords().isNotEmpty && controller.filterByInfraction == true) {
+    if (getInfractionRecords().isNotEmpty && controller.filterByInfraction.isTrue) {
       return (getInfractionRecords()
                 .take(controller.limitRecords.value)
                 .map((record) => recordItem(record))
