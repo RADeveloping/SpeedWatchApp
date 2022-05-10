@@ -173,8 +173,8 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
-  SettingsTile moreInfractionItems() {
-    if (getInfractionRecords().length > controller.limitRecords.value) {
+  SettingsTile moreInfractionItems(List<RecordCollection> list) {
+    if (list.length > controller.limitRecords.value) {
       return SettingsTile(
         title: Center(
             child: Text(
@@ -255,25 +255,22 @@ class LogsList extends GetView<SidebarController> {
 
   List<RecordCollection> getInfractionRecords() {
     List<RecordCollection> infractionRecords = [];
-    var groupByInfractionRecords = groupBy(controller.records.value,
-        (obj) => (obj as RecordCollection).speedRange);
-
-    groupByInfractionRecords.forEach((speedRange, groupedList) {
-      if (speedRange != SpeedRange.green) {
-        infractionRecords += groupedList;
+    for (var record in controller.records) {
+      if (record.speedRange != SpeedRange.green) {
+        infractionRecords.add(record);
       }
-    });
+    }
     return infractionRecords;
   }
 
   List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
-    if (getInfractionRecords().isNotEmpty &&
-        controller.filterByInfraction.isTrue) {
-      return (getInfractionRecords()
+    if (controller.filterByInfraction.isTrue) {
+      List<RecordCollection> list = getInfractionRecords();
+      return (list
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
-          [moreInfractionItems()]);
+          [moreInfractionItems(list)]);
     } else if (controller.records.isNotEmpty) {
       return (controller.records
               .take(controller.limitRecords.value)
