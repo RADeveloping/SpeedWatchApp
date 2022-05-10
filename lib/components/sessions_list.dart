@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,8 +8,8 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/components/session_detail.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
-import 'package:collection/collection.dart';
 import 'package:speedwatch/services/db_service.dart';
+
 import '../constants.dart';
 
 class SessionsList extends GetView<SidebarController> {
@@ -41,10 +42,9 @@ class SessionsList extends GetView<SidebarController> {
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
-    var groupByArchived = groupBy(controller.sessions,
-        (obj) => (obj as SessionCollection).hasExportedSession);
-
-    groupByArchived.forEach((hasExportedSession, groupedList) {
+    groupBy(controller.sessions,
+            (obj) => (obj as SessionCollection).hasExportedSession)
+        .forEach((hasExportedSession, groupedList) {
       if (hasExportedSession) {
         archivedList = groupedList;
       } else {
@@ -52,18 +52,13 @@ class SessionsList extends GetView<SidebarController> {
       }
     });
 
-    List<AbstractSettingsSection> list =
-        !mainList.isEmpty || !archivedList.isEmpty ? [searchBar()] : [];
+    List<AbstractSettingsSection> list = [searchBar()];
 
-    var groupByDate = groupBy(
-        mainList.take(controller.limitSessionsMain.value),
-        (obj) => DateFormat('EEEEEE, MMMM dd, y')
-            .format((obj as SessionCollection).startTime));
-    var groupByDateArchived = groupBy(
-        archivedList.take(controller.limitSessionsArchived.value),
-        (obj) => DateFormat('EEEEEE, MMMM dd, y')
-            .format((obj as SessionCollection).startTime));
-    groupByDate.forEach((date, groupedList) {
+    groupBy(
+            mainList.take(controller.limitSessionsMain.value),
+            (obj) => DateFormat('EEEEEE, MMMM dd, y')
+                .format((obj as SessionCollection).startTime))
+        .forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), false));
     });
 
@@ -73,7 +68,11 @@ class SessionsList extends GetView<SidebarController> {
 
     archivedList.length > 0 ? list.add(archivedTab(context)) : null;
 
-    groupByDateArchived.forEach((date, groupedList) {
+    groupBy(
+            archivedList.take(controller.limitSessionsArchived.value),
+            (obj) => DateFormat('EEEEEE, MMMM dd, y')
+                .format((obj as SessionCollection).startTime))
+        .forEach((date, groupedList) {
       list.add(sessionListSection(groupedList, date.toUpperCase(), true));
     });
 
@@ -85,6 +84,8 @@ class SessionsList extends GetView<SidebarController> {
   }
 
   CustomSettingsSection searchBar() {
+    List<SessionCollection> sessionsCopy = [...controller.sessions];
+
     return CustomSettingsSection(
       child: Container(
         margin: EdgeInsetsDirectional.only(bottom: 10),
@@ -102,7 +103,10 @@ class SessionsList extends GetView<SidebarController> {
                   ),
                   prefixInsets: EdgeInsets.all(10),
                   onChanged: (String value) {
-                    print('The text has changed to: $value');
+                    controller.sessions.value = sessionsCopy
+                        .where((element) => element.streetAddress
+                            .isCaseInsensitiveContains(value))
+                        .toList();
                   },
                   onSubmitted: (String value) {
                     print('Submitted text: $value');
