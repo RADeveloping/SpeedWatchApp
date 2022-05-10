@@ -135,7 +135,7 @@ class LogsList extends GetView<SidebarController> {
       tiles: controller.records.isNotEmpty
           ? (controller.records
                   .take(controller.limitRecords.value)
-                  .map((record) => recordItem(record))
+                  .map((record) => recordItem(record, context))
                   .toList() +
               [moreItems()])
           : [
@@ -164,7 +164,7 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
-  SettingsTile recordItem(RecordCollection record) {
+  SettingsTile recordItem(RecordCollection record, BuildContext context) {
     return SettingsTile(
       trailing: Row(
         children: [
@@ -197,8 +197,14 @@ class LogsList extends GetView<SidebarController> {
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
-      description:
-          record.imagePath != null ? Image.file(File(record.imagePath!)) : null,
+      description: record.imagePath != null
+          ? GestureDetector(
+              onTap: () {
+                showImage(context, File(record.imagePath!));
+              },
+              child: Image.file(File(record.imagePath!)),
+            )
+          : null,
     );
   }
 
@@ -213,6 +219,13 @@ class LogsList extends GetView<SidebarController> {
       }
     });
     return infractionRecords.length;
+  }
+
+  void showImage(BuildContext context, File file) {
+    final imageProvider = Image.file(file).image;
+    showImageViewer(context, imageProvider, onViewerDismissed: () {
+      Navigator.pop(context);
+    });
   }
 }
 
@@ -323,17 +336,5 @@ class LogsTileMoreButton extends StatelessWidget {
       arrowHeight: 15,
       arrowWidth: 30,
     );
-  }
-
-  void showImage(BuildContext context, File file, bool isFirstPhoto) {
-    final imageProvider = Image.file(file).image;
-    showImageViewer(context, imageProvider, onViewerDismissed: () {
-      if (isFirstPhoto) {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      } else {
-        Navigator.pop(context);
-      }
-    });
   }
 }
