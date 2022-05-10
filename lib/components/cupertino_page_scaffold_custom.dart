@@ -96,8 +96,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
 
   Future<void> ShowExportAllShareSheet(
       TapDownDetails positioned, BuildContext context) async {
-    sidebarController.selectedSessions.value
-        .addAll(sidebarController.sessions.value.toList());
+    sidebarController.selectedSessions.value.addAll(sidebarController
+        .sessions.value
+        .where((element) => element.hasExportedSession == false));
     sidebarController.selectedSessions.refresh();
 
     List<String> directories = await ExportService()
@@ -158,7 +159,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: const Text('Move Sessions to "Exported Sessions"'),
+                  title: const Text('Move Sessions to "Archived Sessions"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(
