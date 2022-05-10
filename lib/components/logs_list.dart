@@ -260,6 +260,7 @@ class LogsTileMoreButton extends StatelessWidget {
                                     DbService db = Get.find();
                                     db.addImageToRecord(
                                         recordCollection, file.path);
+                                    Navigator.pop(context);
                                   },
                                 )));
                   },
@@ -291,7 +292,7 @@ class LogsTileMoreButton extends StatelessWidget {
                 ? null
                 : () {
                     DbService db = Get.find();
-                    db.addImageToRecord(recordCollection, '');
+                    db.removeImageFromRecord(recordCollection);
                   },
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
