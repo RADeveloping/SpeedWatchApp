@@ -70,10 +70,12 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                                       positioned, context);
                                 });
                               },
-                              child: Text(
-                                'Export All',
-                                style: TextStyle(color: kColourLight),
-                              ),
+                              child: sidebarController.selectedSessions.isEmpty
+                                  ? null
+                                  : Text(
+                                      'Export All',
+                                      style: TextStyle(color: kColourLight),
+                                    ),
                             )
                           : GestureDetector(
                               onTapDown: (positioned) async {
