@@ -42,6 +42,8 @@ class SidebarController extends GetxController {
 
   RxBool filterByInfraction = false.obs;
 
+  RxBool filterByImagePath = false.obs;
+
   IconData getIcon(VehicleType type) {
     switch (type) {
       case VehicleType.largeTruck:

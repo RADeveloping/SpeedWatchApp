@@ -191,6 +191,24 @@ class LogsList extends GetView<SidebarController> {
     );
   }
 
+  SettingsTile moreRecordsWithImageItems() {
+    if (getRecordsWithImage().length > controller.limitRecords.value) {
+      return SettingsTile(
+        title: Center(
+            child: Text(
+              'Load more',
+              style: TextStyle(color: kColourLight),
+            )),
+        onPressed: (c) {
+          controller.limitRecords.value += 20;
+        },
+      );
+    }
+    return SettingsTile(
+      title: Text(''),
+    );
+  }
+
   SettingsTile recordItem(RecordCollection record, BuildContext context) {
     return SettingsTile(
       trailing: Row(
@@ -266,6 +284,19 @@ class LogsList extends GetView<SidebarController> {
     return infractionRecords;
   }
 
+  List<RecordCollection> getRecordsWithImage() {
+    List<RecordCollection> recordsWithImagePath = [];
+    var groupByImagePath = groupBy(controller.records.value,
+        (obj) => (obj as RecordCollection).imagePath);
+
+    groupByImagePath.forEach((imagePath, groupedList) {
+      if (imagePath != null) {
+        recordsWithImagePath += groupedList;
+      }
+    });
+    return recordsWithImagePath;
+  }
+
   List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
     if (getInfractionRecords().isNotEmpty &&
         controller.filterByInfraction.isTrue) {
@@ -274,6 +305,12 @@ class LogsList extends GetView<SidebarController> {
               .map((record) => recordItem(record, context))
               .toList() +
           [moreInfractionItems()]);
+    } else if (getRecordsWithImage().isNotEmpty && controller.filterByImagePath.isTrue) {
+      return (getRecordsWithImage()
+              .take(controller.limitRecords.value)
+              .map((record) => recordItem(record, context))
+              .toList() +
+          [moreRecordsWithImageItems()]);
     } else if (controller.records.isNotEmpty) {
       return (controller.records
               .take(controller.limitRecords.value)
