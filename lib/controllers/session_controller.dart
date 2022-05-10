@@ -26,6 +26,10 @@ class SessionController extends GetxController {
   List<String> directionOptions =
       Direction.values.map((val) => val.name).toList();
 
+  // Session Notes
+  Rx<TextEditingController> notes_textController =
+      TextEditingController(text: '').obs;
+
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
       TextEditingController(text: '').obs;
