@@ -178,7 +178,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: const Text('Move Sessions to "Archived Sessions"'),
+                  title: Text('Move Session${sidebarController.selectedSessions.value.length > 1 ? 's' : ''} to "Archived"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(

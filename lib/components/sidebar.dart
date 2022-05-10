@@ -100,7 +100,7 @@ class Sidebar extends GetView<SidebarController> {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: const Text('Move Sessions to "Archived Sessions"'),
+                  title: const Text('Move Session to "Archived"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(
