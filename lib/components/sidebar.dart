@@ -50,9 +50,9 @@ class Sidebar extends GetView<SidebarController> {
                         'Done',
                         style: TextStyle(color: kColourLight),
                       )
-                    : Icon(
-                        CupertinoIcons.ellipsis_circle,
-                        color: kColourLight,
+                    : Text(
+                        'Select',
+                        style: TextStyle(color: kColourLight),
                       ),
                 onPressed: () {
                   if (controller.isEditMode.value) {
