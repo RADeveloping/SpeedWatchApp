@@ -274,6 +274,8 @@ class Session extends GetView<SessionController> {
     s.currentSession.value = newSessionCollection;
     controller.address_textController().clear();
     controller.volunteer_textController().clear();
+    controller.notes_textController().clear();
+
     if (controller.volunteerTags.value.length > 0) {
       controller.volunteerTags.value = [];
     }
@@ -301,6 +303,8 @@ class Session extends GetView<SessionController> {
 
     controller.address_textController().clear();
     controller.volunteer_textController().clear();
+    controller.notes_textController().clear();
+
     if (controller.volunteerTags.value.length > 0) {
       controller.volunteerTags.value = [];
     }
@@ -344,6 +348,7 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                   controller.address_textController().clear();
                   controller.volunteerTags().clear();
                   controller.volunteer_textController().clear();
+                  controller.notes_textController().clear();
 
                   if (controller.existingCollection.value.isEmpty) {
                     Get.offAllNamed('/');
