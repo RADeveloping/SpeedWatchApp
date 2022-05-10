@@ -84,19 +84,10 @@ class Sidebar extends GetView<SidebarController> {
 
     } else if (result.status == ShareResultStatus.success) {
 
-      if (isMoveNeeded(controller.selectedSessions.value)) {
+      if (!controller.currentSession.value.hasExportedSession) {
         ShowConfirmMoveDialog(context);
       }
     }
-  }
-
-  bool isMoveNeeded(List<SessionCollection> sessions) {
-    for (var session in sessions) {
-      if (!session.hasExportedSession) {
-        return true;
-      }
-    }
-    return false;
   }
 
   void ShowConfirmMoveDialog(BuildContext context) {
