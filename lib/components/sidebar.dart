@@ -43,26 +43,28 @@ class Sidebar extends GetView<SidebarController> {
                 onPressed: () {},
               ),
             )
-          : Obx(() => CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: controller.isEditMode.value
-                    ? Text(
-                        'Done',
-                        style: TextStyle(color: kColourLight),
-                      )
-                    : Text(
-                        'Select',
-                        style: TextStyle(color: kColourLight),
-                      ),
-                onPressed: () {
-                  if (controller.isEditMode.value) {
-                    controller.isEditMode.value = false;
-                  } else {
-                    controller.isEditMode.value = true;
-                    controller.selectedSessions().clear();
-                  }
-                },
-              )),
+          : Obx(() => controller.sessions.length > 0
+              ? CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  child: controller.isEditMode.value
+                      ? Text(
+                          'Done',
+                          style: TextStyle(color: kColourLight),
+                        )
+                      : Text(
+                          'Select',
+                          style: TextStyle(color: kColourLight),
+                        ),
+                  onPressed: () {
+                    if (controller.isEditMode.value) {
+                      controller.isEditMode.value = false;
+                    } else {
+                      controller.isEditMode.value = true;
+                      controller.selectedSessions().clear();
+                    }
+                  },
+                )
+              : Text('')),
       heroTag: 0,
       child: child,
     );
