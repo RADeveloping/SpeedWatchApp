@@ -47,26 +47,32 @@ class LogsList extends GetView<SidebarController> {
                         borderRadius: BorderRadius.circular(15),
                         color: controller.filterByInfraction.value
                                 ? kColourRightPaneBackground
-                                : kTextStyleTilePlaceholder.color),
+                                : kColourTileDivider),
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
-                      child: Column(
-                        children: [
-                          Text(
-                                '${controller.records.value.length}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
-                                ),
-                              ),
-                          Text(
-                            'Records',
-                            style: TextStyle(
-                                color: Colors.white54,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.only(),
+                        onPressed: () {
+                          controller.filterByInfraction.toggle();
+                        },
+                        child: Column(
+                          children: [
+                            Obx(() => Text(
+                                  '${controller.records.value.length}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                  ),
+                                )),
+                            Text(
+                              'Records',
+                              style: TextStyle(
+                                  color: Colors.white54,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     )),
                 )
@@ -79,7 +85,7 @@ class LogsList extends GetView<SidebarController> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: controller.filterByInfraction.value
-                              ? kTextStyleTilePlaceholder.color
+                              ? kColourTileDivider
                               : kColourRightPaneBackground),
                     child: CupertinoButton(
                       padding: const EdgeInsets.only(),
