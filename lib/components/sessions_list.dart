@@ -212,6 +212,7 @@ class SessionsList extends GetView<SidebarController> {
           sessionDetailController.sliding.value = 0;
           DbService dbService = Get.find();
           controller.records.value = [];
+          controller.filterByInfraction.value = false;
           controller.limitRecords.value = 20;
           controller.currentSession.value = session;
           Function callBack = () => Get.offAndToNamed('/session/${session.id}');
