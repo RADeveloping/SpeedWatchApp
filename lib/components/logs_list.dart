@@ -70,6 +70,7 @@ class LogsList extends GetView<SidebarController> {
                               'Records',
                               style: TextStyle(
                                   color: Colors.white54,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -106,6 +107,48 @@ class LogsList extends GetView<SidebarController> {
                                 'Infractions',
                                 style: TextStyle(
                                     color: Colors.white54,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Obx(
+                      () => Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: controller.filterByImagePath.value
+                              ? kColourTileDivider
+                              : kColourRightPaneBackground),
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.only(),
+                        onPressed: () {
+                          if (getRecordsWithImage().isEmpty || getInfractionRecordsWithImage().isEmpty) {
+                            null;
+                          }
+                          controller.filterByImagePath.toggle();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: Column(
+                            children: [
+                              Text('${getImageCount()}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                'Photos',
+                                style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -250,14 +293,11 @@ class LogsList extends GetView<SidebarController> {
 
   int getImageCount() {
     List<RecordCollection> recordsWithImagePath = [];
-    var groupByImagePath = groupBy(controller.records.value,
-            (obj) => (obj as RecordCollection).imagePath);
-
-    groupByImagePath.forEach((imagePath, groupedList) {
-      if (imagePath != null) {
-        recordsWithImagePath += groupedList;
+    for (var record in controller.records) {
+      if (record.imagePath != null) {
+        recordsWithImagePath.add(record);
       }
-    });
+    }
     return recordsWithImagePath.length;
   }
 
@@ -321,7 +361,9 @@ class LogsList extends GetView<SidebarController> {
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getInfractionRecordsWithImage())]);
-    } else if (controller.records.isNotEmpty) {
+    } else if (controller.records.isNotEmpty &&
+        controller.filterByInfraction.isFalse &&
+        controller.filterByImagePath.isFalse) {
       return (controller.records
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
