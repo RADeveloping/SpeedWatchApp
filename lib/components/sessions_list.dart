@@ -54,28 +54,26 @@ class SessionsList extends GetView<SidebarController> {
 
     List<AbstractSettingsSection> list = [searchBar()];
 
-
     if (controller.isSearching == true) {
       List<SessionCollection> searchSessions = controller.sessions
-          .where((element) => element.streetAddress
-          .isCaseInsensitiveContains(controller.textController.value.value.text))
+          .where((element) => element.streetAddress.isCaseInsensitiveContains(
+              controller.textController.value.value.text))
           .toList();
       groupBy(
-          searchSessions.take(controller.limitSessionsMain.value),
+              searchSessions.take(controller.limitSessionsMain.value),
               (obj) => DateFormat('EEEEEE, MMMM dd, y')
-              .format((obj as SessionCollection).startTime))
+                  .format((obj as SessionCollection).startTime))
           .forEach((date, groupedList) {
         list.add(sessionListSection(groupedList, date.toUpperCase(), false));
       });
       if (searchSessions.length > controller.limitSessionsMain.value) {
         list.add(moreItems(false));
       }
-
     } else {
       groupBy(
-          mainList.take(controller.limitSessionsMain.value),
+              mainList.take(controller.limitSessionsMain.value),
               (obj) => DateFormat('EEEEEE, MMMM dd, y')
-              .format((obj as SessionCollection).startTime))
+                  .format((obj as SessionCollection).startTime))
           .forEach((date, groupedList) {
         list.add(sessionListSection(groupedList, date.toUpperCase(), false));
       });
@@ -84,9 +82,9 @@ class SessionsList extends GetView<SidebarController> {
       }
       archivedList.length > 0 ? list.add(archivedTab(context)) : null;
       groupBy(
-          archivedList.take(controller.limitSessionsArchived.value),
+              archivedList.take(controller.limitSessionsArchived.value),
               (obj) => DateFormat('EEEEEE, MMMM dd, y')
-              .format((obj as SessionCollection).startTime))
+                  .format((obj as SessionCollection).startTime))
           .forEach((date, groupedList) {
         list.add(sessionListSection(groupedList, date.toUpperCase(), true));
       });
@@ -94,7 +92,6 @@ class SessionsList extends GetView<SidebarController> {
         list.add(moreItems(true));
       }
     }
-
 
     return list;
   }
@@ -282,7 +279,7 @@ class SessionsList extends GetView<SidebarController> {
                         ),
                       ),
                       Text(
-                        'Exported',
+                        'Archived',
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
