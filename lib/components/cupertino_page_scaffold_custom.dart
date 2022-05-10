@@ -47,10 +47,14 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                       backgroundColor: backgroundColor,
                       previousPageTitle: previousPageTitle,
                       trailing: trailing,
-                      largeTitle: Text(
-                        largeTitle,
-                        style: TextStyle(color: Colors.white),
-                      ))
+                      largeTitle: Obx(() => Text(
+                            sidebarController.isEditMode.value &&
+                                    sidebarController
+                                        .selectedSessions.isNotEmpty
+                                ? '${sidebarController.selectedSessions.length} Selected'
+                                : largeTitle,
+                            style: TextStyle(color: Colors.white),
+                          )))
                 ];
               }),
         ),
@@ -85,9 +89,7 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
                                 });
                               },
                               child: Text(
-                                sidebarController.selectedSessions.length > 1
-                                    ? 'Export ${sidebarController.selectedSessions.length} items'
-                                    : 'Export ${sidebarController.selectedSessions.length} item',
+                                'Export',
                                 style: TextStyle(color: kColourLight),
                               ),
                             )),
