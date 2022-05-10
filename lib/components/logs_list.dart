@@ -51,6 +51,7 @@ class LogsList extends GetView<SidebarController> {
                     child: Padding(
                       padding: const EdgeInsets.all(7.0),
                       child: CupertinoButton(
+                        padding: const EdgeInsets.only(),
                         onPressed: () {
                           controller.filterByInfraction.toggle();
                         },
@@ -86,19 +87,20 @@ class LogsList extends GetView<SidebarController> {
                         color: controller.filterByInfraction.value
                               ? kColourTileDivider
                               : kColourRightPaneBackground),
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: CupertinoButton(
-                        onPressed: () {
-                          controller.filterByInfraction.toggle();
-                        },
+                    child: CupertinoButton(
+                      padding: const EdgeInsets.only(),
+                      onPressed: () {
+                        controller.filterByInfraction.toggle();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
                         child: Column(
                           children: [
-                            Obx(() => Text('${getInfractionCount()}',
+                            Text('${getInfractionCount()}',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
-                                    fontWeight: FontWeight.bold))),
+                                    fontWeight: FontWeight.bold)),
                             Text(
                               'Infractions',
                               style: TextStyle(
