@@ -7,6 +7,7 @@ import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/services/db_service.dart';
 
+import '../collections/session_collection.dart';
 import '../services/export_service.dart';
 import 'cupertino_page_scaffold_custom.dart';
 
@@ -82,8 +83,20 @@ class Sidebar extends GetView<SidebarController> {
     if (result.status == ShareResultStatus.dismissed) {
 
     } else if (result.status == ShareResultStatus.success) {
-      ShowConfirmMoveDialog(context);
+
+      if (isMoveNeeded(controller.selectedSessions.value)) {
+        ShowConfirmMoveDialog(context);
+      }
     }
+  }
+
+  bool isMoveNeeded(List<SessionCollection> sessions) {
+    for (var session in sessions) {
+      if (!session.hasExportedSession) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void ShowConfirmMoveDialog(BuildContext context) {
@@ -94,7 +107,7 @@ class Sidebar extends GetView<SidebarController> {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: const Text('Move Sessions to "Exported sessions"'),
+                  title: const Text('Move Sessions to "Exported Sessions"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(
