@@ -90,7 +90,7 @@ class ExportService {
     return [session.streetAddress, session.startTime.toString(), session.endTime.toString(), duration.toStringAsFixed(1),
       session.speedLimit.toString(), session.direction.name, session.roadConditionOptions.name, session.roadZoneOptions.name,
       session.weatherOptions.name, session.roadLightingOptions.name, session.volunteerNames.length.toString(),
-      session.volunteerNames.join(', '), (duration * session.volunteerNames.length).toString(), ''];
+      session.volunteerNames.join(', '), (duration * session.volunteerNames.length).toString(), session.notes];
   }
 
   String getFileName(SessionCollection session) {
