@@ -23,18 +23,28 @@ class LogsList extends GetView<SidebarController> {
     return Column(
       children: [
         Expanded(
-          child: Obx(() => SettingsList(
-                applicationType: ApplicationType.both,
-                brightness: Brightness.light,
-                lightTheme: SettingsThemeData(
-                  settingsListBackground: kColourSidebarBackground,
-                  settingsSectionBackground: Colors.transparent,
-                  settingsTileTextColor: kColourSidebarTileText,
-                  tileHighlightColor: kColourLight,
-                  dividerColor: kColourTileDivider,
-                ),
-                sections: [buildSection(context)],
-              )),
+          child: Obx(() => controller.records.isEmpty
+              ? Center(
+                  child: Text(
+                    'No Logs',
+                    style: TextStyle(
+                        color: kColourPlaceHolderText,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
+              : SettingsList(
+                  applicationType: ApplicationType.both,
+                  brightness: Brightness.light,
+                  lightTheme: SettingsThemeData(
+                    settingsListBackground: kColourSidebarBackground,
+                    settingsSectionBackground: Colors.transparent,
+                    settingsTileTextColor: kColourSidebarTileText,
+                    tileHighlightColor: kColourLight,
+                    dividerColor: kColourTileDivider,
+                  ),
+                  sections: [buildSection(context)],
+                )),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20),
@@ -279,11 +289,15 @@ class LogsList extends GetView<SidebarController> {
   }
 
   int getInfractionCount() {
-    return controller.records.where((record) => record.speedRange != SpeedRange.green).length;
+    return controller.records
+        .where((record) => record.speedRange != SpeedRange.green)
+        .length;
   }
 
   int getImageCount() {
-    return controller.records.where((record) => record.imagePath != null).length;
+    return controller.records
+        .where((record) => record.imagePath != null)
+        .length;
   }
 
   void showImage(BuildContext context, File file) {
@@ -292,44 +306,47 @@ class LogsList extends GetView<SidebarController> {
   }
 
   List<RecordCollection> getInfractionRecords() {
-    return controller.records.where((record) => record.speedRange != SpeedRange.green).toList();
+    return controller.records
+        .where((record) => record.speedRange != SpeedRange.green)
+        .toList();
   }
 
   List<RecordCollection> getRecordsWithImage() {
-    return controller.records.where((record) => record.imagePath != null).toList();
+    return controller.records
+        .where((record) => record.imagePath != null)
+        .toList();
   }
 
   List<RecordCollection> getInfractionRecordsWithImage() {
-    return controller.records.where((record) => record.imagePath != null && record.speedRange != SpeedRange.green).toList();
+    return controller.records
+        .where((record) =>
+            record.imagePath != null && record.speedRange != SpeedRange.green)
+        .toList();
   }
 
   List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
-    if (
-        controller.filterByInfraction.isTrue &&
+    if (controller.filterByInfraction.isTrue &&
         controller.filterByImagePath.isFalse) {
       return (getInfractionRecords()
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getInfractionRecords())]);
-    } else if (
-        controller.filterByImagePath.isTrue &&
+    } else if (controller.filterByImagePath.isTrue &&
         controller.filterByInfraction.isFalse) {
       return (getRecordsWithImage()
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getRecordsWithImage())]);
-    } else if (
-        controller.filterByInfraction.isTrue &&
+    } else if (controller.filterByInfraction.isTrue &&
         controller.filterByImagePath.isTrue) {
       return (getInfractionRecordsWithImage()
               .take(controller.limitRecords.value)
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getInfractionRecordsWithImage())]);
-    } else if (
-        controller.filterByInfraction.isFalse &&
+    } else if (controller.filterByInfraction.isFalse &&
         controller.filterByImagePath.isFalse) {
       return (controller.records
               .take(controller.limitRecords.value)
