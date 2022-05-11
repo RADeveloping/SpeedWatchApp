@@ -21,7 +21,7 @@ class SessionsList extends GetView<SidebarController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: Obx(() => controller.sessions.isEmpty
+          child: Obx(() => controller.sessions.isEmpty && controller.isDbReady.value
               ? Center(
                   child: Text(
                     'No Sessions',
