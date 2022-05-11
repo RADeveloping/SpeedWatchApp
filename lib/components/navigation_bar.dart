@@ -76,21 +76,14 @@ class NavigationBarCustom extends GetView<SidebarController> {
                     : Get.currentRoute.isCaseInsensitiveContains('sessions')
                         ? Obx(() => CupertinoButton(
                               padding: EdgeInsets.zero,
-                              child: controller.isEditMode.value
-                                  ? Text(
-                                      'Done',
-                                    )
-                                  : Text(
-                                      'Select',
-                                    ),
+                              child: Text(
+                                controller.isEditMode.value ? 'Done' : 'Select',
+                              ),
                               onPressed: controller.sessions.length > 0
                                   ? () {
-                                      if (controller.isEditMode.value) {
-                                        controller.isEditMode.value = false;
-                                      } else {
-                                        controller.isEditMode.value = true;
-                                        controller.selectedSessions().clear();
-                                      }
+                                      controller.isEditMode.value =
+                                          !controller.isEditMode.value;
+                                      controller.selectedSessions().clear();
                                     }
                                   : null,
                             ))
