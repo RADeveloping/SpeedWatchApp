@@ -201,6 +201,13 @@ class SessionController extends GetxController {
 
     // Notes
     notes_textController.value.text = '';
+    address_textController().clear();
+    volunteer_textController().clear();
+    notes_textController().clear();
+
+    if (volunteerTags.value.length > 0) {
+      volunteerTags.value = [];
+    }
   }
 }
 
