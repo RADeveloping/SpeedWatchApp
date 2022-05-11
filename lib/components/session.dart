@@ -260,6 +260,7 @@ class Session extends GetView<SessionController> {
         newSessionCollection, newSettingsCollection);
     s.records.value = [];
     s.currentSession.value = newSessionCollection;
+    s.isSessionCompleted.value = !DateTime.now().isBefore(s.currentSession.value.endTime);
     controller.address_textController().clear();
     controller.volunteer_textController().clear();
     controller.notes_textController().clear();

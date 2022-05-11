@@ -279,26 +279,11 @@ class LogsList extends GetView<SidebarController> {
   }
 
   int getInfractionCount() {
-    List<RecordCollection> infractionRecords = [];
-    var groupByInfractionRecords = groupBy(controller.records.value,
-        (obj) => (obj as RecordCollection).speedRange);
-
-    groupByInfractionRecords.forEach((speedRange, groupedList) {
-      if (speedRange != SpeedRange.green) {
-        infractionRecords += groupedList;
-      }
-    });
-    return infractionRecords.length;
+    return controller.records.where((record) => record.speedRange != SpeedRange.green).length;
   }
 
   int getImageCount() {
-    List<RecordCollection> recordsWithImagePath = [];
-    for (var record in controller.records) {
-      if (record.imagePath != null) {
-        recordsWithImagePath.add(record);
-      }
-    }
-    return recordsWithImagePath.length;
+    return controller.records.where((record) => record.imagePath != null).length;
   }
 
   void showImage(BuildContext context, File file) {
@@ -307,37 +292,19 @@ class LogsList extends GetView<SidebarController> {
   }
 
   List<RecordCollection> getInfractionRecords() {
-    List<RecordCollection> infractionRecords = [];
-    for (var record in controller.records) {
-      if (record.speedRange != SpeedRange.green) {
-        infractionRecords.add(record);
-      }
-    }
-    return infractionRecords;
+    return controller.records.where((record) => record.speedRange != SpeedRange.green).toList();
   }
 
   List<RecordCollection> getRecordsWithImage() {
-    List<RecordCollection> recordsWithImagePath = [];
-    for (var record in controller.records) {
-      if (record.imagePath != null) {
-        recordsWithImagePath.add(record);
-      }
-    }
-    return recordsWithImagePath;
+    return controller.records.where((record) => record.imagePath != null).toList();
   }
 
   List<RecordCollection> getInfractionRecordsWithImage() {
-    List<RecordCollection> infractionRecordsWithImagePath = [];
-    for (var record in getInfractionRecords()) {
-      if (record.imagePath != null) {
-        infractionRecordsWithImagePath.add(record);
-      }
-    }
-    return infractionRecordsWithImagePath;
+    return controller.records.where((record) => record.imagePath != null && record.speedRange != SpeedRange.green).toList();
   }
 
   List<AbstractSettingsTile> populateLogListTiles(BuildContext context) {
-    if (getInfractionRecords().isNotEmpty &&
+    if (
         controller.filterByInfraction.isTrue &&
         controller.filterByImagePath.isFalse) {
       return (getInfractionRecords()
@@ -345,7 +312,7 @@ class LogsList extends GetView<SidebarController> {
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getInfractionRecords())]);
-    } else if (getRecordsWithImage().isNotEmpty &&
+    } else if (
         controller.filterByImagePath.isTrue &&
         controller.filterByInfraction.isFalse) {
       return (getRecordsWithImage()
@@ -353,7 +320,7 @@ class LogsList extends GetView<SidebarController> {
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getRecordsWithImage())]);
-    } else if (getInfractionRecordsWithImage().isNotEmpty &&
+    } else if (
         controller.filterByInfraction.isTrue &&
         controller.filterByImagePath.isTrue) {
       return (getInfractionRecordsWithImage()
@@ -361,7 +328,7 @@ class LogsList extends GetView<SidebarController> {
               .map((record) => recordItem(record, context))
               .toList() +
           [moreItems(getInfractionRecordsWithImage())]);
-    } else if (controller.records.isNotEmpty &&
+    } else if (
         controller.filterByInfraction.isFalse &&
         controller.filterByImagePath.isFalse) {
       return (controller.records

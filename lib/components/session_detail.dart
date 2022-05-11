@@ -82,30 +82,26 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
             padding: EdgeInsets.all(20.0),
             color: kColourRightPaneBackground,
             child: Center(
-              child: Obx(() => !s.isSessionCompleted.value
-                  ? SpringBoard(
-                      onPressed: (speedRange, vehicleType) async {
-                        if (DateTime.now()
-                            .isBefore(s.currentSession.value.endTime)) {
-                          DbService dbService = Get.find();
-                          int currentSessionId = s.currentSession.value.id;
-                          dbService.writeRecordToDB(
-                              speedRange,
-                              vehicleType,
-                              currentSessionId,
-                              s.currentSession.value
-                                  .volunteerNames[controller.sliding.value]);
-                        } else {
-                          s.isSessionCompleted.value = true;
-                        }
-                      },
-                    )
-                  : Container(
-                      child: Center(
-                          child: Text('Session Ended',
-                              style: TextStyle(
-                                  color: kColourPlaceHolderText,
-                                  fontSize: 20))))),
+              child: Obx(() =>!s.isSessionCompleted.value ? SpringBoard(
+                onPressed: (speedRange, vehicleType) async {
+                  if (DateTime.now().isBefore(s.currentSession.value.endTime)) {
+                    DbService dbService = Get.find();
+                    int currentSessionId = s.currentSession.value.id;
+                    dbService.writeRecordToDB(
+                        speedRange,
+                        vehicleType,
+                        currentSessionId,
+                        s.currentSession.value
+                            .volunteerNames[controller.sliding.value]);
+                    s.deletedRecords.forEach((record) {
+                      dbService.clearDeletedRecord(record);
+                    });
+                  } else {
+                    s.isSessionCompleted.value = true;
+                  }
+
+                },
+              ): Container(child:Center(child: Text('Session Ended', style: TextStyle(color: kColourPlaceHolderText, fontSize: 20))))),
             )),
       ),
     );
