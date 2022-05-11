@@ -82,12 +82,11 @@ class MyApp extends StatelessWidget {
               transition: Transition.fadeIn,
               title: 'Create Session'),
           GetPage(
-            name: '/Edit',
+            name: '/Logs/:sessionID/Edit',
             page: () => Session(
               title: 'Edit Session',
               submitButtonText: 'Update Session',
             ),
-            transition: Transition.fadeIn,
           ),
         ],
         localizationsDelegates: [

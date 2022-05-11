@@ -21,7 +21,13 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
       navigationBar: CupertinoNavigationBar(
         leading: CupertinoButton(
           onPressed: () {
-            Get.toNamed('/Edit', arguments: s.currentSession.value);
+            print(Get.currentRoute);
+
+            Get.toNamed(
+              '/Logs/${s.currentSession.value.id.toString()}/Edit',
+              arguments: s.currentSession.value,
+              preventDuplicates: true,
+            );
           },
           child: Text('Edit'),
           padding: EdgeInsets.zero,
