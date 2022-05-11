@@ -9,6 +9,7 @@ import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/services/db_service.dart';
 
+import 'components/logs_list.dart';
 import 'components/session.dart';
 import 'components/session_detail.dart';
 import 'components/sessions_list.dart';
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
             page: () => Row(
               children: [
                 Sidebar(
-                  child: SessionsList(),
+                  child: LogsList(),
                 ),
                 Expanded(child: SessionDetail()),
               ],
@@ -77,7 +78,6 @@ class MyApp extends StatelessWidget {
                     title: 'Create',
                     submitButtonText: 'Create Session',
                   ),
-              arguments: null,
               title: 'Create Session'),
           GetPage(
             name: '/edit',

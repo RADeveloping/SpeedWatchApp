@@ -28,6 +28,7 @@ class Sidebar extends GetView<SidebarController> {
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     CupertinoSliverNavigationBar(
+                      heroTag: 0,
                       brightness: Brightness.dark,
                       backgroundColor: kColourRightPaneBackground,
                       largeTitle: Obx(() => Text(
