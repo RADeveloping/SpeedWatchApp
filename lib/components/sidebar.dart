@@ -14,15 +14,19 @@ import 'navigation_bar.dart';
 class Sidebar extends StatelessWidget {
   final Widget child;
   final SidebarController controller = Get.find();
+  final String largeTitle;
 
-  Sidebar({required this.child});
+  Sidebar({required this.child, required this.largeTitle});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          child: NavigationBarCustom(child: child),
+          child: NavigationBarCustom(
+            child: child,
+            largeTitle: largeTitle,
+          ),
         ),
         Obx(() => HandleSelect(context))
       ],

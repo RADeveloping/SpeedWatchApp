@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
-        defaultTransition: Transition.noTransition,
+        defaultTransition: Transition.fadeIn,
         title: 'Speed Watch',
         theme: CupertinoThemeData(
           brightness: Brightness.light,
@@ -52,7 +52,10 @@ class MyApp extends StatelessWidget {
             name: '/Sessions',
             page: () {
               return HomeView(
-                leftChild: Sidebar(child: SessionsList()),
+                leftChild: Sidebar(
+                  child: SessionsList(),
+                  largeTitle: 'Sessions',
+                ),
                 rightChild: RightPane(),
               );
             },
@@ -62,7 +65,10 @@ class MyApp extends StatelessWidget {
             name: '/Logs/:sessionID',
             page: () {
               return HomeView(
-                leftChild: Sidebar(child: LogsList()),
+                leftChild: Sidebar(
+                  child: LogsList(),
+                  largeTitle: 'Logs',
+                ),
                 rightChild: SessionDetail(),
               );
             },
@@ -73,6 +79,7 @@ class MyApp extends StatelessWidget {
                     title: 'Create',
                     submitButtonText: 'Create Session',
                   ),
+              transition: Transition.fadeIn,
               title: 'Create Session'),
           GetPage(
             name: '/Edit',
@@ -80,6 +87,7 @@ class MyApp extends StatelessWidget {
               title: 'Edit Session',
               submitButtonText: 'Update Session',
             ),
+            transition: Transition.fadeIn,
           ),
         ],
         localizationsDelegates: [
