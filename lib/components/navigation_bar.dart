@@ -74,28 +74,26 @@ class NavigationBarCustom extends GetView<SidebarController> {
                         Get.currentRoute.isCaseInsensitiveContains('edit'))
                     ? Container()
                     : Get.currentRoute.isCaseInsensitiveContains('sessions')
-                        ? Obx(() => controller.sessions.length > 0
-                            ? CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                child: controller.isEditMode.value
-                                    ? Text(
-                                        'Done',
-                                        style: TextStyle(color: kColourLight),
-                                      )
-                                    : Text(
-                                        'Select',
-                                        style: TextStyle(color: kColourLight),
-                                      ),
-                                onPressed: () {
-                                  if (controller.isEditMode.value) {
-                                    controller.isEditMode.value = false;
-                                  } else {
-                                    controller.isEditMode.value = true;
-                                    controller.selectedSessions().clear();
-                                  }
-                                },
-                              )
-                            : Text(''))
+                        ? Obx(() => CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              child: controller.isEditMode.value
+                                  ? Text(
+                                      'Done',
+                                    )
+                                  : Text(
+                                      'Select',
+                                    ),
+                              onPressed: controller.sessions.length > 0
+                                  ? () {
+                                      if (controller.isEditMode.value) {
+                                        controller.isEditMode.value = false;
+                                      } else {
+                                        controller.isEditMode.value = true;
+                                        controller.selectedSessions().clear();
+                                      }
+                                    }
+                                  : null,
+                            ))
                         : GestureDetector(
                             onTapDown: (positioned) async {
                               await ShowExportShareSheet(positioned, context);
