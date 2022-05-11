@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
                     title: 'Create',
                     submitButtonText: 'Create Session',
                   ),
+              transition: Transition.fadeIn,
               title: 'Create Session'),
           GetPage(
             name: '/Edit',
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
               title: 'Edit Session',
               submitButtonText: 'Update Session',
             ),
+            transition: Transition.fadeIn,
           ),
         ],
         localizationsDelegates: [
