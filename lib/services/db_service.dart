@@ -24,7 +24,7 @@ class DbService extends GetxService {
       inspector: true,
     ).then((db) {
       SidebarController s = Get.find();
-      getSessions(s.handleNewSessions, db);
+      getInitialSessions(s, db);
       setSessionsListener(s.handleNewSessions, db);
       setRecordsListener(s, db);
       return db;
@@ -132,6 +132,18 @@ class DbService extends GetxService {
         .sortByStartTimeDesc()
         .findAll()
         .then((newSession) => handleNewSession(newSession));
+  }
+
+
+  void getInitialSessions(SidebarController s, Isar db) async {
+    db.sessionCollections
+        .where()
+        .sortByStartTimeDesc()
+        .findAll()
+        .then((newSession) {
+          s.isDbReady.value = true;
+          s.handleNewSessions(newSession);
+        });
   }
 
   Future<SessionCollection?> getSessionsWithIdOnly(int sessionId) async {

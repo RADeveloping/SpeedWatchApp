@@ -34,6 +34,8 @@ class SidebarController extends GetxController {
   RxBool isSessionCompleted = false.obs;
   final currentSession = SessionCollection().obs;
 
+  RxBool isDbReady = false.obs;
+
   void handleNewSessions(List<SessionCollection> newSessions) {
     sessions.value = newSessions;
   }
