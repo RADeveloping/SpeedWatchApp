@@ -12,7 +12,6 @@ import '../services/export_service.dart';
 
 class NavigationBarCustom extends GetView<SidebarController> {
   final Widget child;
-  final SidebarController sidebarController = Get.find();
 
   NavigationBarCustom({required this.child});
 
@@ -166,8 +165,8 @@ class NavigationBarCustom extends GetView<SidebarController> {
   }
 
   Container HandleSelect(BuildContext context) {
-    if (sidebarController.isEditMode.value == true) {
-      if (sidebarController.sessions.firstWhereOrNull(
+    if (controller.isEditMode.value == true) {
+      if (controller.sessions.firstWhereOrNull(
               (element) => element.hasExportedSession == false) ==
           null) {
         // Has No New Session
@@ -178,7 +177,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
               alignment: Alignment.centerRight,
               child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: sidebarController.selectedSessions.isEmpty
+                  child: controller.selectedSessions.isEmpty
                       ? Container()
                       : GestureDetector(
                           onTapDown: (positioned) async {
@@ -200,7 +199,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
               alignment: Alignment.centerRight,
               child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: sidebarController.selectedSessions.isEmpty
+                  child: controller.selectedSessions.isEmpty
                       ? Text(
                           'Export',
                           style: TextStyle(color: kColourDisabledButton),
@@ -224,7 +223,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
   Future<void> ShowSelectedExportShareSheet(
       TapDownDetails positioned, BuildContext context) async {
     List<String> directories = await ExportService()
-        .exportSessionsToExcel(sidebarController.selectedSessions);
+        .exportSessionsToExcel(controller.selectedSessions);
 
     final result = await Share.shareFilesWithResult(
       directories,
@@ -234,12 +233,12 @@ class NavigationBarCustom extends GetView<SidebarController> {
     );
 
     if (result.status == ShareResultStatus.dismissed) {
-      sidebarController.isEditMode.value = false;
+      controller.isEditMode.value = false;
     } else if (result.status == ShareResultStatus.success) {
-      if (isMoveNeeded(sidebarController.selectedSessions.value)) {
+      if (isMoveNeeded(controller.selectedSessions.value)) {
         showMoveExportedAlertDialog(context);
       }
-      sidebarController.isEditMode.value = false;
+      controller.isEditMode.value = false;
     }
   }
 
@@ -261,7 +260,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
                   title: Text(
-                      'Move Session${sidebarController.selectedSessions.value.length > 1 ? 's' : ''} to "Archived"'),
+                      'Move Session${controller.selectedSessions.value.length > 1 ? 's' : ''} to "Archived"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(
@@ -278,7 +277,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
                         onPressed: () {
                           DbService dbService = Get.find();
                           dbService.setHasMultipleExportedSession(
-                              sidebarController.selectedSessions);
+                              controller.selectedSessions);
                           Navigator.pop(context);
                         })
                   ]),

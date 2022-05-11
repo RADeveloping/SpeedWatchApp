@@ -65,29 +65,9 @@ class Sidebar extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: controller.selectedSessions.isEmpty
-                      ? GestureDetector(
-                          onTap: () {
-                            if (controller.selectedSessions.firstWhereOrNull(
-                                    (element) =>
-                                        element.hasExportedSession == false) !=
-                                null) {
-                              controller.selectedSessions.removeWhere(
-                                  (session) =>
-                                      session.hasExportedSession == false);
-                              controller.selectedSessions.refresh();
-                            } else {
-                              controller.selectedSessions.addAll(controller
-                                  .sessions
-                                  .where((session) =>
-                                      session.hasExportedSession == false)
-                                  .toList());
-                              controller.selectedSessions.refresh();
-                            }
-                          },
-                          child: Text(
-                            'Select All',
-                            style: TextStyle(color: kColourLight),
-                          ),
+                      ? Text(
+                          'Export',
+                          style: TextStyle(color: kColourDisabledButton),
                         )
                       : GestureDetector(
                           onTapDown: (positioned) {
