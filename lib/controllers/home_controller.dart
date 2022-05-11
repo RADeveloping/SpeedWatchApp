@@ -12,7 +12,6 @@ class HomeController extends GetxController {
   RxList<Widget> children = <Widget>[
     Sidebar(
       child: SessionsList(),
-      largeTitle: 'Sessions',
     ),
     RightPane()
   ].obs;

@@ -3,15 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speedwatch/components/rightpane.dart';
-import 'package:speedwatch/components/session.dart';
 import 'package:speedwatch/components/sidebar.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
-import 'package:speedwatch/screens/home_view.dart';
 import 'package:speedwatch/services/db_service.dart';
 
-import 'components/logs_list.dart';
+import 'components/session.dart';
 import 'components/session_detail.dart';
 import 'components/sessions_list.dart';
 import 'controllers/session_controller.dart';
@@ -36,11 +34,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put<SessionController>(SessionController());
-    Get.put<HomeController>(HomeController());
-    Get.put<SidebarController>(SidebarController());
-    Get.put<SessionDetailDetailController>(SessionDetailDetailController());
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
@@ -54,71 +47,44 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         getPages: [
           GetPage(
-            name: '/',
-            page: () => HomeView(
-              leftChild: Sidebar(
-                child: SessionsList(),
-                largeTitle: 'Sessions',
-              ),
-              rightChild: RightPane(),
-            ),
-            transition: Transition.noTransition,
-          ),
-          GetPage(
-            name: '/create',
-            page: () => HomeView(
-              leftChild: null,
-              rightChild: Session(
-                title: 'Create Session',
-                submitButtonText: 'Create Session',
-              ),
-            ),
-            transition: Transition.noTransition,
-          ),
-          GetPage(
-            name: '/session/:sessionID',
-            page: () => HomeView(
-              leftChild: Sidebar(
-                leading: CupertinoButton(
-                  padding: EdgeInsetsDirectional.zero,
-                  onPressed: () {
-                    Get.offAndToNamed('/');
-                  },
-                  child: Row(
+              name: '/',
+              page: () => Row(
                     children: [
-                      Icon(
-                        CupertinoIcons.back,
-                        color: kColourLight,
+                      Sidebar(
+                        child: SessionsList(),
                       ),
-                      Expanded(
-                        child: Text(
-                          'Sessions',
-                          style: TextStyle(
-                            color: kColourLight,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+                      Expanded(child: RightPane()),
                     ],
                   ),
+              transition: Transition.noTransition,
+              binding: BindingsBuilder(() => {Get.put(SidebarController())}),
+              title: 'Sessions'),
+          GetPage(
+            name: '/session/:sessionID',
+            page: () => Row(
+              children: [
+                Sidebar(
+                  child: SessionsList(),
                 ),
-                largeTitle: 'Log',
-                previousPageTitle: 'Sessions',
-                child: LogsList(),
-              ),
-              rightChild: SessionDetail(),
+                Expanded(child: SessionDetail()),
+              ],
             ),
-            transition: Transition.noTransition,
-            preventDuplicates: true,
+            title: 'Sessions',
           ),
+          GetPage(
+              name: '/create',
+              page: () => Session(
+                    title: 'Create',
+                    submitButtonText: 'Create Session',
+                  ),
+              arguments: null,
+              title: 'Create Session'),
           GetPage(
             name: '/edit',
             page: () => Session(
               title: 'Edit Session',
               submitButtonText: 'Update Session',
             ),
-            transition: Transition.noTransition,
-            preventDuplicates: true,
           ),
         ],
         localizationsDelegates: [
@@ -126,6 +92,13 @@ class MyApp extends StatelessWidget {
           DefaultCupertinoLocalizations.delegate,
           DefaultWidgetsLocalizations.delegate,
         ],
+        initialBinding: BindingsBuilder(() {
+          Get.put<SessionController>(SessionController());
+          Get.put<HomeController>(HomeController());
+          Get.put<SidebarController>(SidebarController());
+          Get.put<SessionDetailDetailController>(
+              SessionDetailDetailController());
+        }),
       ),
     );
   }

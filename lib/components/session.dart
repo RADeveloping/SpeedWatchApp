@@ -14,7 +14,6 @@ import '../collections/settings_collection.dart';
 import '../constants.dart';
 import '../controllers/sidebar_controller.dart';
 import '../services/db_service.dart';
-import 'cupertino_page_scaffold_custom.dart';
 import 'custom_tile_with_choices.dart';
 import 'date_time_picker.dart';
 
@@ -55,207 +54,228 @@ class Session extends GetView<SessionController> {
         minDate: Get.arguments == null
             ? startDatePicker.date.value
             : controller.startEditDate.value);
-    return CupertinoPageScaffoldCustom(
-      backgroundColor: kColourRightPaneBackground,
-      leading: DiscardSessionChangesButton(),
-      largeTitle: title,
-      heroTag: 1,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Obx(
-            () => Expanded(
-              child: SettingsList(
-                applicationType: ApplicationType.both,
-                brightness: Brightness.light,
-                lightTheme: SettingsThemeData(
-                  settingsListBackground: kColourRightPaneBackground,
-                  settingsSectionBackground: kColourSidebarTile,
-                  settingsTileTextColor: kColourSidebarTileText,
-                  tileHighlightColor: kColourLight,
-                  dividerColor: kColourTileDivider,
-                ),
-                sections: [
-                  SettingsSection(tiles: [
-                    SettingsTile(
-                        title: SessionTextFieldEntry(
-                      placeholder: 'Address',
-                      textEditingController:
-                          controller.address_textController.value,
-                      onChanged: (String value) {
-                        controller.address.value = value;
-                      },
-                      onTap: () {
-                        controller.address.value = '';
-                      },
-                      keyboardType: TextInputType.streetAddress,
-                    )),
-                    CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'Direction',
-                      tileTag: controller.directionTag,
-                      tileOptions: controller.directionOptions,
-                    )),
-                    CustomSettingsTile(
-                      child: CustomTileWithChoices(
-                        leadingText: 'Start',
-                        tileTag: controller.directionTag,
-                        tileOptions: controller.directionOptions,
-                        trailing: startDatePicker,
-                      ),
+
+    SidebarController sidebarController = Get.find();
+
+    return NestedScrollView(
+        body: CupertinoPageScaffold(
+          resizeToAvoidBottomInset: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Obx(
+                () => Expanded(
+                  child: SettingsList(
+                    applicationType: ApplicationType.both,
+                    brightness: Brightness.light,
+                    lightTheme: SettingsThemeData(
+                      settingsListBackground: kColourRightPaneBackground,
+                      settingsSectionBackground: kColourSidebarTile,
+                      settingsTileTextColor: kColourSidebarTileText,
+                      tileHighlightColor: kColourLight,
+                      dividerColor: kColourTileDivider,
                     ),
-                    CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'End',
-                      tileTag: controller.directionTag,
-                      tileOptions: controller.directionOptions,
-                      trailing: endDatePicker,
-                    )),
-                  ]),
-                  SettingsSection(tiles: [
-                    SettingsTile(
-                      title: Obx(
-                        () => CupertinoTheme(
-                            data:
-                                CupertinoThemeData(brightness: Brightness.dark),
-                            child: SessionTextFieldEntry(
-                              onTap: () {
-                                controller.volunteerSearchValueChanged('');
-                              },
-                              onChanged: (String value) {
-                                controller.volunteerSearchValueChanged(value);
-                              },
-                              onSubmitted: (String value) {
-                                controller.volunteerSearchValueChanged(value);
-                              },
-                              keyboardType: TextInputType.name,
-                              textEditingController:
-                                  controller.volunteer_textController.value,
-                              placeholder: 'Volunteer Name',
-                            )),
-                      ),
-                    ),
-                    SettingsTile(
-                        title: Obx(() => Material(
-                              color: Colors.transparent,
-                              child: ChipsChoice<String>.multiple(
-                                value: controller.volunteerTags.value,
-                                onChanged: (val) {
-                                  controller.volunteerTags.value = val;
-                                  controller.userListFromDatabase.addAll(val);
-                                  controller.volunteer_textController.value
-                                      .clear();
-                                  controller.volunteerSearchValueChanged('');
-                                },
-                                placeholderBuilder: (BuildContext context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Center(
-                                      child: Text(
-                                        'No Saved Volunteers',
-                                        style: TextStyle(
-                                            color: kColourPlaceHolderText,
-                                            fontSize: 16),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                runSpacing: 20,
-                                choiceItems: C2Choice.listFrom<String, String>(
-                                  source: controller.volunteerOptions,
-                                  value: (i, v) => v,
-                                  label: (i, v) => v,
-                                ),
-                                choiceActiveStyle: choiceActiveStyle,
-                                choiceStyle: choiceStyle,
-                              ),
-                            )))
-                  ]),
-                  SettingsSection(tiles: [
-                    CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'Road Zone',
-                      tileTag: controller.roadZoneTag,
-                      tileOptions: controller.roadZoneOptions,
-                    )),
-                    CustomSettingsTile(
-                        child: Get.arguments == null || s.records.length == 0
-                            ? CustomTileWithChoices(
-                                leadingText: 'Speed Limit (km/h)',
-                                tileTag: controller.speedLimitTag,
-                                tileOptions: controller.speedLimitOptions,
-                              )
-                            : Container()),
-                    CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'Weather Conditions',
-                      tileTag: controller.weatherTag,
-                      tileOptions: controller.weatherOptions,
-                    )),
-                    CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'Road Conditions',
-                      tileTag: controller.roadConditionTag,
-                      tileOptions: controller.roadConditionOptions,
-                    )),
-                    CustomSettingsTile(
-                        child: CustomTileWithChoices(
-                      leadingText: 'Lighting',
-                      tileTag: controller.roadLightingTag,
-                      tileOptions: controller.roadLightingOptions,
-                    )),
-                  ]),
-                  SettingsSection(tiles: [
-                    SettingsTile(
-                      title: Obx(
-                        () => CupertinoTheme(
-                            data:
-                                CupertinoThemeData(brightness: Brightness.dark),
-                            child: SessionTextFieldEntry(
-                              keyboardType: TextInputType.multiline,
-                              textEditingController:
-                                  controller.notes_textController.value,
-                              placeholder: 'Session Notes',
-                            )),
-                      ),
-                    ),
-                  ]),
-                  SettingsSection(tiles: [
-                    CustomSettingsTile(
-                      child: Center(
-                          child: CupertinoTheme(
-                        child: CupertinoButton.filled(
-                          onPressed: controller.address.value.isEmpty ||
-                                  controller.volunteerTags.value.isEmpty
-                              ? null
-                              : controller.existingCollection.isEmpty
-                                  ? createNewSessionClick
-                                  : updateSessionClick,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(CupertinoIcons.add),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text(submitButtonText)
-                            ],
+                    sections: [
+                      SettingsSection(tiles: [
+                        SettingsTile(
+                            title: SessionTextFieldEntry(
+                          placeholder: 'Address',
+                          textEditingController:
+                              controller.address_textController.value,
+                          onChanged: (String value) {
+                            controller.address.value = value;
+                          },
+                          onTap: () {
+                            controller.address.value = '';
+                          },
+                          keyboardType: TextInputType.streetAddress,
+                        )),
+                        CustomSettingsTile(
+                            child: CustomTileWithChoices(
+                          leadingText: 'Direction',
+                          tileTag: controller.directionTag,
+                          tileOptions: controller.directionOptions,
+                        )),
+                        CustomSettingsTile(
+                          child: CustomTileWithChoices(
+                            leadingText: 'Start',
+                            tileTag: controller.directionTag,
+                            tileOptions: controller.directionOptions,
+                            trailing: startDatePicker,
                           ),
                         ),
-                        data: CupertinoThemeData(
-                            brightness: Brightness.dark,
-                            primaryColor: kColourLight),
-                      )),
-                    ),
-                  ]),
-                ],
+                        CustomSettingsTile(
+                            child: CustomTileWithChoices(
+                          leadingText: 'End',
+                          tileTag: controller.directionTag,
+                          tileOptions: controller.directionOptions,
+                          trailing: endDatePicker,
+                        )),
+                      ]),
+                      SettingsSection(tiles: [
+                        SettingsTile(
+                          title: Obx(
+                            () => CupertinoTheme(
+                                data: CupertinoThemeData(
+                                    brightness: Brightness.dark),
+                                child: SessionTextFieldEntry(
+                                  onTap: () {
+                                    controller.volunteerSearchValueChanged('');
+                                  },
+                                  onChanged: (String value) {
+                                    controller
+                                        .volunteerSearchValueChanged(value);
+                                  },
+                                  onSubmitted: (String value) {
+                                    controller
+                                        .volunteerSearchValueChanged(value);
+                                  },
+                                  keyboardType: TextInputType.name,
+                                  textEditingController:
+                                      controller.volunteer_textController.value,
+                                  placeholder: 'Volunteer Name',
+                                )),
+                          ),
+                        ),
+                        SettingsTile(
+                            title: Obx(() => Material(
+                                  color: Colors.transparent,
+                                  child: ChipsChoice<String>.multiple(
+                                    value: controller.volunteerTags.value,
+                                    onChanged: (val) {
+                                      controller.volunteerTags.value = val;
+                                      controller.userListFromDatabase
+                                          .addAll(val);
+                                      controller.volunteer_textController.value
+                                          .clear();
+                                      controller
+                                          .volunteerSearchValueChanged('');
+                                    },
+                                    placeholderBuilder: (BuildContext context) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Center(
+                                          child: Text(
+                                            'No Saved Volunteers',
+                                            style: TextStyle(
+                                                color: kColourPlaceHolderText,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    runSpacing: 20,
+                                    choiceItems:
+                                        C2Choice.listFrom<String, String>(
+                                      source: controller.volunteerOptions,
+                                      value: (i, v) => v,
+                                      label: (i, v) => v,
+                                    ),
+                                    choiceActiveStyle: choiceActiveStyle,
+                                    choiceStyle: choiceStyle,
+                                  ),
+                                )))
+                      ]),
+                      SettingsSection(tiles: [
+                        CustomSettingsTile(
+                            child: CustomTileWithChoices(
+                          leadingText: 'Road Zone',
+                          tileTag: controller.roadZoneTag,
+                          tileOptions: controller.roadZoneOptions,
+                        )),
+                        CustomSettingsTile(
+                            child: Get.arguments == null ||
+                                    s.records.length == 0
+                                ? CustomTileWithChoices(
+                                    leadingText: 'Speed Limit (km/h)',
+                                    tileTag: controller.speedLimitTag,
+                                    tileOptions: controller.speedLimitOptions,
+                                  )
+                                : Container()),
+                        CustomSettingsTile(
+                            child: CustomTileWithChoices(
+                          leadingText: 'Weather Conditions',
+                          tileTag: controller.weatherTag,
+                          tileOptions: controller.weatherOptions,
+                        )),
+                        CustomSettingsTile(
+                            child: CustomTileWithChoices(
+                          leadingText: 'Road Conditions',
+                          tileTag: controller.roadConditionTag,
+                          tileOptions: controller.roadConditionOptions,
+                        )),
+                        CustomSettingsTile(
+                            child: CustomTileWithChoices(
+                          leadingText: 'Lighting',
+                          tileTag: controller.roadLightingTag,
+                          tileOptions: controller.roadLightingOptions,
+                        )),
+                      ]),
+                      SettingsSection(tiles: [
+                        SettingsTile(
+                          title: Obx(
+                            () => CupertinoTheme(
+                                data: CupertinoThemeData(
+                                    brightness: Brightness.dark),
+                                child: SessionTextFieldEntry(
+                                  keyboardType: TextInputType.multiline,
+                                  textEditingController:
+                                      controller.notes_textController.value,
+                                  placeholder: 'Session Notes',
+                                )),
+                          ),
+                        ),
+                      ]),
+                      SettingsSection(tiles: [
+                        CustomSettingsTile(
+                          child: Center(
+                              child: CupertinoTheme(
+                            child: CupertinoButton.filled(
+                              onPressed: controller.address.value.isEmpty ||
+                                      controller.volunteerTags.value.isEmpty
+                                  ? null
+                                  : controller.existingCollection.isEmpty
+                                      ? createNewSessionClick
+                                      : updateSessionClick,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(CupertinoIcons.add),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(submitButtonText)
+                                ],
+                              ),
+                            ),
+                            data: CupertinoThemeData(
+                                brightness: Brightness.dark,
+                                primaryColor: kColourLight),
+                          )),
+                        ),
+                      ]),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            CupertinoSliverNavigationBar(
+              brightness: Brightness.dark,
+              backgroundColor: kColourRightPaneBackground,
+              largeTitle: Text(
+                Get.currentRoute,
+                style: TextStyle(color: Colors.white),
+              ),
+              heroTag: 0,
+            )
+          ];
+        });
   }
 
   void createNewSessionClick() async {
@@ -300,7 +320,8 @@ class Session extends GetView<SessionController> {
     await dbService.writeSessionToDB(
         updatedSessionCollection, newSettingsCollection);
     s.currentSession.value = updatedSessionCollection;
-    s.isSessionCompleted.value = !DateTime.now().isBefore(s.currentSession.value.endTime);
+    s.isSessionCompleted.value =
+        !DateTime.now().isBefore(s.currentSession.value.endTime);
     controller.address_textController().clear();
     controller.volunteer_textController().clear();
     controller.notes_textController().clear();
@@ -308,7 +329,7 @@ class Session extends GetView<SessionController> {
     if (controller.volunteerTags.value.length > 0) {
       controller.volunteerTags.value = [];
     }
-    Get.offAndToNamed('/session/${Get.arguments.id}');
+    Get.back();
   }
 }
 

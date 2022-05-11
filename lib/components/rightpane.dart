@@ -37,7 +37,7 @@ class RightPane extends GetView<RightPane> {
                   child: CupertinoTheme(
                 child: CupertinoButton.filled(
                   onPressed: () {
-                    Get.offAndToNamed('/create');
+                    Get.toNamed('/create');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
