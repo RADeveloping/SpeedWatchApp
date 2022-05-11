@@ -104,6 +104,14 @@ class DbService extends GetxService {
             (recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
   }
 
+  void clearDeletedRecord(RecordCollection deletedRecord) async {
+    Isar db = Get.find();
+    int currentRecordID = deletedRecord.id;
+    await db.writeTxn(((isar) async {
+      await db.recordCollections.delete(currentRecordID);
+    }));
+  }
+
   void getDeletedRecordsWithId(Function handleDeletedRecords,
       int currentSessionId, Function callBack) async {
     Isar db = Get.find();
