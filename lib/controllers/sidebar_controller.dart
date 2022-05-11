@@ -31,6 +31,7 @@ class SidebarController extends GetxController {
   RxInt limitSessionsMain = 20.obs;
   RxInt limitSessionsArchived = 20.obs;
 
+  RxBool isSessionCompleted = false.obs;
   final currentSession = SessionCollection().obs;
 
   void handleNewSessions(List<SessionCollection> newSessions) {
