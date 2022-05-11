@@ -45,23 +45,26 @@ class MyApp extends StatelessWidget {
           primaryColor: kColourLight,
           scaffoldBackgroundColor: kColourSidebarBackground,
         ),
-        initialRoute: '/',
+        initialRoute: '/Sessions',
         getPages: [
           GetPage(
-              name: '/',
+              name: '/Sessions',
               page: () => Row(
                     children: [
-                      Sidebar(
-                        child: SessionsList(),
+                      Expanded(
+                        flex: 2,
+                        child: Sidebar(
+                          child: SessionsList(),
+                        ),
                       ),
-                      Expanded(child: RightPane()),
+                      Expanded(flex: 2, child: RightPane()),
                     ],
                   ),
               transition: Transition.noTransition,
               binding: BindingsBuilder(() => {Get.put(SidebarController())}),
               title: 'Sessions'),
           GetPage(
-            name: '/session/:sessionID',
+            name: '/Logs/:sessionID',
             page: () => Row(
               children: [
                 Sidebar(

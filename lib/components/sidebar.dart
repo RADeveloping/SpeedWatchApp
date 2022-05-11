@@ -35,10 +35,10 @@ class Sidebar extends GetView<SidebarController> {
                             controller.isEditMode.value &&
                                     controller.selectedSessions.isNotEmpty
                                 ? '${controller.selectedSessions.length} Selected'
-                                : Get.previousRoute,
+                                : Get.currentRoute.split('/')[1],
                             style: TextStyle(color: Colors.white),
                           )),
-                      trailing: Get.currentRoute == '/'
+                      trailing: Get.currentRoute == '/Sessions'
                           ? Obx(() => controller.sessions.length > 0
                               ? CupertinoButton(
                                   padding: EdgeInsets.zero,

@@ -300,7 +300,7 @@ class Session extends GetView<SessionController> {
       controller.volunteerTags.value = [];
     }
 
-    Get.offAndToNamed('/session/${id}');
+    Get.offAndToNamed('/Logs/${id}');
   }
 
   void updateSessionClick() async {
@@ -372,10 +372,10 @@ class DiscardSessionChangesButton extends GetView<SessionController> {
                   controller.notes_textController().clear();
 
                   if (controller.existingCollection.value.isEmpty) {
-                    Get.offAllNamed('/');
+                    Get.offAllNamed('/Sessions');
                   } else {
                     Get.offAllNamed(
-                        '/session/${controller.existingCollection.value[0].id}');
+                        '/Logs/${controller.existingCollection.value[0].id}');
                     controller.existingCollection.value = [];
                   }
                 },
