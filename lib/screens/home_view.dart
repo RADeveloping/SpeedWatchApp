@@ -21,9 +21,7 @@ class HomeView extends GetView<HomeController> {
             resizable: true,
             initialWeights:
                 context.isPortrait ? [0.417, 0.583] : [0.347, 0.653],
-            children: context.isPortrait && context.width <= 704
-                ? [leftChild]
-                : [leftChild, rightChild]),
+            children: [leftChild, rightChild]),
       ),
     );
   }
