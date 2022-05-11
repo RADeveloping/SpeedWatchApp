@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetCupertinoApp(
-        defaultTransition: Transition.noTransition,
+        defaultTransition: Transition.fadeIn,
         title: 'Speed Watch',
         theme: CupertinoThemeData(
           brightness: Brightness.light,
