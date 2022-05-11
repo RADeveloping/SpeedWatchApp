@@ -3,16 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speedwatch/components/rightpane.dart';
+import 'package:speedwatch/components/sessions_list.dart';
 import 'package:speedwatch/components/sidebar.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/home_controller.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
+import 'package:speedwatch/screens/home_view.dart';
 import 'package:speedwatch/services/db_service.dart';
 
 import 'components/logs_list.dart';
 import 'components/session.dart';
 import 'components/session_detail.dart';
-import 'components/sessions_list.dart';
 import 'controllers/session_controller.dart';
 
 // Global variable for storing the list of cameras available
@@ -48,42 +49,33 @@ class MyApp extends StatelessWidget {
         initialRoute: '/Sessions',
         getPages: [
           GetPage(
-              name: '/Sessions',
-              page: () => Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Sidebar(
-                          child: SessionsList(),
-                        ),
-                      ),
-                      Expanded(flex: 2, child: RightPane()),
-                    ],
-                  ),
-              transition: Transition.noTransition,
-              binding: BindingsBuilder(() => {Get.put(SidebarController())}),
-              title: 'Sessions'),
-          GetPage(
-            name: '/Logs/:sessionID',
-            page: () => Row(
-              children: [
-                Sidebar(
-                  child: LogsList(),
-                ),
-                Expanded(child: SessionDetail()),
-              ],
-            ),
-            title: 'Sessions',
+            name: '/Sessions',
+            page: () {
+              return HomeView(
+                leftChild: Sidebar(child: SessionsList()),
+                rightChild: RightPane(),
+              );
+            },
+            binding: BindingsBuilder(() => {Get.put(SidebarController())}),
           ),
           GetPage(
-              name: '/create',
+            name: '/Logs/:sessionID',
+            page: () {
+              return HomeView(
+                leftChild: Sidebar(child: LogsList()),
+                rightChild: SessionDetail(),
+              );
+            },
+          ),
+          GetPage(
+              name: '/Create',
               page: () => Session(
                     title: 'Create',
                     submitButtonText: 'Create Session',
                   ),
               title: 'Create Session'),
           GetPage(
-            name: '/edit',
+            name: '/Edit',
             page: () => Session(
               title: 'Edit Session',
               submitButtonText: 'Update Session',

@@ -9,78 +9,23 @@ import 'package:speedwatch/services/db_service.dart';
 
 import '../collections/session_collection.dart';
 import '../services/export_service.dart';
+import 'navigation_bar.dart';
 
-class Sidebar extends GetView<SidebarController> {
+class Sidebar extends StatelessWidget {
   final Widget child;
+  final SidebarController controller = Get.find();
 
   Sidebar({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Expanded(
-            child: NestedScrollView(
-                body: CupertinoPageScaffold(
-                    resizeToAvoidBottomInset: true, child: child),
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    CupertinoSliverNavigationBar(
-                      heroTag: 0,
-                      brightness: Brightness.dark,
-                      backgroundColor: kColourRightPaneBackground,
-                      largeTitle: Obx(() => Text(
-                            controller.isEditMode.value &&
-                                    controller.selectedSessions.isNotEmpty
-                                ? '${controller.selectedSessions.length} Selected'
-                                : Get.currentRoute.split('/')[1],
-                            style: TextStyle(color: Colors.white),
-                          )),
-                      trailing: Get.currentRoute == '/Sessions'
-                          ? Obx(() => controller.sessions.length > 0
-                              ? CupertinoButton(
-                                  padding: EdgeInsets.zero,
-                                  child: controller.isEditMode.value
-                                      ? Text(
-                                          'Done',
-                                          style: TextStyle(color: kColourLight),
-                                        )
-                                      : Text(
-                                          'Select',
-                                          style: TextStyle(color: kColourLight),
-                                        ),
-                                  onPressed: () {
-                                    if (controller.isEditMode.value) {
-                                      controller.isEditMode.value = false;
-                                    } else {
-                                      controller.isEditMode.value = true;
-                                      controller.selectedSessions().clear();
-                                    }
-                                  },
-                                )
-                              : Text(''))
-                          : GestureDetector(
-                              onTapDown: (positioned) async {
-                                await ShowExportShareSheet(positioned, context);
-                              },
-                              child: CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                child: Icon(
-                                  CupertinoIcons.share_up,
-                                  color: kColourLight,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                    ),
-                  ];
-                }),
-          ),
-          Obx(() => HandleSelect(context))
-        ],
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: NavigationBarCustom(child: child),
+        ),
+        Obx(() => HandleSelect(context))
+      ],
     );
   }
 
@@ -218,60 +163,6 @@ class Sidebar extends GetView<SidebarController> {
                           DbService dbService = Get.find();
                           dbService.setHasMultipleExportedSession(
                               controller.selectedSessions);
-                          Navigator.pop(context);
-                        })
-                  ]),
-            )));
-  }
-
-  Future<void> ShowExportShareSheet(
-      TapDownDetails positioned, BuildContext context) async {
-    List<String> directories = [
-      await ExportService()
-          .exportSessionToExcel(controller.currentSession.value)
-    ];
-
-    final result = await Share.shareFilesWithResult(
-      directories,
-      subject: 'Export to Excel',
-      sharePositionOrigin: Rect.fromLTWH(
-          positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
-    );
-
-    if (result.status == ShareResultStatus.dismissed) {
-    } else if (result.status == ShareResultStatus.success) {
-      if (!controller.currentSession.value.hasExportedSession) {
-        ShowConfirmMoveDialog(context);
-      }
-    }
-  }
-
-  void ShowConfirmMoveDialog(BuildContext context) {
-    showCupertinoDialog<void>(
-        context: context,
-        builder: (BuildContext context) => CupertinoTheme(
-            data: CupertinoThemeData(brightness: Brightness.dark),
-            child: Container(
-              color: Colors.black.withOpacity(0.6),
-              child: CupertinoAlertDialog(
-                  title: const Text('Move Session to "Archived"'),
-                  actions: <CupertinoDialogAction>[
-                    CupertinoDialogAction(
-                        child: const Text(
-                          'Don\'t Move',
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
-                    CupertinoDialogAction(
-                        child: const Text(
-                          'Move',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () {
-                          DbService dbService = Get.find();
-                          dbService.setHasSingleExportedSession(
-                              controller.currentSession.value);
                           Navigator.pop(context);
                         })
                   ]),

@@ -13,7 +13,6 @@ import '../services/db_service.dart';
 
 class SessionController extends GetxController {
   RxList<SessionCollection> existingCollection = <SessionCollection>[].obs;
-
   RxSet<String> userListFromDatabase = <String>{}.obs;
   RxString title = 'Create Session'.obs;
   // Address
@@ -173,6 +172,35 @@ class SessionController extends GetxController {
 
     // Notes
     notes_textController.value.text = session.notes;
+  }
+
+  void resetSessionDetails() {
+    address_textController.value.text = '';
+    address.value = '';
+
+    startEditDate.value = DateTime(0);
+    endEditDate.value = DateTime(0);
+
+    directionTag.value = 0;
+    volunteerTags.value = [];
+
+    // Road Zone
+    roadZoneTag.value = 0;
+
+    // Speed Limit
+    speedLimitTag.value = 0;
+
+    // Weather
+    weatherTag.value = 2;
+
+    // Road Conditions
+    roadConditionTag.value = 0;
+
+    // Road Lighting
+    roadLightingTag.value = 2;
+
+    // Notes
+    notes_textController.value.text = '';
   }
 }
 
