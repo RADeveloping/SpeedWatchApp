@@ -16,8 +16,10 @@ class NavigationBarCustom extends GetView<SidebarController> {
   final Widget child;
   final String largeTitle;
   final SessionController sessionController = Get.find();
+  final BuildContext? outerContext;
 
-  NavigationBarCustom({required this.child, required this.largeTitle});
+  NavigationBarCustom(
+      {required this.child, required this.largeTitle, this.outerContext});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,9 @@ class NavigationBarCustom extends GetView<SidebarController> {
                         ))
                     : largeTitle == 'Edit Session'
                         ? DiscardChangesButton(
-                            sessionController: sessionController)
+                            sessionController: sessionController,
+                            outerContext: outerContext!,
+                          )
                         : null,
                 brightness: Brightness.dark,
                 backgroundColor: kColourRightPaneBackground,
@@ -295,10 +299,11 @@ class NavigationBarCustom extends GetView<SidebarController> {
 }
 
 class DiscardChangesButton extends StatelessWidget {
-  const DiscardChangesButton({
-    Key? key,
-    required this.sessionController,
-  }) : super(key: key);
+  final BuildContext outerContext;
+
+  const DiscardChangesButton(
+      {Key? key, required this.sessionController, required this.outerContext})
+      : super(key: key);
 
   final SessionController sessionController;
 
@@ -338,8 +343,8 @@ class DiscardChangesButton extends StatelessWidget {
                   sessionController.volunteerTags().clear();
                   sessionController.volunteer_textController().clear();
                   sessionController.notes_textController().clear();
-
-                  Get.back();
+                  Navigator.pop(outerContext);
+                  Get.back(closeOverlays: true);
                 },
                 child: Container(
                   alignment: Alignment.center,

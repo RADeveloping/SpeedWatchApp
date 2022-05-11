@@ -21,8 +21,6 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
       navigationBar: CupertinoNavigationBar(
         leading: CupertinoButton(
           onPressed: () {
-            print(Get.currentRoute);
-
             Get.toNamed(
               '/Logs/${s.currentSession.value.id.toString()}/Edit',
               arguments: s.currentSession.value,

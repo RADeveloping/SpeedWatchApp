@@ -80,13 +80,15 @@ class MyApp extends StatelessWidget {
                     submitButtonText: 'Create Session',
                   ),
               transition: Transition.fadeIn,
-              title: 'Create Session'),
+              title: 'Create Session',
+              fullscreenDialog: true),
           GetPage(
             name: '/Logs/:sessionID/Edit',
             page: () => Session(
               title: 'Edit Session',
               submitButtonText: 'Update Session',
             ),
+            fullscreenDialog: true,
           ),
         ],
         localizationsDelegates: [

@@ -59,6 +59,7 @@ class Session extends GetView<SessionController> {
             : controller.startEditDate.value);
 
     return NavigationBarCustom(
+      outerContext: context,
       largeTitle: Get.arguments == null ? 'Create Session' : 'Edit Session',
       child: Obx(
         () => SettingsList(
