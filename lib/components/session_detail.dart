@@ -82,20 +82,23 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
             padding: EdgeInsets.all(20.0),
             color: kColourRightPaneBackground,
             child: Center(
-              child: SpringBoard(
+              child: Obx(() =>!s.isSessionCompleted.value ? SpringBoard(
                 onPressed: (speedRange, vehicleType) async {
-                  DbService dbService = Get.find();
-                  String currentSessionIDInString =
-                      await Get.parameters['sessionID'] as String;
-                  int currentSessionId = int.parse(currentSessionIDInString);
-                  dbService.writeRecordToDB(
-                      speedRange,
-                      vehicleType,
-                      currentSessionId,
-                      s.currentSession.value
-                          .volunteerNames[controller.sliding.value]);
+                  if (DateTime.now().isBefore(s.currentSession.value.endTime)) {
+                    DbService dbService = Get.find();
+                    int currentSessionId = s.currentSession.value.id;
+                    dbService.writeRecordToDB(
+                        speedRange,
+                        vehicleType,
+                        currentSessionId,
+                        s.currentSession.value
+                            .volunteerNames[controller.sliding.value]);
+                  } else {
+                    s.isSessionCompleted.value = true;
+                  }
+
                 },
-              ),
+              ): Container(child:Center(child: Text('Session Completed', style: TextStyle(color: kColourLight))))),
             )),
       ),
     );
