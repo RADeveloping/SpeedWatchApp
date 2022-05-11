@@ -12,8 +12,9 @@ import '../services/export_service.dart';
 
 class NavigationBarCustom extends GetView<SidebarController> {
   final Widget child;
+  final String largeTitle;
 
-  NavigationBarCustom({required this.child});
+  NavigationBarCustom({required this.child, required this.largeTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,9 @@ class NavigationBarCustom extends GetView<SidebarController> {
                       controller.isEditMode.value &&
                               controller.selectedSessions.isNotEmpty
                           ? '${controller.selectedSessions.length} Selected'
-                          : Get.currentRoute.split('/')[1],
+                          : largeTitle.isEmpty
+                              ? ''
+                              : largeTitle,
                       style: TextStyle(color: Colors.white),
                     )),
                 trailing: (Get.currentRoute

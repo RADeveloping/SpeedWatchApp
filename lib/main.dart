@@ -52,7 +52,10 @@ class MyApp extends StatelessWidget {
             name: '/Sessions',
             page: () {
               return HomeView(
-                leftChild: Sidebar(child: SessionsList()),
+                leftChild: Sidebar(
+                  child: SessionsList(),
+                  largeTitle: 'Sessions',
+                ),
                 rightChild: RightPane(),
               );
             },
@@ -62,7 +65,10 @@ class MyApp extends StatelessWidget {
             name: '/Logs/:sessionID',
             page: () {
               return HomeView(
-                leftChild: Sidebar(child: LogsList()),
+                leftChild: Sidebar(
+                  child: LogsList(),
+                  largeTitle: 'Logs',
+                ),
                 rightChild: SessionDetail(),
               );
             },
