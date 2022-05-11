@@ -103,12 +103,15 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                         }
                       },
                     )
-                  : Container(
-                      child: Center(
-                          child: Text('Session Ended',
-                              style: TextStyle(
-                                  color: kColourPlaceHolderText,
-                                  fontSize: 20))))),
+                  : Center(
+                      child: Text(
+                        'Session Ended',
+                        style: TextStyle(
+                            color: kColourPlaceHolderText,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )),
             )),
       ),
     );
