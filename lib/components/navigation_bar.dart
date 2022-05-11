@@ -62,7 +62,8 @@ class NavigationBarCustom extends GetView<SidebarController> {
                             }
                           },
                         ))
-                    : largeTitle == 'Edit Session'
+                    : largeTitle == 'Edit Session' ||
+                            largeTitle == 'Create Session'
                         ? DiscardChangesButton(
                             sessionController: sessionController,
                             outerContext: outerContext!,

@@ -74,14 +74,14 @@ class MyApp extends StatelessWidget {
             },
           ),
           GetPage(
-              name: '/Create',
-              page: () => Session(
-                    title: 'Create',
-                    submitButtonText: 'Create Session',
-                  ),
-              transition: Transition.fadeIn,
-              title: 'Create Session',
-              fullscreenDialog: true),
+            name: '/Sessions/Create',
+            page: () => Session(
+              title: 'Create',
+              submitButtonText: 'Create Session',
+            ),
+            title: 'Create Session',
+            fullscreenDialog: true,
+          ),
           GetPage(
             name: '/Logs/:sessionID/Edit',
             page: () => Session(
