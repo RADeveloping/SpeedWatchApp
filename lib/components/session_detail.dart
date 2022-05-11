@@ -93,6 +93,9 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                         currentSessionId,
                         s.currentSession.value
                             .volunteerNames[controller.sliding.value]);
+                    s.deletedRecords.forEach((record) {
+                      dbService.clearDeletedRecord(record);
+                    });
                   } else {
                     s.isSessionCompleted.value = true;
                   }
