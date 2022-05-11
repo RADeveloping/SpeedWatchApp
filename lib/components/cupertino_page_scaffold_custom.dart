@@ -99,29 +99,9 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: sidebarController.selectedSessions.isEmpty
-                      ? GestureDetector(
-                          onTap: () {
-                            if (sidebarController.selectedSessions
-                                    .firstWhereOrNull((element) =>
-                                        element.hasExportedSession == false) !=
-                                null) {
-                              sidebarController.selectedSessions.removeWhere(
-                                  (session) =>
-                                      session.hasExportedSession == false);
-                              sidebarController.selectedSessions.refresh();
-                            } else {
-                              sidebarController.selectedSessions.addAll(
-                                  sidebarController.sessions
-                                      .where((session) =>
-                                          session.hasExportedSession == false)
-                                      .toList());
-                              sidebarController.selectedSessions.refresh();
-                            }
-                          },
-                          child: Text(
-                            'Select All',
-                            style: TextStyle(color: kColourLight),
-                          ),
+                      ? Text(
+                          'Export',
+                          style: TextStyle(color: kColourDisabledButton),
                         )
                       : GestureDetector(
                           onTapDown: (positioned) {
@@ -178,7 +158,8 @@ class CupertinoPageScaffoldCustom extends StatelessWidget {
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: CupertinoAlertDialog(
-                  title: Text('Move Session${sidebarController.selectedSessions.value.length > 1 ? 's' : ''} to "Archived"'),
+                  title: Text(
+                      'Move Session${sidebarController.selectedSessions.value.length > 1 ? 's' : ''} to "Archived"'),
                   actions: <CupertinoDialogAction>[
                     CupertinoDialogAction(
                         child: const Text(

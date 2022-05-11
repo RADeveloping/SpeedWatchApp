@@ -24,40 +24,66 @@ class Sidebar extends GetView<SidebarController> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffoldCustom(
-      leading: leading,
-      backgroundColor: kColourSidebarBackground,
-      largeTitle: largeTitle,
-      previousPageTitle: previousPageTitle,
-      trailing: largeTitle == 'Log'
-          ? GestureDetector(
-              onTapDown: (positioned) async {
-                await ShowExportShareSheet(positioned, context);
-              },
-              child: CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Icon(
-                  CupertinoIcons.share_up,
-                  color: kColourLight,
-                ),
-                onPressed: () {},
-              ),
-            )
-          : Obx(() => controller.sessions.length > 0
+    return Obx(() => CupertinoPageScaffoldCustom(
+          leading: controller.isEditMode.value && largeTitle != 'Log'
               ? CupertinoButton(
                   padding: EdgeInsets.zero,
                   child: Text(
-                    controller.isEditMode.value ? 'Done' : 'Select',
+                    controller.selectedSessions.length ==
+                            controller.sessions.length
+                        ? 'Deselect All'
+                        : 'Select All',
                   ),
                   onPressed: () {
-                    controller.isEditMode.value = !controller.isEditMode.value;
-                    controller.selectedSessions().clear();
+                    if (controller.selectedSessions.firstWhereOrNull(
+                            (element) => element.hasExportedSession == false) !=
+                        null) {
+                      controller.selectedSessions.removeWhere(
+                          (session) => session.hasExportedSession == false);
+                      controller.selectedSessions.refresh();
+                    } else {
+                      controller.selectedSessions.addAll(controller.sessions
+                          .where(
+                              (session) => session.hasExportedSession == false)
+                          .toList());
+                      controller.selectedSessions.refresh();
+                    }
                   },
                 )
-              : Text('')),
-      heroTag: 0,
-      child: child,
-    );
+              : leading,
+          backgroundColor: kColourSidebarBackground,
+          largeTitle: largeTitle,
+          previousPageTitle: previousPageTitle,
+          trailing: largeTitle == 'Log'
+              ? GestureDetector(
+                  onTapDown: (positioned) async {
+                    await ShowExportShareSheet(positioned, context);
+                  },
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    child: Icon(
+                      CupertinoIcons.share_up,
+                      color: kColourLight,
+                    ),
+                    onPressed: () {},
+                  ),
+                )
+              : Obx(() => controller.sessions.length > 0
+                  ? CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        controller.isEditMode.value ? 'Done' : 'Select',
+                      ),
+                      onPressed: () {
+                        controller.isEditMode.value =
+                            !controller.isEditMode.value;
+                        controller.selectedSessions().clear();
+                      },
+                    )
+                  : Text('')),
+          heroTag: 0,
+          child: child,
+        ));
   }
 
   Future<void> ShowExportShareSheet(
