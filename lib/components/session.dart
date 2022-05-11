@@ -263,13 +263,6 @@ class Session extends GetView<SessionController> {
     s.currentSession.value = newSessionCollection;
     s.isSessionCompleted.value =
         !DateTime.now().isBefore(s.currentSession.value.endTime);
-    controller.address_textController().clear();
-    controller.volunteer_textController().clear();
-    controller.notes_textController().clear();
-
-    if (controller.volunteerTags.value.length > 0) {
-      controller.volunteerTags.value = [];
-    }
 
     Get.offAndToNamed('/Logs/${id}');
   }
@@ -293,13 +286,7 @@ class Session extends GetView<SessionController> {
     s.currentSession.value = updatedSessionCollection;
     s.isSessionCompleted.value =
         !DateTime.now().isBefore(s.currentSession.value.endTime);
-    controller.address_textController().clear();
-    controller.volunteer_textController().clear();
-    controller.notes_textController().clear();
 
-    if (controller.volunteerTags.value.length > 0) {
-      controller.volunteerTags.value = [];
-    }
     Get.back();
   }
 }
