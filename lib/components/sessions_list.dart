@@ -235,9 +235,10 @@ class SessionsList extends GetView<SidebarController> {
           controller.filterByImagePath.value = false;
           controller.limitRecords.value = 20;
           controller.currentSession.value = session;
-          controller.isSessionCompleted.value = !DateTime.now().isBefore(controller.currentSession.value.endTime);
+          controller.isSessionCompleted.value =
+              !DateTime.now().isBefore(controller.currentSession.value.endTime);
 
-          Function callBack = () => Get.offAndToNamed('/session/${session.id}');
+          Function callBack = () => Get.toNamed('/Logs/${session.id}');
           dbService.getRecordsWithId(
               controller.handleNewRecords, session.id, callBack);
           dbService.getDeletedRecordsWithId(
