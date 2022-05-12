@@ -118,7 +118,7 @@ class SessionsList extends GetView<SidebarController> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: CupertinoTheme(
-                  data: CupertinoThemeData(brightness: Brightness.dark, textTheme: CupertinoTextThemeData()),
+                  data: CupertinoThemeData(brightness: Brightness.dark, primaryColor: kColourLight),
                   child: CupertinoSearchTextField(
                     controller: controller.textController.value,
                     itemColor: kColourLight,
