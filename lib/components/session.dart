@@ -108,63 +108,68 @@ class Session extends GetView<SessionController> {
                 trailing: endDatePicker,
               )),
             ]),
-            SettingsSection(tiles: [
-              SettingsTile(
-                title: Obx(
-                  () => CupertinoTheme(
-                      data: CupertinoThemeData(brightness: Brightness.dark),
-                      child: SessionTextFieldEntry(
-                        onTap: () {
-                          controller.volunteerSearchValueChanged('');
-                        },
-                        onChanged: (String value) {
-                          controller.volunteerSearchValueChanged(value.trim());
-                        },
-                        onSubmitted: (String value) {
-                          controller.volunteerSearchValueChanged(value.trim());
-                        },
-                        keyboardType: TextInputType.name,
-                        textEditingController:
-                            controller.volunteer_textController.value,
-                        placeholder: 'Volunteer Name',
-                      )),
-                ),
-              ),
-              SettingsTile(
-                  title: Obx(() => Material(
-                        color: Colors.transparent,
-                        child: ChipsChoice<String>.multiple(
-                          value: controller.volunteerTags.value,
-                          onChanged: (val) {
-                            controller.volunteerTags.value = val;
-                            controller.userListFromDatabase.addAll(val);
-                            controller.volunteer_textController.value.clear();
+            SettingsSection(
+              tiles: [
+                SettingsTile(
+                  title: Obx(
+                    () => CupertinoTheme(
+                        data: CupertinoThemeData(brightness: Brightness.dark),
+                        child: SessionTextFieldEntry(
+                          onTap: () {
                             controller.volunteerSearchValueChanged('');
                           },
-                          placeholderBuilder: (BuildContext context) {
-                            return Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Center(
-                                child: Text(
-                                  'No Saved Volunteers',
-                                  style: TextStyle(
-                                      color: kColourPlaceHolderText,
-                                      fontSize: 16),
-                                ),
-                              ),
-                            );
+                          onChanged: (String value) {
+                            controller
+                                .volunteerSearchValueChanged(value.trim());
                           },
-                          runSpacing: 20,
-                          choiceItems: C2Choice.listFrom<String, String>(
-                            source: controller.volunteerOptions,
-                            value: (i, v) => v,
-                            label: (i, v) => v,
+                          onSubmitted: (String value) {
+                            controller
+                                .volunteerSearchValueChanged(value.trim());
+                          },
+                          keyboardType: TextInputType.name,
+                          textEditingController:
+                              controller.volunteer_textController.value,
+                          placeholder: 'Volunteer Name',
+                        )),
+                  ),
+                ),
+                SettingsTile(
+                    title: Obx(() => Material(
+                          color: Colors.transparent,
+                          child: ChipsChoice<String>.multiple(
+                            value: controller.volunteerTags.value,
+                            onChanged: (val) {
+                              controller.volunteerTags.value = val;
+                              controller.userListFromDatabase.addAll(val);
+                              controller.volunteer_textController.value.clear();
+                              controller.volunteerSearchValueChanged('');
+                            },
+                            placeholderBuilder: (BuildContext context) {
+                              return Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Center(
+                                  child: Text(
+                                    'No Saved Volunteers',
+                                    style: TextStyle(
+                                        color: kColourPlaceHolderText,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              );
+                            },
+                            runSpacing: 20,
+                            choiceItems: C2Choice.listFrom<String, String>(
+                              source: controller.volunteerOptions,
+                              value: (i, v) => v,
+                              label: (i, v) => v,
+                            ),
+                            choiceActiveStyle: choiceActiveStyle,
+                            choiceStyle: choiceStyle,
                           ),
-                          choiceActiveStyle: choiceActiveStyle,
-                          choiceStyle: choiceStyle,
-                        ),
-                      )))
-            ]),
+                        )))
+              ],
+              margin: EdgeInsetsDirectional.fromSTEB(16.0, 14.0, 16.0, 10.0),
+            ),
             SettingsSection(tiles: [
               CustomSettingsTile(
                   child: CustomTileWithChoices(
