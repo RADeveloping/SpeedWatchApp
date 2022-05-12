@@ -41,14 +41,15 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
               child: GestureDetector(
                 child: Obx(() => Icon(
                       CupertinoIcons.arrow_uturn_left_circle,
-                      color: s.records.length > 0
+                      color: s.records.length > 0 &&
+                          s.isSessionCompleted.isFalse
                           ? kColourLight
                           : kColourDisabledButton,
                     )),
                 onTap: () {
                   DbService dbService = Get.find();
                   List<RecordCollection> records = s.records.value;
-                  records.length == 0
+                  records.length == 0 || s.isSessionCompleted.isTrue
                       ? null
                       : dbService.deleteLatestRecord(records[0]);
                 },
@@ -61,7 +62,8 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                 child: GestureDetector(
                   child: Obx(() => Icon(
                         CupertinoIcons.arrow_uturn_right_circle,
-                        color: s.deletedRecords.length > 0
+                        color: s.deletedRecords.length > 0 &&
+                            s.isSessionCompleted.isFalse
                             ? kColourLight
                             : kColourDisabledButton,
                       )),
@@ -69,7 +71,7 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                     DbService dbService = Get.find();
                     List<RecordCollection> deletedRecords =
                         s.deletedRecords.value;
-                    deletedRecords.length == 0
+                    deletedRecords.length == 0 || s.isSessionCompleted.isTrue
                         ? null
                         : dbService
                             .restoreLatestDeletedRecord(deletedRecords[0]);
