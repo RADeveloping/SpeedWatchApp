@@ -41,13 +41,16 @@ class Sidebar extends StatelessWidget {
         // Has No New Session
         return Container(
           height: 50,
-          color: Colors.transparent,
+          color: kColourSidebarBackground,
           child: Align(
               alignment: Alignment.centerRight,
               child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: controller.selectedSessions.isEmpty
-                      ? Container()
+                      ? Text(
+                          'Export',
+                          style: TextStyle(color: kColourDisabledButton),
+                        )
                       : GestureDetector(
                           onTapDown: (positioned) async {
                             await ShowSelectedExportShareSheet(
