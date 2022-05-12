@@ -23,73 +23,75 @@ class SpringBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SidebarController s = Get.find();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SpeedButtonGroup(
-          minSpeed: 0,
-          maxSpeed: s.currentSession.value.speedLimit,
-          onPressed: (vehicleType) {
-            onPressed(SpeedRange.green, vehicleType);
-          },
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFA4F485),
-              Color(0xFF64CD4C),
-            ],
+    return Obx(
+      ()=> Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SpeedButtonGroup(
+            minSpeed: 0,
+            maxSpeed: s.currentSession.value.speedLimit,
+            onPressed: (vehicleType) {
+              onPressed(SpeedRange.green, vehicleType);
+            },
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFA4F485),
+                Color(0xFF64CD4C),
+              ],
+            ),
+            iconSize: iconSize,
           ),
-          iconSize: iconSize,
-        ),
-        SpeedButtonGroup(
-          minSpeed: s.currentSession.value.speedLimit + 1,
-          maxSpeed: s.currentSession.value.speedLimit + 10,
-          onPressed: (vehicleType) {
-            onPressed(SpeedRange.yellow, vehicleType);
-          },
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFF9D96D),
-              Color(0xFFF7CD53),
-            ],
+          SpeedButtonGroup(
+            minSpeed: s.currentSession.value.speedLimit + 1,
+            maxSpeed: s.currentSession.value.speedLimit + 10,
+            onPressed: (vehicleType) {
+              onPressed(SpeedRange.yellow, vehicleType);
+            },
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFF9D96D),
+                Color(0xFFF7CD53),
+              ],
+            ),
+            iconSize: iconSize,
           ),
-          iconSize: iconSize,
-        ),
-        SpeedButtonGroup(
-          minSpeed: s.currentSession.value.speedLimit + 11,
-          maxSpeed: s.currentSession.value.speedLimit + 20,
-          onPressed: (vehicleType) {
-            onPressed(SpeedRange.orange, vehicleType);
-          },
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFF19838),
-              Color(0xFFED6947),
-            ],
+          SpeedButtonGroup(
+            minSpeed: s.currentSession.value.speedLimit + 11,
+            maxSpeed: s.currentSession.value.speedLimit + 20,
+            onPressed: (vehicleType) {
+              onPressed(SpeedRange.orange, vehicleType);
+            },
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFF19838),
+                Color(0xFFED6947),
+              ],
+            ),
+            iconSize: iconSize,
           ),
-          iconSize: iconSize,
-        ),
-        SpeedButtonGroup(
-          minSpeed: s.currentSession.value.speedLimit + 20,
-          onPressed: (vehicleType) {
-            onPressed(SpeedRange.red, vehicleType);
-          },
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFE5466B),
-              Color(0xFFE9664B),
-            ],
+          SpeedButtonGroup(
+            minSpeed: s.currentSession.value.speedLimit + 20,
+            onPressed: (vehicleType) {
+              onPressed(SpeedRange.red, vehicleType);
+            },
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFE5466B),
+                Color(0xFFE9664B),
+              ],
+            ),
+            iconSize: iconSize,
           ),
-          iconSize: iconSize,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
