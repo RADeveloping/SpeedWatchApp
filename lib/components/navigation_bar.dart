@@ -33,26 +33,27 @@ class NavigationBarCustom extends GetView<SidebarController> {
                     ? Obx(() => CupertinoButton(
                           padding: EdgeInsets.zero,
                           child: Text(
-                            controller.selectedSessions.length ==
-                                    controller.sessions.length
+                            controller.selectedSessions.toSet().containsAll(
+                                    controller.sessions
+                                        .where((session) =>
+                                            !session.hasExportedSession)
+                                        .toList())
                                 ? 'Deselect All'
                                 : 'Select All',
                           ),
                           onPressed: () {
-                            if (controller.selectedSessions.firstWhereOrNull(
-                                    (element) =>
-                                        element.hasExportedSession == false) !=
-                                null) {
-                              controller.selectedSessions.removeWhere(
-                                  (session) =>
-                                      session.hasExportedSession == false);
-                              controller.selectedSessions.refresh();
+                            if (controller.selectedSessions.toSet().containsAll(
+                                controller.sessions
+                                    .where((session) =>
+                                        !session.hasExportedSession)
+                                    .toList())) {
+                              controller.selectedSessions.clear();
                             } else {
-                              controller.selectedSessions.addAll(controller
-                                  .sessions
-                                  .where((session) =>
-                                      session.hasExportedSession == false)
-                                  .toList());
+                              controller.selectedSessions.addAllUnique(
+                                  controller.sessions
+                                      .where((session) =>
+                                          !session.hasExportedSession)
+                                      .toList());
                               controller.selectedSessions.refresh();
                             }
                           },
@@ -276,5 +277,15 @@ class NavigationBarCustom extends GetView<SidebarController> {
                         })
                   ]),
             )));
+  }
+}
+
+extension ListExtension<E> on List<E> {
+  void addAllUnique(Iterable<E> iterable) {
+    for (var element in iterable) {
+      if (!contains(element)) {
+        add(element);
+      }
+    }
   }
 }
