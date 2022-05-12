@@ -37,7 +37,7 @@ class RightPane extends GetView<RightPane> {
                   child: CupertinoTheme(
                 child: CupertinoButton.filled(
                   onPressed: () {
-                    Get.toNamed('/Create',
+                    Get.toNamed('/Sessions/Create',
                         parameters: null, preventDuplicates: false);
                   },
                   child: Row(

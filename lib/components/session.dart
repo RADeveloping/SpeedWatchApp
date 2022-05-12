@@ -2,7 +2,6 @@ import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
 import 'package:speedwatch/components/session_detail.dart';
@@ -60,6 +59,7 @@ class Session extends GetView<SessionController> {
             : controller.startEditDate.value);
 
     return NavigationBarCustom(
+      outerContext: context,
       largeTitle: Get.arguments == null ? 'Create Session' : 'Edit Session',
       child: Obx(
         () => SettingsList(
@@ -288,75 +288,5 @@ class Session extends GetView<SessionController> {
         !DateTime.now().isBefore(s.currentSession.value.endTime);
 
     Get.back();
-  }
-}
-
-class DiscardSessionChangesButton extends GetView<SessionController> {
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      child: Icon(
-        CupertinoIcons.xmark,
-        color: kColourLight,
-      ),
-      onPressed: () {
-        showPopover(
-          context: context,
-          backgroundColor: kColourRightPaneBackground,
-          transitionDuration: const Duration(milliseconds: 150),
-          bodyBuilder: (context) => Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Are you sure you want to discard changes?',
-                    style: TextStyle(fontSize: 14, color: Colors.white24),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Container(
-                height: 1,
-                color: kColourTileDivider,
-              ),
-              GestureDetector(
-                onTap: () {
-                  controller.address_textController().clear();
-                  controller.volunteerTags().clear();
-                  controller.volunteer_textController().clear();
-                  controller.notes_textController().clear();
-
-                  if (controller.existingCollection.value.isEmpty) {
-                    Get.offAllNamed('/Sessions');
-                  } else {
-                    Get.offAllNamed(
-                        '/Logs/${controller.existingCollection.value[0].id}');
-                    controller.existingCollection.value = [];
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.transparent,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text('Discard Changes',
-                        style: TextStyle(color: Colors.red, fontSize: 18)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          direction: PopoverDirection.bottom,
-          width: 300,
-          height: 125,
-          arrowHeight: 15,
-          arrowWidth: 30,
-        );
-      },
-    );
   }
 }

@@ -2,19 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:popover/popover.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 import 'package:speedwatch/services/db_service.dart';
 
 import '../collections/session_collection.dart';
+import '../controllers/session_controller.dart';
 import '../services/export_service.dart';
 
 class NavigationBarCustom extends GetView<SidebarController> {
   final Widget child;
   final String largeTitle;
+  final SessionController sessionController = Get.find();
+  final BuildContext? outerContext;
 
-  NavigationBarCustom({required this.child, required this.largeTitle});
+  NavigationBarCustom(
+      {required this.child, required this.largeTitle, this.outerContext});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +63,13 @@ class NavigationBarCustom extends GetView<SidebarController> {
                             }
                           },
                         ))
-                    : null,
+                    : largeTitle == 'Edit Session' ||
+                            largeTitle == 'Create Session'
+                        ? DiscardChangesButton(
+                            sessionController: sessionController,
+                            outerContext: outerContext!,
+                          )
+                        : null,
                 brightness: Brightness.dark,
                 backgroundColor: kColourRightPaneBackground,
                 largeTitle: Obx(() => Text(
@@ -73,21 +84,30 @@ class NavigationBarCustom extends GetView<SidebarController> {
                 trailing: (Get.currentRoute
                             .isCaseInsensitiveContains('create') ||
                         Get.currentRoute.isCaseInsensitiveContains('edit'))
-                    ? Container()
+                    ? null
                     : Get.currentRoute.isCaseInsensitiveContains('sessions')
-                        ? Obx(() => CupertinoButton(
-                              padding: EdgeInsets.zero,
-                              child: Text(
-                                controller.isEditMode.value ? 'Done' : 'Select',
-                              ),
-                              onPressed: controller.sessions.length > 0
-                                  ? () {
-                                      controller.isEditMode.value =
-                                          !controller.isEditMode.value;
-                                      controller.selectedSessions().clear();
-                                    }
-                                  : null,
-                            ))
+                        ? Obx(() => controller.sessions.length > 0
+                            ? CupertinoButton(
+                                padding: EdgeInsets.zero,
+                                child: controller.isEditMode.value
+                                    ? Text(
+                                        'Done',
+                                        style: TextStyle(color: kColourLight),
+                                      )
+                                    : Text(
+                                        'Select',
+                                        style: TextStyle(color: kColourLight),
+                                      ),
+                                onPressed: () {
+                                  if (controller.isEditMode.value) {
+                                    controller.isEditMode.value = false;
+                                  } else {
+                                    controller.isEditMode.value = true;
+                                    controller.selectedSessions().clear();
+                                  }
+                                },
+                              )
+                            : Text(''))
                         : GestureDetector(
                             onTapDown: (positioned) async {
                               await ShowExportShareSheet(positioned, context);
@@ -277,6 +297,78 @@ class NavigationBarCustom extends GetView<SidebarController> {
                         })
                   ]),
             )));
+  }
+}
+
+class DiscardChangesButton extends StatelessWidget {
+  final BuildContext outerContext;
+
+  const DiscardChangesButton(
+      {Key? key, required this.sessionController, required this.outerContext})
+      : super(key: key);
+
+  final SessionController sessionController;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      child: Icon(
+        CupertinoIcons.xmark,
+        color: kColourLight,
+      ),
+      onPressed: () {
+        showPopover(
+          context: context,
+          backgroundColor: kColourRightPaneBackground,
+          transitionDuration: const Duration(milliseconds: 150),
+          bodyBuilder: (context) => Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Are you sure you want to discard changes?',
+                    style: TextStyle(fontSize: 14, color: Colors.white24),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Container(
+                height: 1,
+                color: kColourTileDivider,
+              ),
+              GestureDetector(
+                onTap: () {
+                  sessionController.address_textController().clear();
+                  sessionController.volunteerTags().clear();
+                  sessionController.volunteer_textController().clear();
+                  sessionController.notes_textController().clear();
+                  Navigator.pop(outerContext);
+                  Get.back(closeOverlays: true);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('Discard Changes',
+                        style: TextStyle(color: Colors.red, fontSize: 18)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          direction: PopoverDirection.bottom,
+          width: 300,
+          height: 125,
+          arrowHeight: 15,
+          arrowWidth: 30,
+        );
+      },
+    );
   }
 }
 

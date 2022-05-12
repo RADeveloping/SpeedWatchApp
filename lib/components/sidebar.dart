@@ -63,7 +63,7 @@ class Sidebar extends StatelessWidget {
         // Has New Session
         return Container(
           height: 50,
-          color: Colors.transparent,
+          color: kColourSidebarBackground,
           child: Align(
               alignment: Alignment.centerRight,
               child: Padding(
