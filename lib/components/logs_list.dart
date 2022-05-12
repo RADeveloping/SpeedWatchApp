@@ -24,17 +24,7 @@ class LogsList extends GetView<SidebarController> {
     return Column(
       children: [
         Expanded(
-          child: Obx(() => controller.records.isEmpty
-              ? Center(
-                  child: Text(
-                    'No Logs',
-                    style: TextStyle(
-                        color: kColourPlaceHolderText,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
-                  ),
-                )
-              : SettingsList(
+          child: Obx(() => SettingsList(
                   applicationType: ApplicationType.both,
                   brightness: Brightness.light,
                   lightTheme: SettingsThemeData(
@@ -47,6 +37,17 @@ class LogsList extends GetView<SidebarController> {
                   sections: [buildSection(context)],
                 )),
         ),
+    Obx(() =>controller.records.isEmpty
+            ? Expanded(
+              child: Text(
+                  'No Logs',
+                  style: TextStyle(
+                      color: kColourPlaceHolderText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+              ),
+            )
+            : Container()),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20),
           child: Row(
