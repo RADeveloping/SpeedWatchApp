@@ -136,10 +136,14 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Obx(() => Text(
-                        sidebarController.currentSession.value
-                            .volunteerNames[controller.sliding.value],
-                        style: TextStyle(color: kColourLight))),
+                    Obx(() => Expanded(
+                      child: Text(
+                          sidebarController.currentSession.value
+                              .volunteerNames[controller.sliding.value],
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(color: kColourLight)),
+                    )),
                     Container(
                       width: 5,
                     ),
@@ -185,10 +189,13 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Obx(() => Text(
-                      sidebarController.currentSession.value
-                          .volunteerNames[controller.sliding.value],
-                      style: TextStyle(color: Colors.white))),
+                  Obx(() => Expanded(
+                    child: Text(
+                        sidebarController.currentSession.value
+                            .volunteerNames[controller.sliding.value],
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white)),
+                  )),
                 ],
               ));
   }
