@@ -118,10 +118,10 @@ class Session extends GetView<SessionController> {
                           controller.volunteerSearchValueChanged('');
                         },
                         onChanged: (String value) {
-                          controller.volunteerSearchValueChanged(value);
+                          controller.volunteerSearchValueChanged(value.trim());
                         },
                         onSubmitted: (String value) {
-                          controller.volunteerSearchValueChanged(value);
+                          controller.volunteerSearchValueChanged(value.trim());
                         },
                         keyboardType: TextInputType.name,
                         textEditingController:
