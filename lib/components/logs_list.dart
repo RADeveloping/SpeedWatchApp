@@ -215,7 +215,7 @@ class LogsList extends GetView<SidebarController> {
       return SettingsTile(
         title: Center(
             child: Text(
-          'Load more',
+          'Load More',
           style: TextStyle(color: kColourLight),
         )),
         onPressed: (c) {
@@ -233,7 +233,7 @@ class LogsList extends GetView<SidebarController> {
       return SettingsTile(
         title: Center(
             child: Text(
-          'Load more',
+          'Load More',
           style: TextStyle(color: kColourLight),
         )),
         onPressed: (c) {
