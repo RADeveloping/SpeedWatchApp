@@ -92,6 +92,15 @@ class Sidebar extends StatelessWidget {
     }
   }
 
+  String getFilename(List<String> directories) {
+    if (directories.length > 1) {
+      return (directories.length.toString() + ' Documents');
+    } else if (directories.length == 1) {
+      return (directories[0].split('/').last);
+    }
+    return '';
+  }
+
   Future<void> ShowSelectedExportShareSheet(
       TapDownDetails positioned, BuildContext context) async {
     List<String> directories = await ExportService()
@@ -99,7 +108,7 @@ class Sidebar extends StatelessWidget {
 
     final result = await Share.shareFilesWithResult(
       directories,
-      subject: 'Export to Excel',
+      subject: getFilename(directories),
       sharePositionOrigin: Rect.fromLTWH(
           positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
     );
