@@ -182,7 +182,7 @@ class SessionsList extends GetView<SidebarController> {
                 title: Text(''),
                 tiles: [
                   SettingsTile(
-                    title: Center(child: Text('Load more')),
+                    title: Center(child: Text('Load More', style: TextStyle(color: kColourLight))),
                     onPressed: (c) {
                       controller.limitSessionsMain.value += 20;
                     },
@@ -194,7 +194,7 @@ class SessionsList extends GetView<SidebarController> {
                     title: Text(''),
                     tiles: [
                       SettingsTile(
-                          title: Center(child: Text('Load more')),
+                          title: Center(child: Text('Load More', style: TextStyle(color: kColourLight))),
                           onPressed: (c) {
                             controller.limitSessionsArchived.value += 20;
                           })
