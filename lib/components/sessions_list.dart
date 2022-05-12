@@ -117,29 +117,32 @@ class SessionsList extends GetView<SidebarController> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CupertinoSearchTextField(
-                  controller: controller.textController.value,
-                  itemColor: kColourLight,
-                  placeholder: 'Search Sessions',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  prefixInsets: EdgeInsets.all(10),
-                  onChanged: (String value) {
-                    if (controller.textController.value.value.text != '') {
-                      controller.isSearching.value = true;
-                    } else {
+                child: CupertinoTheme(
+                  data: CupertinoThemeData(brightness: Brightness.dark),
+                  child: CupertinoSearchTextField(
+                    controller: controller.textController.value,
+                    itemColor: kColourLight,
+                    placeholder: 'Search Sessions',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    prefixInsets: EdgeInsets.all(10),
+                    onChanged: (String value) {
+                      if (controller.textController.value.value.text != '') {
+                        controller.isSearching.value = true;
+                      } else {
+                        controller.isSearching.value = false;
+                      }
+                      controller.sessions.refresh();
+                    },
+                    onSubmitted: (String value) {
+                      print('Submitted text: $value');
+                    },
+                    onSuffixTap: () {
+                      controller.textController.value.clear();
                       controller.isSearching.value = false;
-                    }
-                    controller.sessions.refresh();
-                  },
-                  onSubmitted: (String value) {
-                    print('Submitted text: $value');
-                  },
-                  onSuffixTap: () {
-                    controller.textController.value.clear();
-                    controller.isSearching.value = false;
-                  },
+                    },
+                  ),
                 ),
               ),
             ),
