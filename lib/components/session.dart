@@ -286,9 +286,7 @@ class Session extends GetView<SessionController> {
     s.currentSession.value = updatedSessionCollection;
     s.isSessionCompleted.value =
         !DateTime.now().isBefore(s.currentSession.value.endTime);
-
     s.currentSession.refresh();
-
     Get.back();
   }
 }
