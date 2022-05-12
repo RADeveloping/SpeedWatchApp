@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:camera_camera/camera_camera.dart';
-import 'package:collection/collection.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:popover/popover.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
@@ -394,22 +395,33 @@ class LogsTileMoreButton extends StatelessWidget {
           CupertinoButton(
             onPressed: recordCollection.imagePath != null
                 ? null
-                : () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context_) => CameraCamera(
-                                  key: Key('cam'),
-                                  resolutionPreset: ResolutionPreset.veryHigh,
-                                  cameraSide: CameraSide.front,
-                                  onFile: (file) {
-                                    DbService db = Get.find();
-                                    db.addImageToRecord(
-                                        recordCollection, file.path);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                )));
+                : () async {
+                    await Permission.camera.status.then((value) {
+                      print(value);
+
+                      if (value.isPermanentlyDenied) {
+                        print('No Access');
+                        Navigator.pop(context);
+                        showCameraDeniedAlertDialog(context);
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context_) => CameraCamera(
+                                      key: Key('cam'),
+                                      resolutionPreset:
+                                          ResolutionPreset.veryHigh,
+                                      cameraSide: CameraSide.front,
+                                      onFile: (file) {
+                                        DbService db = Get.find();
+                                        db.addImageToRecord(
+                                            recordCollection, file.path);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      },
+                                    )));
+                      }
+                    });
                   },
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
@@ -470,4 +482,35 @@ class LogsTileMoreButton extends StatelessWidget {
       arrowWidth: 30,
     );
   }
+}
+
+void showCameraDeniedAlertDialog(BuildContext context) {
+  showCupertinoDialog<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoTheme(
+          data: CupertinoThemeData(brightness: Brightness.dark),
+          child: Container(
+            color: Colors.black.withOpacity(0.6),
+            child: CupertinoAlertDialog(
+                title: Text('Camera Access Needed'),
+                content: Text(
+                    'To take photos using this app, allow access to your camera in the settings app.'),
+                actions: <CupertinoDialogAction>[
+                  CupertinoDialogAction(
+                      child: const Text(
+                        'Open Settings',
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        AppSettings.openLocationSettings(asAnotherTask: true);
+                      }),
+                  CupertinoDialogAction(
+                      child: const Text(
+                        'Dismiss',
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                ]),
+          )));
 }

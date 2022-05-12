@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:popover/popover.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/services/db_service.dart';
@@ -127,65 +128,66 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => sidebarController.currentSession.value.volunteerNames.length > 1
-        ? GestureDetector(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Obx(() => Text(
-                    sidebarController.currentSession.value
-                        .volunteerNames[controller.sliding.value],
-                    style: TextStyle(color: kColourLight))),
-                Container(
-                  width: 5,
+    return Obx(
+        () => sidebarController.currentSession.value.volunteerNames.length > 1
+            ? GestureDetector(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(() => Text(
+                        sidebarController.currentSession.value
+                            .volunteerNames[controller.sliding.value],
+                        style: TextStyle(color: kColourLight))),
+                    Container(
+                      width: 5,
+                    ),
+                    Text(
+                      '▾',
+                      style: TextStyle(fontSize: 20, color: kColourLight),
+                    )
+                  ],
                 ),
-                Text(
-                  '▾',
-                  style: TextStyle(fontSize: 20, color: kColourLight),
-                )
-              ],
-            ),
-            onTap: () {
-              showPopover(
-                context: context,
-                transitionDuration: const Duration(milliseconds: 150),
-                bodyBuilder: (context) => CupertinoPicker(
-                  onSelectedItemChanged: (int value) {
-                    controller.sliding.value = value;
-                  },
-                  scrollController: FixedExtentScrollController(
-                      initialItem: controller.sliding.value),
-                  itemExtent: 36.0,
-                  squeeze: 1,
-                  children:
-                      sidebarController.currentSession.value.volunteerNames
-                          .map((name) => Text(
-                                name,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ))
-                          .toList(),
-                ),
-                direction: PopoverDirection.top,
-                barrierColor: Colors.black.withOpacity(0.8),
-                backgroundColor: kColourRightPaneBackground,
-                width: 400,
-                height: 200,
-                arrowHeight: 15,
-                arrowWidth: 30,
-              );
-            },
-          )
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(() => Text(
-                  sidebarController.currentSession.value
-                      .volunteerNames[controller.sliding.value],
-                  style: TextStyle(color: Colors.white))),
-            ],
-          ));
+                onTap: () {
+                  showPopover(
+                    context: context,
+                    transitionDuration: const Duration(milliseconds: 150),
+                    bodyBuilder: (context) => CupertinoPicker(
+                      onSelectedItemChanged: (int value) {
+                        controller.sliding.value = value;
+                      },
+                      scrollController: FixedExtentScrollController(
+                          initialItem: controller.sliding.value),
+                      itemExtent: 36.0,
+                      squeeze: 1,
+                      children:
+                          sidebarController.currentSession.value.volunteerNames
+                              .map((name) => Text(
+                                    name,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ))
+                              .toList(),
+                    ),
+                    direction: PopoverDirection.top,
+                    barrierColor: Colors.black.withOpacity(0.8),
+                    backgroundColor: kColourRightPaneBackground,
+                    width: 400,
+                    height: 200,
+                    arrowHeight: 15,
+                    arrowWidth: 30,
+                  );
+                },
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Obx(() => Text(
+                      sidebarController.currentSession.value
+                          .volunteerNames[controller.sliding.value],
+                      style: TextStyle(color: Colors.white))),
+                ],
+              ));
   }
 }

@@ -21,28 +21,29 @@ class SessionsList extends GetView<SidebarController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: Obx(() => controller.sessions.isEmpty && controller.isDbReady.value
-              ? Center(
-                  child: Text(
-                    'No Sessions',
-                    style: TextStyle(
-                        color: kColourPlaceHolderText,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
-                  ),
-                )
-              : SettingsList(
-                  applicationType: ApplicationType.both,
-                  brightness: Brightness.light,
-                  lightTheme: SettingsThemeData(
-                    settingsListBackground: kColourSidebarBackground,
-                    settingsSectionBackground: kColourSidebarTile,
-                    settingsTileTextColor: kColourSidebarTileText,
-                    tileHighlightColor: kColourLight,
-                    dividerColor: kColourTileDivider,
-                  ),
-                  sections: buildList(context),
-                )),
+          child: Obx(
+              () => controller.sessions.isEmpty && controller.isDbReady.value
+                  ? Center(
+                      child: Text(
+                        'No Sessions',
+                        style: TextStyle(
+                            color: kColourPlaceHolderText,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : SettingsList(
+                      applicationType: ApplicationType.both,
+                      brightness: Brightness.light,
+                      lightTheme: SettingsThemeData(
+                        settingsListBackground: kColourSidebarBackground,
+                        settingsSectionBackground: kColourSidebarTile,
+                        settingsTileTextColor: kColourSidebarTileText,
+                        tileHighlightColor: kColourLight,
+                        dividerColor: kColourTileDivider,
+                      ),
+                      sections: buildList(context),
+                    )),
         ),
       ],
     );

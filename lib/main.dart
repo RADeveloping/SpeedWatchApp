@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,11 +15,7 @@ import 'components/session.dart';
 import 'components/session_detail.dart';
 import 'controllers/session_controller.dart';
 
-// Global variable for storing the list of cameras available
-List<CameraDescription> cameras = [];
-
 Future<void> main() async {
-  // Fetch the available cameras before initializing the app
   runApp(MyApp());
   await initServices();
 }
