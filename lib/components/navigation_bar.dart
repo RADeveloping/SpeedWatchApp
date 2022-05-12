@@ -33,8 +33,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
                     ? Get.previousRoute.split('/')[1]
                     : '',
                 heroTag: 0,
-                leading: controller.isEditMode.value &&
-                        Get.currentRoute.isCaseInsensitiveContains('sessions')
+                leading: controller.isEditMode.value && largeTitle == 'Sessions'
                     ? Obx(() => CupertinoButton(
                           padding: EdgeInsets.zero,
                           child: Text(
@@ -74,7 +73,8 @@ class NavigationBarCustom extends GetView<SidebarController> {
                 backgroundColor: kColourRightPaneBackground,
                 largeTitle: Obx(() => Text(
                       controller.isEditMode.value &&
-                              controller.selectedSessions.isNotEmpty
+                              controller.selectedSessions.isNotEmpty &&
+                              largeTitle == 'Sessions'
                           ? '${controller.selectedSessions.length} Selected'
                           : largeTitle.isEmpty
                               ? ''
@@ -85,7 +85,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
                             .isCaseInsensitiveContains('create') ||
                         Get.currentRoute.isCaseInsensitiveContains('edit'))
                     ? null
-                    : Get.currentRoute.isCaseInsensitiveContains('sessions')
+                    : (largeTitle == 'Sessions')
                         ? Obx(() => controller.sessions.length > 0
                             ? CupertinoButton(
                                 padding: EdgeInsets.zero,

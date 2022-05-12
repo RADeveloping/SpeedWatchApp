@@ -397,10 +397,7 @@ class LogsTileMoreButton extends StatelessWidget {
                 ? null
                 : () async {
                     await Permission.camera.status.then((value) {
-                      print(value);
-
                       if (value.isPermanentlyDenied) {
-                        print('No Access');
                         Navigator.pop(context);
                         showCameraDeniedAlertDialog(context);
                       } else {
