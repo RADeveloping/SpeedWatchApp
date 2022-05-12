@@ -123,7 +123,7 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    return sidebarController.currentSession.value.volunteerNames.length > 1
+    return Obx(() => sidebarController.currentSession.value.volunteerNames.length > 1
         ? GestureDetector(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -182,6 +182,6 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
                       .volunteerNames[controller.sliding.value],
                   style: TextStyle(color: Colors.white))),
             ],
-          );
+          ));
   }
 }
