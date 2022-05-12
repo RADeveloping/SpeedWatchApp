@@ -118,7 +118,7 @@ class SessionsList extends GetView<SidebarController> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: CupertinoTheme(
-                  data: CupertinoThemeData(brightness: Brightness.dark),
+                  data: CupertinoThemeData(brightness: Brightness.dark, textTheme: CupertinoTextThemeData()),
                   child: CupertinoSearchTextField(
                     controller: controller.textController.value,
                     itemColor: kColourLight,
@@ -138,6 +138,7 @@ class SessionsList extends GetView<SidebarController> {
                     onSubmitted: (String value) {
                       print('Submitted text: $value');
                     },
+                    suffixIcon: const Icon(CupertinoIcons.xmark_circle_fill, color: kColourPlaceHolderText),
                     onSuffixTap: () {
                       controller.textController.value.clear();
                       controller.isSearching.value = false;
