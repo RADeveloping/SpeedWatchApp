@@ -125,6 +125,15 @@ class NavigationBarCustom extends GetView<SidebarController> {
         });
   }
 
+  String getFilename(List<String> directories) {
+    if (directories.length > 1) {
+      return (directories.length.toString() + ' Documents');
+    } else if (directories.length == 1) {
+      return (directories[0].split('/').last);
+    }
+    return '';
+  }
+
   Future<void> ShowExportShareSheet(
       TapDownDetails positioned, BuildContext context) async {
     List<String> directories = [
@@ -134,7 +143,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
 
     final result = await Share.shareFilesWithResult(
       directories,
-      subject: 'Export to Excel',
+      subject: getFilename(directories),
       sharePositionOrigin: Rect.fromLTWH(
           positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
     );
