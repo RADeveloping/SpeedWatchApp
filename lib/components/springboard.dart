@@ -16,7 +16,7 @@ class SpringBoard extends StatelessWidget {
   const SpringBoard({
     Key? key,
     required Function(SpeedRange, VehicleType) this.onPressed,
-    double? this.iconSize = 82,
+    double? this.iconSize = 76,
   }) : super(key: key);
 
   @override
