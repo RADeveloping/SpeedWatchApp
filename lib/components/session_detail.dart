@@ -189,12 +189,14 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Obx(() => Expanded(
-                    child: Text(
-                        sidebarController.currentSession.value
-                            .volunteerNames[controller.sliding.value],
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white)),
+                  Obx(() => Center(
+                    child: Expanded(
+                      child: Text(
+                          sidebarController.currentSession.value
+                              .volunteerNames[controller.sliding.value],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Colors.white)),
+                    ),
                   )),
                 ],
               ));
