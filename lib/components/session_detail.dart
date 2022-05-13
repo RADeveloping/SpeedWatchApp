@@ -43,12 +43,13 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                                 records.length == 0 || s.isSessionCompleted.isTrue
                                 ? null
                                     : dbService.deleteLatestRecord(records[0]);
-                                s.deletedRecords.refresh();
                           }
                           : null,
-              disabledColor: kColourDisabledButton,
               child: Icon(
                     CupertinoIcons.arrow_uturn_left_circle,
+                    color: s.records.length > 0 && s.isSessionCompleted.isFalse
+                            ? kColourLight
+                            : kColourDisabledButton,
                   ),
               padding: EdgeInsets.zero,
             )),
@@ -64,12 +65,14 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                               ? null
                               : dbService
                               .restoreLatestDeletedRecord(deletedRecords[0]);
-                          s.deletedRecords.refresh();
                         }
                       : null,
-                disabledColor: kColourDisabledButton,
                 child: Icon(
                       CupertinoIcons.arrow_uturn_right_circle,
+                      color: s.deletedRecords.length > 0 &&
+                          s.isSessionCompleted.isFalse
+                          ? kColourLight
+                          : kColourDisabledButton,
                     ),
                 padding: EdgeInsets.zero)),
           ],
