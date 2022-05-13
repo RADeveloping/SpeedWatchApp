@@ -1,9 +1,9 @@
 import 'package:chips_choice_null_safety/chips_choice_null_safety.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/controllers/session_controller.dart';
+
 import '../constants.dart';
 
 class CustomTileWithChoices extends GetView<SessionController> {
