@@ -25,28 +25,28 @@ class LogsList extends GetView<SidebarController> {
       children: [
         Expanded(
           child: Obx(() => SettingsList(
-                  applicationType: ApplicationType.both,
-                  brightness: Brightness.light,
-                  lightTheme: SettingsThemeData(
-                    settingsListBackground: kColourSidebarBackground,
-                    settingsSectionBackground: Colors.transparent,
-                    settingsTileTextColor: kColourSidebarTileText,
-                    tileHighlightColor: kColourLight,
-                    dividerColor: kColourTileDivider,
-                  ),
-                  sections: [buildSection(context)],
-                )),
+                applicationType: ApplicationType.both,
+                brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: kColourSidebarBackground,
+                  settingsSectionBackground: Colors.transparent,
+                  settingsTileTextColor: kColourSidebarTileText,
+                  tileHighlightColor: kColourLight,
+                  dividerColor: kColourTileDivider,
+                ),
+                sections: [buildSection(context)],
+              )),
         ),
-    Obx(() =>controller.records.isEmpty
+        Obx(() => controller.records.isEmpty
             ? Expanded(
-              child: Text(
+                child: Text(
                   'No Logs',
                   style: TextStyle(
                       color: kColourPlaceHolderText,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
-              ),
-            )
+                ),
+              )
             : Container()),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20),
@@ -74,7 +74,7 @@ class LogsList extends GetView<SidebarController> {
                             'Records',
                             style: TextStyle(
                                 color: Colors.white54,
-                                fontSize: 13,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -114,7 +114,7 @@ class LogsList extends GetView<SidebarController> {
                                     color: controller.filterByInfraction.value
                                         ? kColourLight
                                         : Colors.white54,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.bold),
                               )),
                         ],
@@ -160,7 +160,7 @@ class LogsList extends GetView<SidebarController> {
                                     color: controller.filterByImagePath.value
                                         ? kColourLight
                                         : Colors.white54,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.bold),
                               )),
                         ],
