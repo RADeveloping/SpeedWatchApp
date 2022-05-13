@@ -19,7 +19,7 @@ class SidebarController extends GetxController {
       <SessionCollection>[].obs;
   RxList<SessionCollection> selectedSessionsNonArchived =
       <SessionCollection>[].obs;
-
+  bool isShareSheetOpening = false;
   RxBool isSearching = false.obs;
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
