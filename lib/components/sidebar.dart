@@ -102,9 +102,12 @@ class Sidebar extends StatelessWidget {
 
   Future<void> ShowSelectedExportShareSheet(
       TapDownDetails positioned, BuildContext context) async {
+    if (controller.isShareSheetOpening == true) {
+      return;
+    }
+    controller.isShareSheetOpening = true;
     List<String> directories = await ExportService()
         .exportSessionsToExcel(controller.selectedSessions);
-
     final result = await Share.shareFilesWithResult(
       directories,
       subject: getFilename(directories),
@@ -114,10 +117,12 @@ class Sidebar extends StatelessWidget {
 
     if (result.status == ShareResultStatus.dismissed) {
       controller.isEditMode.value = false;
+      controller.isShareSheetOpening = false;
     } else if (result.status == ShareResultStatus.success) {
       if (isMoveNeeded(controller.selectedSessions.value)) {
         showMoveExportedAlertDialog(context);
       }
+      controller.isShareSheetOpening = false;
       controller.isEditMode.value = false;
     }
   }

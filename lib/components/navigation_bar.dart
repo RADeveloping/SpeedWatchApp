@@ -136,6 +136,10 @@ class NavigationBarCustom extends GetView<SidebarController> {
 
   Future<void> ShowExportShareSheet(
       TapDownDetails positioned, BuildContext context) async {
+    if (controller.isShareSheetOpening == true) {
+      return;
+    }
+    controller.isShareSheetOpening = true;
     List<String> directories = [
       await ExportService()
           .exportSessionToExcel(controller.currentSession.value)
@@ -147,12 +151,13 @@ class NavigationBarCustom extends GetView<SidebarController> {
       sharePositionOrigin: Rect.fromLTWH(
           positioned.globalPosition.dx, positioned.globalPosition.dy, 1, 1),
     );
-
     if (result.status == ShareResultStatus.dismissed) {
+      controller.isShareSheetOpening = false;
     } else if (result.status == ShareResultStatus.success) {
       if (!controller.currentSession.value.hasExportedSession) {
         ShowConfirmMoveDialog(context);
       }
+      controller.isShareSheetOpening = false;
     }
   }
 
