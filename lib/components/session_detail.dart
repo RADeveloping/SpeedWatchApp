@@ -34,49 +34,47 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CupertinoButton(
+            Obx(() => CupertinoButton(
               // Undo
-              onPressed: () {},
-              child: GestureDetector(
-                child: Obx(() => Icon(
-                      CupertinoIcons.arrow_uturn_left_circle,
-                      color:
-                          s.records.length > 0 && s.isSessionCompleted.isFalse
-                              ? kColourLight
-                              : kColourDisabledButton,
-                    )),
-                onTap: () {
-                  DbService dbService = Get.find();
-                  List<RecordCollection> records = s.records.value;
-                  records.length == 0 || s.isSessionCompleted.isTrue
-                      ? null
-                      : dbService.deleteLatestRecord(records[0]);
-                },
-              ),
-              padding: EdgeInsets.zero,
-            ),
-            CupertinoButton(
-                // Redo
-                onPressed: () {},
-                child: GestureDetector(
-                  child: Obx(() => Icon(
-                        CupertinoIcons.arrow_uturn_right_circle,
-                        color: s.deletedRecords.length > 0 &&
-                                s.isSessionCompleted.isFalse
+              onPressed: s.records.length > 0 && s.isSessionCompleted.isFalse
+                          ? () {
+                                DbService dbService = Get.find();
+                                List<RecordCollection> records = s.records.value;
+                                records.length == 0 || s.isSessionCompleted.isTrue
+                                ? null
+                                    : dbService.deleteLatestRecord(records[0]);
+                          }
+                          : null,
+              child: Icon(
+                    CupertinoIcons.arrow_uturn_left_circle,
+                    color: s.records.length > 0 && s.isSessionCompleted.isFalse
                             ? kColourLight
                             : kColourDisabledButton,
-                      )),
-                  onTap: () {
-                    DbService dbService = Get.find();
-                    List<RecordCollection> deletedRecords =
-                        s.deletedRecords.value;
-                    deletedRecords.length == 0 || s.isSessionCompleted.isTrue
-                        ? null
-                        : dbService
-                            .restoreLatestDeletedRecord(deletedRecords[0]);
-                  },
-                ),
-                padding: EdgeInsets.zero),
+                  ),
+              padding: EdgeInsets.zero,
+            )),
+            Obx(() => CupertinoButton(
+                // Redo
+                onPressed: s.deletedRecords.length > 0 &&
+                    s.isSessionCompleted.isFalse
+                      ? () {
+                          DbService dbService = Get.find();
+                          List<RecordCollection> deletedRecords =
+                              s.deletedRecords.value;
+                          deletedRecords.length == 0 || s.isSessionCompleted.isTrue
+                              ? null
+                              : dbService
+                              .restoreLatestDeletedRecord(deletedRecords[0]);
+                        }
+                      : null,
+                child: Icon(
+                      CupertinoIcons.arrow_uturn_right_circle,
+                      color: s.deletedRecords.length > 0 &&
+                          s.isSessionCompleted.isFalse
+                          ? kColourLight
+                          : kColourDisabledButton,
+                    ),
+                padding: EdgeInsets.zero)),
           ],
         ),
         backgroundColor: kColourRightPaneBackground,
