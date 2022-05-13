@@ -47,6 +47,7 @@ class Session extends GetView<SessionController> {
         onChange: (dateTime) {
           if (Get.arguments == null) {
             endDatePicker.date.value = dateTime.add(Duration(hours: 2));
+            endDatePicker.minDate = dateTime.add(Duration(hours: 2));
           }
         },
         minDate: Get.arguments == null ? null : controller.startEditDate.value);
