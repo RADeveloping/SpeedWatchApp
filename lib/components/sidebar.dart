@@ -52,9 +52,8 @@ class Sidebar extends StatelessWidget {
                           style: TextStyle(color: kColourDisabledButton),
                         )
                       : GestureDetector(
-                          onTapDown: (positioned) async {
-                            await ShowSelectedExportShareSheet(
-                                positioned, context);
+                          onTapDown: (positioned) {
+                            ShowSelectedExportShareSheet(positioned, context);
                           },
                           child: Text(
                             'Export',

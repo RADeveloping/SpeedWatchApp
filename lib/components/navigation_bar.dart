@@ -109,8 +109,8 @@ class NavigationBarCustom extends GetView<SidebarController> {
                               )
                             : Text(''))
                         : GestureDetector(
-                            onTapDown: (positioned) async {
-                              await ShowExportShareSheet(positioned, context);
+                            onTapDown: (positioned) {
+                              ShowExportShareSheet(positioned, context);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -204,9 +204,8 @@ class NavigationBarCustom extends GetView<SidebarController> {
                   child: controller.selectedSessions.isEmpty
                       ? Container()
                       : GestureDetector(
-                          onTapDown: (positioned) async {
-                            await ShowSelectedExportShareSheet(
-                                positioned, context);
+                          onTapDown: (positioned) {
+                            ShowSelectedExportShareSheet(positioned, context);
                           },
                           child: Text(
                             'Export',
