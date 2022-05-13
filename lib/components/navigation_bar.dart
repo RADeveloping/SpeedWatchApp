@@ -112,13 +112,13 @@ class NavigationBarCustom extends GetView<SidebarController> {
                             onTapDown: (positioned) async {
                               await ShowExportShareSheet(positioned, context);
                             },
-                            child: CupertinoButton(
-                              padding: EdgeInsets.zero,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
                               child: Icon(
                                 CupertinoIcons.share_up,
+                                size: 24.0,
                                 color: kColourLight,
                               ),
-                              onPressed: () {},
                             ),
                           ))),
           ];
