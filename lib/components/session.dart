@@ -47,6 +47,7 @@ class Session extends GetView<SessionController> {
         onChange: (dateTime) {
           if (Get.arguments == null) {
             endDatePicker.date.value = dateTime.add(Duration(hours: 2));
+            endDatePicker.minDate = dateTime.add(Duration(hours: 2));
           }
         },
         minDate: Get.arguments == null ? null : controller.startEditDate.value);
@@ -55,8 +56,8 @@ class Session extends GetView<SessionController> {
             ? DateTime.now().add(Duration(hours: 2))
             : controller.endEditDate.value,
         minDate: Get.arguments == null
-            ? startDatePicker.date.value
-            : controller.startEditDate.value);
+            ? startDatePicker.date.value.add(Duration(hours: 2))
+            : controller.startEditDate.value.add(Duration(hours: 2)));
 
     return NavigationBarCustom(
       outerContext: context,
