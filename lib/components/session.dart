@@ -256,6 +256,8 @@ class Session extends GetView<SessionController> {
   void createNewSessionClick() async {
     DbService dbService = Get.find();
     SidebarController s = Get.find();
+    SessionDetailDetailController sessionDetailController = Get.find();
+    sessionDetailController.sliding.value = 0;
     SessionCollection newSessionCollection = controller.getSession(
         startDatePicker.date.value, endDatePicker.date.value);
     SettingsCollection newSettingsCollection = SettingsCollection()
