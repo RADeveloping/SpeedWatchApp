@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:popover/popover.dart';
 import 'package:speedwatch/constants.dart';
 import 'package:speedwatch/services/db_service.dart';
@@ -41,10 +40,10 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
               child: GestureDetector(
                 child: Obx(() => Icon(
                       CupertinoIcons.arrow_uturn_left_circle,
-                      color: s.records.length > 0 &&
-                          s.isSessionCompleted.isFalse
-                          ? kColourLight
-                          : kColourDisabledButton,
+                      color:
+                          s.records.length > 0 && s.isSessionCompleted.isFalse
+                              ? kColourLight
+                              : kColourDisabledButton,
                     )),
                 onTap: () {
                   DbService dbService = Get.find();
@@ -63,7 +62,7 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
                   child: Obx(() => Icon(
                         CupertinoIcons.arrow_uturn_right_circle,
                         color: s.deletedRecords.length > 0 &&
-                            s.isSessionCompleted.isFalse
+                                s.isSessionCompleted.isFalse
                             ? kColourLight
                             : kColourDisabledButton,
                       )),
@@ -134,23 +133,18 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
         () => sidebarController.currentSession.value.volunteerNames.length > 1
             ? GestureDetector(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Obx(() => Expanded(
-                      child: Text(
-                          sidebarController.currentSession.value
-                              .volunteerNames[controller.sliding.value],
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(color: kColourLight)),
-                    )),
-                    Container(
-                      width: 5,
-                    ),
-                    Text(
-                      '▾',
-                      style: TextStyle(fontSize: 20, color: kColourLight),
-                    )
+                          flex: 1,
+                          child: Text(
+                              '${sidebarController.currentSession.value.volunteerNames[controller.sliding.value]} ▾',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(color: kColourLight),
+                              textAlign: TextAlign.center),
+                        )),
                   ],
                 ),
                 onTap: () {
@@ -172,6 +166,7 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
+                                    textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                   ))
                               .toList(),
@@ -186,19 +181,12 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
                   );
                 },
               )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Obx(() => Center(
-                    child: Expanded(
-                      child: Text(
-                          sidebarController.currentSession.value
-                              .volunteerNames[controller.sliding.value],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  )),
-                ],
-              ));
+            : Obx(() => Text(
+                  sidebarController.currentSession.value
+                      .volunteerNames[controller.sliding.value],
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                )));
   }
 }
