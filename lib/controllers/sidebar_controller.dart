@@ -77,7 +77,7 @@ class SidebarController extends GetxController {
     switch (type) {
       case VehicleType.largeTruck:
         {
-          return 'Truck';
+          return 'Large Truck';
         }
       case VehicleType.motorBike:
         {

@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
 
 import '../constants.dart';
@@ -24,7 +23,7 @@ class SpringBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     SidebarController s = Get.find();
     return Obx(
-      ()=> Column(
+      () => Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SpeedButtonGroup(
