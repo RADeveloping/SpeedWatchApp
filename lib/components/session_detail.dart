@@ -117,14 +117,6 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
       ),
     );
   }
-
-  void undoAction(SidebarController s) {
-    DbService dbService = Get.find();
-        List<RecordCollection> records = s.records.value;
-        records.length == 0 || s.isSessionCompleted.isTrue
-            ? null
-            : dbService.deleteLatestRecord(records[0]);
-  }
 }
 
 class SwitchUser extends GetView<SessionDetailDetailController> {
