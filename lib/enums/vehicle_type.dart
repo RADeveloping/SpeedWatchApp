@@ -1,1 +1,6 @@
-enum VehicleType { passenger, largeTruck, transit, motorBike }
+enum VehicleType {
+  passenger,
+  largeTruck,
+  transit,
+  motorBike,
+}

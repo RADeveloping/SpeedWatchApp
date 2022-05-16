@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +14,12 @@ class SidebarController extends GetxController {
   RxBool archiveExpanded = false.obs;
   RxBool isEditMode = false.obs;
   RxList<SessionCollection> selectedSessions = <SessionCollection>[].obs;
-
+  RxList<SessionCollection> selectedSessionsArchived =
+      <SessionCollection>[].obs;
+  RxList<SessionCollection> selectedSessionsNonArchived =
+      <SessionCollection>[].obs;
+  bool isShareSheetOpening = false;
+  RxBool isSearching = false.obs;
   final sessions = <SessionCollection>[].obs;
   final records = <RecordCollection>[].obs;
 
@@ -26,7 +30,10 @@ class SidebarController extends GetxController {
   RxInt limitSessionsMain = 20.obs;
   RxInt limitSessionsArchived = 20.obs;
 
+  RxBool isSessionCompleted = false.obs;
   final currentSession = SessionCollection().obs;
+
+  RxBool isDbReady = false.obs;
 
   void handleNewSessions(List<SessionCollection> newSessions) {
     sessions.value = newSessions;
@@ -39,6 +46,10 @@ class SidebarController extends GetxController {
   void handleDeletedRecords(List<RecordCollection> recordsToBeRestored) async {
     deletedRecords.value = recordsToBeRestored;
   }
+
+  RxBool filterByInfraction = false.obs;
+
+  RxBool filterByImagePath = false.obs;
 
   IconData getIcon(VehicleType type) {
     switch (type) {
@@ -65,7 +76,7 @@ class SidebarController extends GetxController {
     switch (type) {
       case VehicleType.largeTruck:
         {
-          return 'Truck';
+          return 'Large Truck';
         }
       case VehicleType.motorBike:
         {

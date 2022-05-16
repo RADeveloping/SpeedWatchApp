@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,9 +24,9 @@ class DbService extends GetxService {
       inspector: true,
     ).then((db) {
       SidebarController s = Get.find();
-      getSessions(s.handleNewSessions, db);
+      getInitialSessions(s, db);
       setSessionsListener(s.handleNewSessions, db);
-      setRecordsListener(s.handleNewRecords, s.handleDeletedRecords, db);
+      setRecordsListener(s, db);
       return db;
     });
     Get.put(isar, permanent: true);
@@ -39,17 +41,16 @@ class DbService extends GetxService {
   }
 
   void setRecordsListener(
-      Function handleNewRecords, Function handleDeletedRecords, Isar db) async {
+      SidebarController controller, Isar db) async {
     Stream<void> recordsChanged = db.recordCollections.watchLazy();
     recordsChanged.listen((s) {
-      getRecords(handleNewRecords, db);
-      getDeletedRecords(handleDeletedRecords, db);
+      getRecords(controller, db);
+      getDeletedRecords(controller, db);
     });
   }
 
-  void getRecords(Function handleNewRecords, Isar db) async {
-    int currentSessionId =
-        int.parse(await Get.parameters['sessionID'] as String);
+  void getRecords(SidebarController s, Isar db) async {
+    int currentSessionId = s.currentSession.value.id;
     db.recordCollections
         .where()
         .deletedAtIsNull()
@@ -57,7 +58,7 @@ class DbService extends GetxService {
         .sessionIdEqualTo(currentSessionId)
         .sortByCreatedAtDesc()
         .findAll()
-        .then((newRecords) => handleNewRecords(newRecords));
+        .then((newRecords) => s.handleNewRecords(newRecords));
   }
 
   void getRecordsWithId(Function handleNewRecords, int currentSessionId,
@@ -88,9 +89,8 @@ class DbService extends GetxService {
         .findAll();
   }
 
-  void getDeletedRecords(Function handleDeletedRecords, Isar db) async {
-    int currentSessionId =
-        int.parse(await Get.parameters['sessionID'] as String);
+  void getDeletedRecords(SidebarController s, Isar db) async {
+    int currentSessionId = s.currentSession.value.id;
     db.recordCollections
         .where()
         .deletedAtIsNotNull()
@@ -99,7 +99,15 @@ class DbService extends GetxService {
         .sortByDeletedAtDesc()
         .findAll()
         .then(
-            (recordsToBeRestored) => handleDeletedRecords(recordsToBeRestored));
+            (recordsToBeRestored) => s.handleDeletedRecords(recordsToBeRestored));
+  }
+
+  void clearDeletedRecord(RecordCollection deletedRecord) async {
+    Isar db = Get.find();
+    int currentRecordID = deletedRecord.id;
+    await db.writeTxn(((isar) async {
+      await db.recordCollections.delete(currentRecordID);
+    }));
   }
 
   void getDeletedRecordsWithId(Function handleDeletedRecords,
@@ -124,6 +132,18 @@ class DbService extends GetxService {
         .sortByStartTimeDesc()
         .findAll()
         .then((newSession) => handleNewSession(newSession));
+  }
+
+
+  void getInitialSessions(SidebarController s, Isar db) async {
+    db.sessionCollections
+        .where()
+        .sortByStartTimeDesc()
+        .findAll()
+        .then((newSession) {
+          s.isDbReady.value = true;
+          s.handleNewSessions(newSession);
+        });
   }
 
   Future<SessionCollection?> getSessionsWithIdOnly(int sessionId) async {
@@ -213,6 +233,15 @@ class DbService extends GetxService {
     }));
   }
 
+  void removeImageFromRecord(RecordCollection recordCollection) async {
+    Isar db = Get.find();
+    await db.writeTxn(((isar) async {
+      _deleteFile(File(recordCollection.imagePath!));
+      recordCollection.imagePath = null;
+      await db.recordCollections.put(recordCollection);
+    }));
+  }
+
   Future<List<String>> getCurrentSettingValue(int id) async {
     Isar db = Get.find();
     SettingsCollection? currentSettings = await db.settingsCollections.get(id);
@@ -221,5 +250,15 @@ class DbService extends GetxService {
       output = currentSettings.value;
     }
     return output;
+  }
+
+  Future<Object> _deleteFile(File fileToDelete) async {
+    try {
+      final file = await fileToDelete;
+
+      return await file.delete();
+    } catch (e) {
+      return 0;
+    }
   }
 }

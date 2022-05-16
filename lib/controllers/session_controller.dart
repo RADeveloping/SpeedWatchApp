@@ -13,7 +13,6 @@ import '../services/db_service.dart';
 
 class SessionController extends GetxController {
   RxList<SessionCollection> existingCollection = <SessionCollection>[].obs;
-
   RxSet<String> userListFromDatabase = <String>{}.obs;
   RxString title = 'Create Session'.obs;
   // Address
@@ -25,6 +24,10 @@ class SessionController extends GetxController {
   RxInt directionTag = 0.obs;
   List<String> directionOptions =
       Direction.values.map((val) => val.name).toList();
+
+  // Session Notes
+  Rx<TextEditingController> notes_textController =
+      TextEditingController(text: '').obs;
 
   // Volunteer
   Rx<TextEditingController> volunteer_textController =
@@ -101,7 +104,8 @@ class SessionController extends GetxController {
       ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
       ..volunteerNames = volunteerTags.value
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
-      ..hasExportedSession = false;
+      ..hasExportedSession = false
+      ..notes = notes_textController.value.text;
   }
 
   SessionCollection updateSession(DateTime startDate, DateTime endDate,
@@ -117,7 +121,8 @@ class SessionController extends GetxController {
       ..roadZoneOptions = RoadZone.values[roadZoneTag.value]
       ..volunteerNames = volunteerTags.value
       ..speedLimit = int.parse(speedLimitOptions[speedLimitTag.value])
-      ..hasExportedSession = false;
+      ..hasExportedSession = false
+      ..notes = notes_textController.value.text;
   }
 
   void setVolunteerOptions() async {
@@ -164,6 +169,45 @@ class SessionController extends GetxController {
 
     // Road Lighting
     roadLightingTag.value = session.roadLightingOptions.index;
+
+    // Notes
+    notes_textController.value.text = session.notes;
+  }
+
+  void resetSessionDetails() {
+    address_textController.value.text = '';
+    address.value = '';
+
+    startEditDate.value = DateTime(0);
+    endEditDate.value = DateTime(0);
+
+    directionTag.value = 0;
+    volunteerTags.value = [];
+
+    // Road Zone
+    roadZoneTag.value = 0;
+
+    // Speed Limit
+    speedLimitTag.value = 0;
+
+    // Weather
+    weatherTag.value = 2;
+
+    // Road Conditions
+    roadConditionTag.value = 0;
+
+    // Road Lighting
+    roadLightingTag.value = 2;
+
+    // Notes
+    notes_textController.value.text = '';
+    address_textController().clear();
+    volunteer_textController().clear();
+    notes_textController().clear();
+
+    if (volunteerTags.value.length > 0) {
+      volunteerTags.value = [];
+    }
   }
 }
 

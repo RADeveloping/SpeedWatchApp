@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,9 +6,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:speedwatch/collections/session_collection.dart';
+import 'package:speedwatch/components/session_detail.dart';
 import 'package:speedwatch/controllers/sidebar_controller.dart';
-import 'package:collection/collection.dart';
 import 'package:speedwatch/services/db_service.dart';
+
 import '../constants.dart';
 
 class SessionsList extends GetView<SidebarController> {
@@ -19,18 +21,29 @@ class SessionsList extends GetView<SidebarController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: Obx(() => SettingsList(
-                applicationType: ApplicationType.both,
-                brightness: Brightness.light,
-                lightTheme: SettingsThemeData(
-                  settingsListBackground: kColourSidebarBackground,
-                  settingsSectionBackground: kColourSidebarTile,
-                  settingsTileTextColor: kColourSidebarTileText,
-                  tileHighlightColor: kColourLight,
-                  dividerColor: kColourTileDivider,
-                ),
-                sections: buildList(context),
-              )),
+          child: Obx(
+              () => controller.sessions.isEmpty && controller.isDbReady.value
+                  ? Center(
+                      child: Text(
+                        'No Sessions',
+                        style: TextStyle(
+                            color: kColourPlaceHolderText,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : SettingsList(
+                      applicationType: ApplicationType.both,
+                      brightness: Brightness.light,
+                      lightTheme: SettingsThemeData(
+                        settingsListBackground: kColourSidebarBackground,
+                        settingsSectionBackground: kColourSidebarTile,
+                        settingsTileTextColor: kColourSidebarTileText,
+                        tileHighlightColor: kColourLight,
+                        dividerColor: kColourTileDivider,
+                      ),
+                      sections: buildList(context),
+                    )),
         ),
       ],
     );
@@ -40,10 +53,9 @@ class SessionsList extends GetView<SidebarController> {
     List<SessionCollection> mainList = [];
     List<SessionCollection> archivedList = [];
 
-    var groupByArchived = groupBy(controller.sessions,
-        (obj) => (obj as SessionCollection).hasExportedSession);
-
-    groupByArchived.forEach((hasExportedSession, groupedList) {
+    groupBy(controller.sessions,
+            (obj) => (obj as SessionCollection).hasExportedSession)
+        .forEach((hasExportedSession, groupedList) {
       if (hasExportedSession) {
         archivedList = groupedList;
       } else {
@@ -52,32 +64,45 @@ class SessionsList extends GetView<SidebarController> {
     });
 
     List<AbstractSettingsSection> list =
-        !mainList.isEmpty || !archivedList.isEmpty ? [searchBar()] : [];
+        controller.sessions.isEmpty ? [] : [searchBar()];
 
-    var groupByDate = groupBy(
-        mainList.take(controller.limitSessionsMain.value),
-        (obj) => DateFormat('EEEEEE, MMMM dd, y')
-            .format((obj as SessionCollection).startTime));
-    var groupByDateArchived = groupBy(
-        archivedList.take(controller.limitSessionsArchived.value),
-        (obj) => DateFormat('EEEEEE, MMMM dd, y')
-            .format((obj as SessionCollection).startTime));
-    groupByDate.forEach((date, groupedList) {
-      list.add(sessionListSection(groupedList, date.toUpperCase(), false));
-    });
-
-    if (mainList.length > controller.limitSessionsMain.value) {
-      list.add(moreItems(false));
-    }
-
-    archivedList.length > 0 ? list.add(archivedTab(context)) : null;
-
-    groupByDateArchived.forEach((date, groupedList) {
-      list.add(sessionListSection(groupedList, date.toUpperCase(), true));
-    });
-
-    if (archivedList.length > controller.limitSessionsArchived.value) {
-      list.add(moreItems(true));
+    if (controller.isSearching == true) {
+      List<SessionCollection> searchSessions = controller.sessions
+          .where((element) => element.streetAddress.isCaseInsensitiveContains(
+              controller.textController.value.value.text))
+          .toList();
+      groupBy(
+              searchSessions.take(controller.limitSessionsMain.value),
+              (obj) => DateFormat('EEEEEE, MMMM dd, y')
+                  .format((obj as SessionCollection).startTime))
+          .forEach((date, groupedList) {
+        list.add(sessionListSection(groupedList, date.toUpperCase(), false));
+      });
+      if (searchSessions.length > controller.limitSessionsMain.value) {
+        list.add(moreItems(false));
+      }
+    } else {
+      groupBy(
+              mainList.take(controller.limitSessionsMain.value),
+              (obj) => DateFormat('EEEEEE, MMMM dd, y')
+                  .format((obj as SessionCollection).startTime))
+          .forEach((date, groupedList) {
+        list.add(sessionListSection(groupedList, date.toUpperCase(), false));
+      });
+      if (mainList.length > controller.limitSessionsMain.value) {
+        list.add(moreItems(false));
+      }
+      archivedList.length > 0 ? list.add(archivedTab(context)) : null;
+      groupBy(
+              archivedList.take(controller.limitSessionsArchived.value),
+              (obj) => DateFormat('EEEEEE, MMMM dd, y')
+                  .format((obj as SessionCollection).startTime))
+          .forEach((date, groupedList) {
+        list.add(sessionListSection(groupedList, date.toUpperCase(), true));
+      });
+      if (archivedList.length > controller.limitSessionsArchived.value) {
+        list.add(moreItems(true));
+      }
     }
 
     return list;
@@ -92,23 +117,33 @@ class SessionsList extends GetView<SidebarController> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CupertinoSearchTextField(
-                  controller: controller.textController.value,
-                  itemColor: kColourLight,
-                  placeholder: 'Search Sessions',
-                  style: TextStyle(
-                    color: Colors.white,
+                child: CupertinoTheme(
+                  data: CupertinoThemeData(brightness: Brightness.dark, primaryColor: kColourLight),
+                  child: CupertinoSearchTextField(
+                    controller: controller.textController.value,
+                    itemColor: kColourLight,
+                    placeholder: 'Search Sessions',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    prefixInsets: EdgeInsets.all(10),
+                    onChanged: (String value) {
+                      if (controller.textController.value.value.text != '') {
+                        controller.isSearching.value = true;
+                      } else {
+                        controller.isSearching.value = false;
+                      }
+                      controller.sessions.refresh();
+                    },
+                    onSubmitted: (String value) {
+                      print('Submitted text: $value');
+                    },
+                    suffixIcon: const Icon(CupertinoIcons.xmark_circle_fill, color: kColourPlaceHolderText),
+                    onSuffixTap: () {
+                      controller.textController.value.clear();
+                      controller.isSearching.value = false;
+                    },
                   ),
-                  prefixInsets: EdgeInsets.all(10),
-                  onChanged: (String value) {
-                    print('The text has changed to: $value');
-                  },
-                  onSubmitted: (String value) {
-                    print('Submitted text: $value');
-                  },
-                  onSuffixTap: () {
-                    controller.textController.value.clear();
-                  },
                 ),
               ),
             ),
@@ -148,7 +183,7 @@ class SessionsList extends GetView<SidebarController> {
                 title: Text(''),
                 tiles: [
                   SettingsTile(
-                    title: Center(child: Text('Load more')),
+                    title: Center(child: Text('Load More', style: TextStyle(color: kColourLight))),
                     onPressed: (c) {
                       controller.limitSessionsMain.value += 20;
                     },
@@ -160,7 +195,7 @@ class SessionsList extends GetView<SidebarController> {
                     title: Text(''),
                     tiles: [
                       SettingsTile(
-                          title: Center(child: Text('Load more')),
+                          title: Center(child: Text('Load More', style: TextStyle(color: kColourLight))),
                           onPressed: (c) {
                             controller.limitSessionsArchived.value += 20;
                           })
@@ -207,11 +242,18 @@ class SessionsList extends GetView<SidebarController> {
             ),
       onPressed: (BuildContext context) {
         if (!controller.isEditMode.value) {
+          SessionDetailDetailController sessionDetailController = Get.find();
+          sessionDetailController.sliding.value = 0;
           DbService dbService = Get.find();
           controller.records.value = [];
+          controller.filterByInfraction.value = false;
+          controller.filterByImagePath.value = false;
           controller.limitRecords.value = 20;
           controller.currentSession.value = session;
-          Function callBack = () => Get.offAndToNamed('/session/${session.id}');
+          controller.isSessionCompleted.value =
+              !DateTime.now().isBefore(controller.currentSession.value.endTime);
+
+          Function callBack = () => Get.toNamed('/Logs/${session.id}');
           dbService.getRecordsWithId(
               controller.handleNewRecords, session.id, callBack);
           dbService.getDeletedRecordsWithId(
@@ -255,7 +297,7 @@ class SessionsList extends GetView<SidebarController> {
                         ),
                       ),
                       Text(
-                        'Exported',
+                        'Archived',
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
