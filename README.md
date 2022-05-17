@@ -1,7 +1,7 @@
+![alt text](/ios/Runner/Assets.xcassets/AppIcon.appiconset/icon76.png)
 ## Speed Watch
 
 Speed Watch is an iPad application developed in Flutter for use in the Speed Watch program by volunteer police throughout B.C. 
-
 
 * [Team Members](#team-members)
 * [General info](#general-info)
