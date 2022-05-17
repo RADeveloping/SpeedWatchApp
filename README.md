@@ -7,7 +7,7 @@ Speed Watch is an iPad application developed in Flutter for use in the Speed Wat
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Dependencies](#dependencies)
-* [Contents](#content)
+* [Contents](#contents)
 * [IDE](#ide)
 * [Setup](#setup)
 
@@ -54,7 +54,7 @@ Technologies used for this project:
 * Xcode
 * (optional) Visual Studio Code
 
-## Content
+## Contents
 Content of the project folder:
 ```
 Top level:
