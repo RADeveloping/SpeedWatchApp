@@ -57,12 +57,11 @@ Technologies used for this project:
 ## Content
 Content of the project folder:
 ```
- Top level of the project folder:
+Top level:
 ├── README.md                  # Readme
 ├── pubspec.yaml               # Package dependencies
 
-Subfolders of the project folder:
-
+Subfolders:
 ├── /android                   # Android build data
 ├── /ios                       # iOS build data
 ├── /lib                       # Flutter project files
