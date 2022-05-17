@@ -27,6 +27,7 @@ Technologies used for this project:
 * Flutter
 * Dart
 * Objective-C
+* Swift
 
 ## Dependencies
 * flutter
@@ -50,9 +51,8 @@ Technologies used for this project:
 * excel: 2.0.0-null-safety-3
 
 ## IDE
-* Android Studio
+* Android Studio or Visual Studio Code
 * Xcode
-* (optional) Visual Studio Code
 
 ## Contents
 Content of the project folder:
@@ -81,4 +81,4 @@ Subfolders:
 Setting up this project will allow you to preview and compile the app locally.
 1. Clone the repository into a working directory
 2. Run *pub get*
-3. Run main.dart in Android Studio using the iOS Emulator
+3. Run main.dart in Android Studio or Visual Studio Code using the iOS Simulator
