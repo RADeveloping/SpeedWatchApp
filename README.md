@@ -20,7 +20,9 @@ Amrit | Manhas | [Link](https://github.com/apsm100)
 Sunwoo | Park | [Link](https://github.com/swparkaust)
 
 ## General Info
-The Speed Watch program is performed by volunteers to survey speeding incidents throughout B.C. Speed Watch allows volunteers to create sessions locally, record speeds, and export sessions to an excel file. *The application is available for download in the App Store. 
+The Speed Watch program is performed by volunteers to survey speeding incidents throughout B.C. Speed Watch allows volunteers to create sessions locally, record speeds, and export sessions to an excel file. 
+
+[Download on the App Store](https://apps.apple.com/ca/app/speed-watch/id1624769526) 
 
 ## Technologies
 Technologies used for this project:
