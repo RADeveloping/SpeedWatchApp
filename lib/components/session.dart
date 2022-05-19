@@ -115,22 +115,34 @@ class Session extends GetView<SessionController> {
                   title: Obx(
                     () => CupertinoTheme(
                         data: CupertinoThemeData(brightness: Brightness.dark),
-                        child: SessionTextFieldEntry(
-                          onTap: () {
-                            controller.volunteerSearchValueChanged('');
+                        child: Focus(
+                          child: SessionTextFieldEntry(
+                            onTap: () {
+                              controller.volunteerSearchValueChanged('');
+                            },
+                            onChanged: (String value) {
+                              controller
+                                  .volunteerSearchValueChanged(value.trim());
+                            },
+                            onSubmitted: (String value) {
+                              controller
+                                  .volunteerSearchValueChanged(value.trim());
+                            },
+                            keyboardType: TextInputType.name,
+                            textEditingController:
+                                controller.volunteer_textController.value,
+                            placeholder: 'Volunteer Name',
+                          ),
+                          onFocusChange: (hasFocus) {
+                            if (!hasFocus) {
+                              controller.volunteerTags.value
+                                  .add(controller.volunteerOptions[0]);
+                              controller.userListFromDatabase
+                                  .add(controller.volunteerOptions[0]);
+                              controller.volunteer_textController.value.clear();
+                              controller.volunteerSearchValueChanged('');
+                            }
                           },
-                          onChanged: (String value) {
-                            controller
-                                .volunteerSearchValueChanged(value.trim());
-                          },
-                          onSubmitted: (String value) {
-                            controller
-                                .volunteerSearchValueChanged(value.trim());
-                          },
-                          keyboardType: TextInputType.name,
-                          textEditingController:
-                              controller.volunteer_textController.value,
-                          placeholder: 'Volunteer Name',
                         )),
                   ),
                 ),
