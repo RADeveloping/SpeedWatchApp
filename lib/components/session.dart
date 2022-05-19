@@ -268,6 +268,8 @@ class Session extends GetView<SessionController> {
   void createNewSessionClick() async {
     DbService dbService = Get.find();
     SidebarController s = Get.find();
+    s.filterByInfraction.value = false;
+    s.filterByImagePath.value = false;
     SessionDetailDetailController sessionDetailController = Get.find();
     sessionDetailController.sliding.value = 0;
     SessionCollection newSessionCollection = controller.getSession(
