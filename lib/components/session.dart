@@ -137,6 +137,7 @@ class Session extends GetView<SessionController> {
                             if (!hasFocus) {
                               controller.volunteerTags.value
                                   .add(controller.volunteerOptions[0]);
+                              controller.volunteerTags.refresh();
                               controller.userListFromDatabase
                                   .add(controller.volunteerOptions[0]);
                               controller.volunteer_textController.value.clear();
