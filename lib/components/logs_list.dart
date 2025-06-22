@@ -488,7 +488,7 @@ void showCameraDeniedAlertDialog(BuildContext context) {
       builder: (BuildContext context) => CupertinoTheme(
           data: CupertinoThemeData(brightness: Brightness.dark),
           child: Container(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             child: CupertinoAlertDialog(
                 title: Text('Camera Access Needed'),
                 content: Text(

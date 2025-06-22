@@ -35,45 +35,47 @@ class SessionDetail extends GetView<SessionDetailDetailController> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Obx(() => CupertinoButton(
-              // Undo
-              onPressed: s.records.length > 0 && s.isSessionCompleted.isFalse
+                  // Undo
+                  onPressed:
+                      s.records.length > 0 && s.isSessionCompleted.isFalse
                           ? () {
-                                DbService dbService = Get.find();
-                                List<RecordCollection> records = s.records.value;
-                                records.length == 0 || s.isSessionCompleted.isTrue
-                                ? null
-                                    : dbService.deleteLatestRecord(records[0]);
-                          }
+                              DbService dbService = Get.find();
+                              List<RecordCollection> records = s.records.value;
+                              records.length == 0 || s.isSessionCompleted.isTrue
+                                  ? null
+                                  : dbService.deleteLatestRecord(records[0]);
+                            }
                           : null,
-              child: Icon(
+                  child: Icon(
                     CupertinoIcons.arrow_uturn_left_circle,
                     color: s.records.length > 0 && s.isSessionCompleted.isFalse
-                            ? kColourLight
-                            : kColourDisabledButton,
+                        ? kColourLight
+                        : kColourDisabledButton,
                   ),
-              padding: EdgeInsets.zero,
-            )),
+                  padding: EdgeInsets.zero,
+                )),
             Obx(() => CupertinoButton(
                 // Redo
                 onPressed: s.deletedRecords.length > 0 &&
-                    s.isSessionCompleted.isFalse
-                      ? () {
-                          DbService dbService = Get.find();
-                          List<RecordCollection> deletedRecords =
-                              s.deletedRecords.value;
-                          deletedRecords.length == 0 || s.isSessionCompleted.isTrue
-                              ? null
-                              : dbService
-                              .restoreLatestDeletedRecord(deletedRecords[0]);
-                        }
-                      : null,
+                        s.isSessionCompleted.isFalse
+                    ? () {
+                        DbService dbService = Get.find();
+                        List<RecordCollection> deletedRecords =
+                            s.deletedRecords.value;
+                        deletedRecords.length == 0 ||
+                                s.isSessionCompleted.isTrue
+                            ? null
+                            : dbService
+                                .restoreLatestDeletedRecord(deletedRecords[0]);
+                      }
+                    : null,
                 child: Icon(
-                      CupertinoIcons.arrow_uturn_right_circle,
-                      color: s.deletedRecords.length > 0 &&
+                  CupertinoIcons.arrow_uturn_right_circle,
+                  color: s.deletedRecords.length > 0 &&
                           s.isSessionCompleted.isFalse
-                          ? kColourLight
-                          : kColourDisabledButton,
-                    ),
+                      ? kColourLight
+                      : kColourDisabledButton,
+                ),
                 padding: EdgeInsets.zero)),
           ],
         ),
@@ -170,7 +172,7 @@ class SwitchUser extends GetView<SessionDetailDetailController> {
                               .toList(),
                     ),
                     direction: PopoverDirection.top,
-                    barrierColor: Colors.black.withOpacity(0.8),
+                    barrierColor: Colors.black.withValues(alpha: 0.8),
                     backgroundColor: kColourRightPaneBackground,
                     width: 400,
                     height: 200,

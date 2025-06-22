@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
                 rightChild: RightPane(),
               );
             },
-            binding: BindingsBuilder(() => {Get.put(SidebarController())}),
+            binding: BindingsBuilder(() => Get.put(SidebarController())),
           ),
           GetPage(
             name: '/Logs/:sessionID',

@@ -35,7 +35,7 @@ class DatePickerChoice extends StatelessWidget {
             value: 0,
             onChanged: (val) {
               showPopover(
-                barrierColor: Colors.black.withOpacity(0.75),
+                barrierColor: Colors.black.withValues(alpha: 0.75),
                 context: context,
                 transitionDuration: const Duration(milliseconds: 150),
                 bodyBuilder: (context) => CupertinoTheme(

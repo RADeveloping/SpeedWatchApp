@@ -166,7 +166,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
         builder: (BuildContext context) => CupertinoTheme(
             data: CupertinoThemeData(brightness: Brightness.dark),
             child: Container(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withValues(alpha: 0.6),
               child: CupertinoAlertDialog(
                   title: const Text('Move Session to "Archived"'),
                   actions: <CupertinoDialogAction>[
@@ -284,7 +284,7 @@ class NavigationBarCustom extends GetView<SidebarController> {
         builder: (BuildContext context) => CupertinoTheme(
             data: CupertinoThemeData(brightness: Brightness.dark),
             child: Container(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withValues(alpha: 0.6),
               child: CupertinoAlertDialog(
                   title: Text(
                       'Move Session${controller.selectedSessions.value.length > 1 ? 's' : ''} to "Archived"'),
