@@ -164,10 +164,9 @@ packages:
   chips_choice_null_safety:
     dependency: "direct main"
     description:
-      name: chips_choice_null_safety
-      sha256: "3133fb94869b788ba3cabab0c76c6ffc86de0bd47df6543b06ca9b144338b9c4"
-      url: "https://pub.dev"
-    source: hosted
+      path: "lib/vendor/chips_choice_null_safety-2.0.6"
+      relative: true
+    source: path
     version: "2.0.6"
   clock:
     dependency: transitive

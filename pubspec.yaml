@@ -39,7 +39,8 @@ dependencies:
   flutter_cupertino_settings: ^0.5.0
   multi_split_view: ^1.13.0
   settings_ui: ^2.0.2
-  chips_choice_null_safety: ^2.0.6
+  chips_choice_null_safety:
+    path: lib/vendor/chips_choice_null_safety-2.0.6
   isar: ^2.5.0
   isar_flutter_libs: 2.5.0
   isar_generator: 2.5.0
