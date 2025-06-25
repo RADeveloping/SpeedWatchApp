@@ -49,6 +49,7 @@ class SessionController extends GetxController {
   RxInt speedLimitTag = 0.obs;
   List<String> speedLimitOptions = [
     '30',
+    '40',
     '50',
     '60',
     '70',
